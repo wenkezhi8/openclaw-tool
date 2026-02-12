@@ -1,0 +1,22 @@
+import { Router } from 'express';
+import * as gatewayController from '../controllers/gateway-controller';
+import { gatewayRateLimit } from '../middleware/rate-limit';
+
+const router = Router();
+
+// GET /api/gateway/status - Get gateway status
+router.get('/status', gatewayRateLimit, gatewayController.getGatewayStatus);
+
+// POST /api/gateway/start - Start gateway
+router.post('/start', gatewayRateLimit, gatewayController.startGateway);
+
+// POST /api/gateway/stop - Stop gateway
+router.post('/stop', gatewayRateLimit, gatewayController.stopGateway);
+
+// POST /api/gateway/restart - Restart gateway
+router.post('/restart', gatewayRateLimit, gatewayController.restartGateway);
+
+// GET /api/gateway/metrics - Get gateway metrics
+router.get('/metrics', gatewayRateLimit, gatewayController.getGatewayMetrics);
+
+export default router;

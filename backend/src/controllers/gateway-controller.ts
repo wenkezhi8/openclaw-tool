@@ -1,0 +1,102 @@
+import { Response } from 'express';
+import * as gatewayService from '../services/cli/gateway-service';
+import { asyncHandler } from '../middleware/async-handler';
+import type { Request } from 'express';
+
+/**
+ * Get Gateway Status
+ */
+export const getGatewayStatus = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
+  const status = await gatewayService.getGatewayStatus();
+  res.json({ success: true, data: status });
+});
+
+/**
+ * Start Gateway
+ */
+export const startGateway = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  const options = {
+    port: req.body.port,
+    workers: req.body.workers,
+  };
+
+  const result = await gatewayService.startGateway(options);
+
+  if (result.status === 'error') {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'COMMAND_FAILED',
+        message: 'Failed to start gateway',
+        details: { lastError: result.lastError },
+      },
+    });
+    return;
+  }
+
+  res.json({
+    success: true,
+    data: { ...result, message: 'Gateway started successfully' },
+  });
+});
+
+/**
+ * Stop Gateway
+ */
+export const stopGateway = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
+  const result = await gatewayService.stopGateway();
+
+  if (result.status === 'error') {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'COMMAND_FAILED',
+        message: 'Failed to stop gateway',
+        details: { lastError: result.lastError },
+      },
+    });
+    return;
+  }
+
+  res.json({
+    success: true,
+    data: { ...result, message: 'Gateway stopped successfully' },
+  });
+});
+
+/**
+ * Restart Gateway
+ */
+export const restartGateway = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  const options = {
+    port: req.body.port,
+    workers: req.body.workers,
+  };
+
+  const result = await gatewayService.restartGateway(options);
+
+  if (result.status === 'error') {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'COMMAND_FAILED',
+        message: 'Failed to restart gateway',
+        details: { lastError: result.lastError },
+      },
+    });
+    return;
+  }
+
+  res.json({
+    success: true,
+    data: { ...result, message: 'Gateway restarted successfully' },
+  });
+});
+
+/**
+ * Get Gateway Metrics
+ */
+export const getGatewayMetrics = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
+  const metrics = await gatewayService.getGatewayMetrics();
+  res.json({ success: true, data: metrics });
+});

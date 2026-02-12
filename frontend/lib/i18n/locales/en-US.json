@@ -1,0 +1,470 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "export": "Export",
+    "import": "Import",
+    "refresh": "Refresh",
+    "submit": "Submit",
+    "reset": "Reset",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "actions": "Actions",
+    "status": "Status",
+    "name": "Name",
+    "description": "Description",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "active": "Active",
+    "inactive": "Inactive",
+    "success": "Success",
+    "error": "Error",
+    "warning": "Warning",
+    "info": "Info",
+    "retry": "Retry",
+    "copy": "Copy",
+    "copied": "Copied!",
+    "test": "Test",
+    "configure": "Configure",
+    "details": "Details",
+    "view": "View",
+    "select": "Select",
+    "selectAll": "Select All",
+    "clear": "Clear",
+    "apply": "Apply",
+    "yes": "Yes",
+    "no": "No",
+    "optional": "Optional",
+    "required": "Required",
+    "n_a": "N/A"
+  },
+  "ui": {
+    "components": {
+      "loadingSpinner": {
+        "loading": "Loading...",
+        "pleaseWait": "Please wait..."
+      },
+      "errorMessage": {
+        "title": "Error",
+        "defaultMessage": "An error occurred, please try again.",
+        "retry": "Retry",
+        "goBack": "Go Back"
+      },
+      "emptyState": {
+        "title": "No Data",
+        "description": "No items found",
+        "action": "Create New Item"
+      },
+      "pagination": {
+        "previous": "Previous",
+        "next": "Next",
+        "page": "Page",
+        "of": "of",
+        "showing": "Showing",
+        "to": "to",
+        "items": "items"
+      },
+      "confirmDialog": {
+        "title": "Confirm Action",
+        "message": "Are you sure you want to proceed?",
+        "confirm": "Confirm",
+        "cancel": "Cancel"
+      },
+      "table": {
+        "noData": "No data available",
+        "sortedAscending": "Sorted ascending",
+        "sortedDescending": "Sorted descending",
+        "selectRow": "Select row",
+        "selectAll": "Select all"
+      },
+      "select": {
+        "placeholder": "Please select...",
+        "noOptions": "No options available",
+        "search": "Search..."
+      },
+      "input": {
+        "clear": "Clear",
+        "invalid": "Invalid input"
+      },
+      "dialog": {
+        "close": "Close"
+      }
+    },
+    "alerts": {
+      "networkError": "Network error, please check your connection.",
+      "sessionExpired": "Your session has expired, please log in again.",
+      "unauthorized": "You do not have permission to perform this action.",
+      "notFound": "The requested resource was not found.",
+      "serverError": "Server error, please try again later.",
+      "validationError": "Please check your input and try again.",
+      "timeout": "Request timeout, please retry."
+    },
+    "toasts": {
+      "success": "Success",
+      "error": "Error",
+      "warning": "Warning",
+      "info": "Info",
+      "operationSuccess": "Operation completed successfully",
+      "operationFailed": "Operation failed",
+      "saveSuccess": "Saved successfully",
+      "saveError": "Failed to save",
+      "deleteSuccess": "Deleted successfully",
+      "deleteError": "Failed to delete",
+      "updateSuccess": "Updated successfully",
+      "updateError": "Failed to update",
+      "createSuccess": "Created successfully",
+      "createError": "Failed to create",
+      "copySuccess": "Copied to clipboard",
+      "uploadSuccess": "Uploaded successfully",
+      "uploadError": "Upload failed",
+      "downloadSuccess": "Downloaded successfully",
+      "downloadError": "Download failed"
+    }
+  },
+  "api": {
+    "errors": {
+      "networkError": "A network error occurred",
+      "timeout": "Request timeout",
+      "unauthorized": "Unauthorized access",
+      "forbidden": "Access forbidden",
+      "notFound": "Resource not found",
+      "validationFailed": "Validation failed",
+      "serverError": "Internal server error",
+      "serviceUnavailable": "Service temporarily unavailable",
+      "unknownError": "An unknown error occurred"
+    },
+    "status": {
+      "pending": "Pending",
+      "loading": "Loading...",
+      "success": "Success",
+      "error": "Error",
+      "idle": "Idle"
+    }
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidFormat": "Invalid format",
+    "invalidEmail": "Invalid email address",
+    "invalidUrl": "Invalid URL",
+    "invalidNumber": "Must be a number",
+    "minLength": "Must be at least {min} characters",
+    "maxLength": "Must be at most {max} characters",
+    "minValue": "Minimum value is {min}",
+    "maxValue": "Maximum value is {max}",
+    "patternMismatch": "Format does not match the required pattern",
+    "unique": "This value must be unique"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "gateway": "Gateway",
+    "agents": "Agents",
+    "channels": "Channels",
+    "models": "Models",
+    "logs": "Logs",
+    "settings": "Settings",
+    "install": "Install"
+  },
+  "header": {
+    "language": "Language",
+    "theme": "Theme",
+    "toggleTheme": "Toggle theme",
+    "logout": "Logout"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "subtitle": "Monitor and manage your OpenClaw AI gateway",
+    "overview": "Overview",
+    "statistics": "Statistics",
+    "recentActivity": "Recent Activity",
+    "systemStatus": "System Status",
+    "quickActions": "Quick Actions"
+  },
+  "gateway": {
+    "title": "Gateway Management",
+    "subtitle": "Start, stop and monitor the OpenClaw AI gateway",
+    "status": "Gateway Status",
+    "statusIndicator": "Status",
+    "configuration": "Configuration",
+    "endpoints": "Endpoints",
+    "restart": "Restart",
+    "stop": "Stop",
+    "start": "Start",
+    "running": "Running",
+    "stopped": "Stopped",
+    "error": "Error",
+    "unknown": "Unknown",
+    "settings": "Gateway Settings",
+    "control": "Control",
+    "controlDescription": "Manage gateway state",
+    "metrics": "Metrics",
+    "uptime": "Uptime",
+    "cpuUsage": "CPU Usage",
+    "memoryUsage": "Memory Usage",
+    "pid": "Process ID",
+    "port": "Port",
+    "runningOnPort": "Running on port",
+    "notRunning": "Gateway is not running. Start the gateway to view detailed metrics.",
+    "refreshing": "Refreshing...",
+    "lastUpdated": "Last updated",
+    "autoRefresh": "Auto-refresh",
+    "totalRequests": "Total Requests",
+    "sinceStart": "Since gateway started",
+    "avgLatency": "Avg Latency",
+    "ofAllRequests": "of all requests",
+    "throughput": "Throughput",
+    "requestsPerSecond": "requests/sec",
+    "successRate": "Success Rate",
+    "errors": {
+      "loadFailed": "Failed to load gateway status",
+      "loadFailedHint": "Please check if the backend server is running.",
+      "actionFailed": "Failed to execute action",
+      "connectionLost": "Connection to gateway lost",
+      "startupFailed": "Failed to start gateway",
+      "shutdownFailed": "Failed to stop gateway",
+      "restartFailed": "Failed to restart gateway"
+    },
+    "p50Latency": "p50 Latency",
+    "p95Latency": "p95 Latency",
+    "p99Latency": "p99 Latency",
+    "milliseconds": "ms",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "megabytes": "MB",
+    "percent": "%",
+    "confirmations": {
+      "start": "Are you sure you want to start the gateway?",
+      "stop": "Are you sure you want to stop the gateway? This will interrupt all active connections.",
+      "restart": "Are you sure you want to restart the gateway? This will interrupt all active connections."
+    },
+    "actions": {
+      "starting": "Starting...",
+      "stopping": "Stopping...",
+      "restarting": "Restarting...",
+      "refresh": "Refresh"
+    },
+    "success": {
+      "started": "Gateway started successfully",
+      "stopped": "Gateway stopped successfully",
+      "restarted": "Gateway restarted successfully"
+    },
+    "shortcuts": {
+      "title": "Keyboard Shortcuts",
+      "refresh": "Refresh",
+      "start": "Start Gateway",
+      "stop": "Stop Gateway",
+      "restart": "Restart Gateway",
+      "showShortcuts": "Press ? to show shortcuts"
+    }
+  },
+  "agents": {
+    "title": "Agent Management",
+    "list": "Agent List",
+    "create": "Create Agent",
+    "edit": "Edit Agent",
+    "delete": "Delete Agent",
+    "agentName": "Agent Name",
+    "agentType": "Agent Type",
+    "status": "Status",
+    "config": "Configuration"
+  },
+  "channels": {
+    "title": "Channel Management",
+    "list": "Channel List",
+    "create": "Create Channel",
+    "edit": "Edit Channel",
+    "delete": "Delete Channel",
+    "channelName": "Channel Name",
+    "channelType": "Channel Type",
+    "status": "Status",
+    "config": "Configuration",
+    "testTitle": "Test Connection",
+    "testing": "Testing...",
+    "testSuccess": "Connection successful",
+    "testError": "Connection failed",
+    "latency": "Latency"
+  },
+  "models": {
+    "title": "Model Management",
+    "list": "Model List",
+    "add": "Add Model",
+    "edit": "Edit Model",
+    "confirmDelete": "Are you sure you want to delete \"{name}\"?",
+    "autoDiscovery": "Models are automatically discovered from configured channels. Add a channel to see available models.",
+    "testTitle": "Test Model",
+    "testing": "Testing...",
+    "testSuccess": "Test successful",
+    "testError": "Test failed",
+    "configTitle": "Configure Model",
+    "save": "Save Configuration"
+  },
+  "logs": {
+    "title": "System Logs",
+    "subtitle": "Real-time logs from the OpenClaw gateway and agents",
+    "filter": "Filter Logs",
+    "level": "Log Level",
+    "source": "Source",
+    "timestamp": "Timestamp",
+    "message": "Message",
+    "clear": "Clear Logs",
+    "clearLogs": "Clear Logs",
+    "export": "Export Logs",
+    "exportLogs": "Export Logs",
+    "search": "Search logs...",
+    "searchPlaceholder": "Enter search term...",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "waiting": "Waiting for logs...",
+    "levels": {
+      "debug": "Debug",
+      "info": "Info",
+      "warn": "Warning",
+      "error": "Error",
+      "fatal": "Fatal",
+      "all": "All Levels"
+    },
+    "components": {
+      "all": "All Components",
+      "gateway": "Gateway",
+      "agents": "Agents"
+    },
+    "exportFormats": {
+      "json": "Export as JSON",
+      "csv": "Export as CSV",
+      "txt": "Export as Text"
+    },
+    "advancedSearch": {
+      "title": "Advanced Search",
+      "regex": "Use Regular Expression",
+      "caseSensitive": "Case Sensitive",
+      "dateRange": "Date Range",
+      "from": "From",
+      "to": "To"
+    },
+    "exportModal": {
+      "title": "Export Logs",
+      "format": "Format",
+      "allLogs": "All Logs",
+      "filteredLogs": "Filtered Logs Only",
+      "dateRange": "Date Range",
+      "selectFormat": "Select Format",
+      "exporting": "Exporting...",
+      "success": "Logs exported successfully",
+      "error": "Failed to export logs"
+    },
+    "errors": {
+      "loadFailed": "Failed to load logs",
+      "connectionLost": "Connection lost, reconnecting..."
+    }
+  },
+  "install": {
+    "title": "Installation",
+    "subtitle": "Manage OpenClaw CLI installation",
+    "status": "Installation Status",
+    "statusTitle": "Status",
+    "progress": "Progress",
+    "logs": "Installation Logs",
+    "start": "Start Installation",
+    "startNow": "Install OpenClaw",
+    "cancel": "Cancel Installation",
+    "complete": "Installation Complete",
+    "failed": "Installation Failed",
+    "installed": "Installed",
+    "notInstalled": "Not Installed",
+    "version": "Version",
+    "latestVersion": "Latest Version",
+    "updateAvailable": "Update Available",
+    "path": "Path",
+    "actions": "Actions",
+    "actionsDescription": "Install, update, or uninstall OpenClaw CLI",
+    "updateNow": "Update Now",
+    "upToDate": "Up to Date",
+    "uninstall": "Uninstall",
+    "confirmUninstall": "Are you sure you want to uninstall OpenClaw CLI? This action cannot be undone.",
+    "steps": {
+      "checking": "Checking system requirements",
+      "downloading": "Downloading OpenClaw CLI",
+      "installing": "Installing OpenClaw CLI",
+      "verifying": "Verifying installation",
+      "configuring": "Configuring environment",
+      "complete": "Installation complete"
+    },
+    "progressDetail": {
+      "currentStep": "Current Step",
+      "estimatedTime": "Estimated Time Remaining",
+      "bytesDownloaded": "Downloaded",
+      "totalBytes": "Total Size",
+      "downloadSpeed": "Download Speed"
+    },
+    "errors": {
+      "loadFailed": "Failed to load installation status",
+      "installFailed": "Installation failed",
+      "updateFailed": "Update failed",
+      "uninstallFailed": "Uninstallation failed",
+      "downloadFailed": "Download failed",
+      "verificationFailed": "Verification failed",
+      "rollback": "An error occurred, rolling back changes...",
+      "retry": "Retry",
+      "rollbackComplete": "Rollback complete"
+    },
+    "statusDescription": {
+      "installed": "OpenClaw CLI v{version} installed at {path}",
+      "notInstalled": "OpenClaw CLI is not installed on this system"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Configure your OpenClaw Manager preferences",
+    "general": "General",
+    "appearance": "Appearance",
+    "language": "Language",
+    "theme": "Theme",
+    "notifications": "Notifications",
+    "security": "Security",
+    "advanced": "Advanced",
+    "apiConfig": {
+      "title": "API Configuration",
+      "description": "Configure backend API connection settings",
+      "apiUrl": "API URL",
+      "wsUrl": "WebSocket URL",
+      "apiKey": "API Key (optional)",
+      "apiKeyPlaceholder": "Enter API key for authentication",
+      "save": "Save Configuration"
+    },
+    "gatewayConfig": {
+      "title": "Gateway Settings",
+      "description": "Default settings for the OpenClaw gateway",
+      "defaultPort": "Default Port",
+      "defaultWorkers": "Default Workers",
+      "save": "Save Settings"
+    },
+    "about": {
+      "title": "About",
+      "description": "OpenClaw Manager Information",
+      "version": "Version",
+      "license": "License",
+      "repository": "Repository"
+    }
+  },
+  "messages": {
+    "saveSuccess": "Saved successfully",
+    "deleteSuccess": "Deleted successfully",
+    "updateSuccess": "Updated successfully",
+    "createSuccess": "Created successfully",
+    "confirmDelete": "Are you sure you want to delete this item?",
+    "noData": "No data available",
+    "errorOccurred": "An error occurred",
+    "loadingData": "Loading data...",
+    "operationSuccess": "Operation successful",
+    "operationFailed": "Operation failed"
+  }
+}

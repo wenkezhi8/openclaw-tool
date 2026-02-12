@@ -1,0 +1,159 @@
+OpenClaw Manager - Project Directory Structure
+==============================================
+
+openclaw-manager/
+├── frontend/                          # Next.js 15 Frontend Application
+│   ├── app/
+│   │   ├── layout.tsx                 # Root layout with providers
+│   │   ├── page.tsx                   # Dashboard home page
+│   │   ├── gateway/
+│   │   │   ├── page.tsx              # Gateway management page
+│   │   │   └── client-page.tsx       # Gateway client page
+│   │   ├── agents/
+│   │   │   ├── page.tsx              # Agents list page
+│   │   │   ├── create/page.tsx       # Create agent page
+│   │   │   └── [id]/page.tsx         # Agent detail page
+│   │   ├── channels/
+│   │   │   └── page.tsx              # Channels management page
+│   │   ├── models/
+│   │   │   └── page.tsx              # Models management page
+│   │   ├── logs/
+│   │   │   └── page.tsx              # Real-time logs viewer
+│   │   ├── settings/
+│   │   │   └── page.tsx              # Settings page
+│   │   ├── api/
+│   │   │   └── health/route.ts       # Health check endpoint
+│   │   └── globals.css               # Global styles
+│   ├── components/
+│   │   ├── ui/                       # shadcn/ui components
+│   │   │   ├── button.tsx
+│   │   │   ├── card.tsx
+│   │   │   ├── dialog.tsx
+│   │   │   ├── table.tsx
+│   │   │   ├── toasts.tsx
+│   │   │   └── ...
+│   │   ├── layout/
+│   │   │   ├── header.tsx            # Header component
+│   │   │   ├── sidebar.tsx           # Sidebar navigation
+│   │   │   └── footer.tsx            # Footer component
+│   │   ├── gateway/
+│   │   │   ├── status-card.tsx       # Gateway status display
+│   │   │   ├── control-buttons.tsx   # Start/Stop/Restart controls
+│   │   │   └── metrics-panel.tsx     # Metrics display
+│   │   ├── agents/
+│   │   │   ├── agents-table.tsx      # Agents list table
+│   │   │   ├── agent-card.tsx        # Agent card component
+│   │   │   ├── create-form.tsx       # Create agent form
+│   │   │   └── delete-dialog.tsx     # Delete confirmation
+│   │   ├── channels/
+│   │   │   ├── channels-table.tsx    # Channels list table
+│   │   │   └── add-channel-dialog.tsx
+│   │   ├── models/
+│   │   │   ├── models-table.tsx      # Models list table
+│   │   │   └── add-model-dialog.tsx
+│   │   ├── logs/
+│   │   │   ├── log-viewer.tsx        # Real-time log viewer
+│   │   │   └── log-filter.tsx        # Log level filter
+│   │   └── common/
+│   │       ├── loading-spinner.tsx
+│   │       ├── error-boundary.tsx
+│   │       └── command-output.tsx
+│   ├── lib/
+│   │   ├── api-client.ts             # API client with axios/fetch
+│   │   ├── websocket-client.ts       # WebSocket client for logs
+│   │   ├── query-client.ts           # React Query setup
+│   │   └── utils.ts                  # Utility functions
+│   ├── hooks/
+│   │   ├── use-gateway.ts            # Gateway state hook
+│   │   ├── use-agents.ts             # Agents data hook
+│   │   ├── use-channels.ts           # Channels data hook
+│   │   ├── use-models.ts             # Models data hook
+│   │   ├── use-logs.ts               # Logs WebSocket hook
+│   │   └── use-toast.ts              # Toast notifications
+│   ├── types/
+│   │   ├── gateway.ts                # Gateway types
+│   │   ├── agent.ts                  # Agent types
+│   │   ├── channel.ts                # Channel types
+│   │   ├── model.ts                  # Model types
+│   │   └── api.ts                    # API response types
+│   ├── public/
+│   │   └── icons/                    # Custom icons
+│   ├── package.json
+│   ├── tsconfig.json
+│   ├── tailwind.config.ts
+│   ├── next.config.js
+│   └── postcss.config.js
+│
+├── backend/                           # Express Backend Server
+│   ├── src/
+│   │   ├── index.ts                  # Server entry point
+│   │   ├── app.ts                    # Express app setup
+│   │   ├── config/
+│   │   │   ├── index.ts              # Configuration loader
+│   │   │   ├── env.ts                # Environment variables
+│   │   │   └── openclaw.ts           # OpenClaw CLI config
+│   │   ├── routes/
+│   │   │   ├── index.ts              # Routes aggregator
+│   │   │   ├── gateway.ts            # Gateway routes
+│   │   │   ├── agents.ts             # Agents routes
+│   │   │   ├── channels.ts           # Channels routes
+│   │   │   ├── models.ts             # Models routes
+│   │   │   ├── install.ts            # Installation routes
+│   │   │   └── logs.ts               # Logs routes
+│   │   ├── controllers/
+│   │   │   ├── gateway.controller.ts
+│   │   │   ├── agents.controller.ts
+│   │   │   ├── channels.controller.ts
+│   │   │   ├── models.controller.ts
+│   │   │   ├── install.controller.ts
+│   │   │   └── logs.controller.ts
+│   │   ├── services/
+│   │   │   ├── openclaw.service.ts   # OpenClaw CLI wrapper
+│   │   │   ├── gateway.service.ts    # Gateway business logic
+│   │   │   ├── agents.service.ts     # Agents business logic
+│   │   │   ├── channels.service.ts   # Channels business logic
+│   │   │   ├── models.service.ts     # Models business logic
+│   │   │   ├── install.service.ts    # Installation service
+│   │   │   └── logs.service.ts       # Logs service with spawn
+│   │   ├── middleware/
+│   │   │   ├── error-handler.ts      # Error handling middleware
+│   │   │   ├── request-logger.ts     # Request logging
+│   │   │   ├── auth.ts               # Authentication (optional)
+│   │   │   └── rate-limit.ts         # Rate limiting
+│   │   ├── websocket/
+│   │   │   ├── index.ts              # WebSocket server setup
+│   │   │   ├── logs.handler.ts       # Logs stream handler
+│   │   │   └── gateway.handler.ts    # Gateway status broadcast
+│   │   └── utils/
+│   │       ├── logger.ts              # Logging utility
+│   │       ├── command-executor.ts    # CLI command executor
+│   │       └── response-formatter.ts  # API response formatter
+│   ├── tests/
+│   │   ├── unit/
+│   │   │   ├── services/
+│   │   │   └── controllers/
+│   │   └── integration/
+│   │       └── api/
+│   ├── package.json
+│   ├── tsconfig.json
+│   └── nodemon.json
+│
+├── docs/                              # Documentation
+│   ├── architecture.md                # Architecture design document
+│   ├── api.md                         # API documentation
+│   ├── deployment.md                  # Deployment guide
+│   └── development.md                  # Development setup guide
+│
+├── scripts/                           # Utility Scripts
+│   ├── setup.sh                       # Initial setup script
+│   ├── dev.sh                         # Start development environment
+│   └── build.sh                       # Build for production
+│
+├── docker/                            # Docker Configuration
+│   ├── Dockerfile.frontend
+│   ├── Dockerfile.backend
+│   └── docker-compose.yml
+│
+├── .gitignore
+├── README.md                          # Project overview
+└── project-structure.txt              # This file
