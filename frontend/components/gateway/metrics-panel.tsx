@@ -28,7 +28,7 @@ export function GatewayMetricsPanel({
     throughput: t('gateway.throughput'),
     requestsPerSecond: t('gateway.requestsPerSecond'),
     successRate: t('gateway.successRate'),
-    errors: t('gateway.errors'),
+    errors: t('common.error'),
     p50Latency: t('gateway.p50Latency'),
     p95Latency: t('gateway.p95Latency'),
     p99Latency: t('gateway.p99Latency'),

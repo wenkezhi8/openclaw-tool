@@ -1,11 +1,15 @@
 import rateLimit from 'express-rate-limit';
 
+// Disable rate limiting in development
+const isDev = process.env.NODE_ENV !== 'production';
+
 /**
  * Rate limiter for gateway control operations (state-changing)
  */
 export const gatewayRateLimit = rateLimit({
   windowMs: 60 * 1000, // 1 minute
-  max: 10,
+  max: isDev ? 100 : 10,
+  skip: isDev ? () => true : undefined,
   message: {
     success: false,
     error: {
@@ -22,7 +26,8 @@ export const gatewayRateLimit = rateLimit({
  */
 export const agentRateLimit = rateLimit({
   windowMs: 60 * 1000,
-  max: 30,
+  max: isDev ? 200 : 30,
+  skip: isDev ? () => true : undefined,
   message: {
     success: false,
     error: {
@@ -39,7 +44,8 @@ export const agentRateLimit = rateLimit({
  */
 export const readRateLimit = rateLimit({
   windowMs: 60 * 1000,
-  max: 60,
+  max: isDev ? 500 : 60,
+  skip: isDev ? () => true : undefined,
   message: {
     success: false,
     error: {

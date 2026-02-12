@@ -26,8 +26,13 @@ type Path = PathImpl<Messages, string>;
 /**
  * Get nested value from object using dot notation
  */
-function getNestedValue<T>(obj: T, path: string): any {
-  return path.split('.').reduce((acc, part) => acc?.[part], obj as any);
+function getNestedValue<T>(obj: T, path: string): unknown {
+  return path.split('.').reduce((acc: unknown, part) => {
+    if (acc && typeof acc === 'object' && part in acc) {
+      return (acc as Record<string, unknown>)[part];
+    }
+    return undefined;
+  }, obj as unknown);
 }
 
 export function useI18n() {
@@ -35,7 +40,10 @@ export function useI18n() {
 
   const t = (key: Path): string => {
     const value = getNestedValue(messages[locale], key as string);
-    return value || key as string;
+    if (typeof value === 'string') {
+      return value;
+    }
+    return key as string;
   };
 
   return {

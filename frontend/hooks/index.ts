@@ -7,7 +7,6 @@ export * from './use-install';
 export * from './use-logs';
 export * from './use-toast';
 export * from './use-shortcuts';
-export * from './use-i18n';
 
-// Re-export useI18n from lib for convenience
+// Re-export useI18n from lib (custom implementation, not next-intl)
 export { useI18n } from '@/lib/i18n';

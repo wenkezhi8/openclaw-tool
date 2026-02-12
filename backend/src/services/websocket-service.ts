@@ -78,7 +78,7 @@ export class WebSocketService {
           });
           break;
 
-        case 'subscribe':
+        case 'subscribe': {
           // Handle subscription
           const channel = (message.data as { channel: string })?.channel;
           if (channel) {
@@ -86,8 +86,9 @@ export class WebSocketService {
             logger.debug(`Client ${client.id} subscribed to ${channel}`);
           }
           break;
+        }
 
-        case 'unsubscribe':
+        case 'unsubscribe': {
           // Handle unsubscription
           const unsubChannel = (message.data as { channel: string })?.channel;
           if (unsubChannel) {
@@ -95,6 +96,7 @@ export class WebSocketService {
             logger.debug(`Client ${client.id} unsubscribed from ${unsubChannel}`);
           }
           break;
+        }
 
         case 'ping':
           // Respond with pong

@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, useContext, useState, ReactNode, useMemo } from 'react';
+import { createContext, useContext, useState, ReactNode, useMemo, useEffect } from 'react';
 import { Locale, defaultLocale, localeNames, locales } from './config';
 import enUS from './locales/en-US.json';
 import zhCN from './locales/zh-CN.json';
@@ -34,6 +34,7 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 }
 
 function getInitialLocale(): Locale {
+  // Always use defaultLocale on server to avoid hydration mismatch
   if (typeof window === 'undefined') return defaultLocale;
 
   try {
@@ -51,14 +52,17 @@ function getInitialLocale(): Locale {
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => {
+  // Initialize with defaultLocale to ensure server/client match
+  const [locale, setLocaleState] = useState<Locale>(defaultLocale);
+  const [isInitialized, setIsInitialized] = useState(false);
+
+  // Update locale after mount to avoid hydration mismatch
+  useEffect(() => {
     const initialLocale = getInitialLocale();
-    // Set initial lang attribute on mount
-    if (typeof window !== 'undefined') {
-      document.documentElement.lang = initialLocale;
-    }
-    return initialLocale;
-  });
+    document.documentElement.lang = initialLocale;
+    setLocaleState(initialLocale);
+    setIsInitialized(true);
+  }, []);
 
   const setLocale = (newLocale: Locale) => {
     if (translations[newLocale]) {
@@ -83,6 +87,11 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     localeName: localeNames[locale],
     availableLocales: locales,
   }), [locale]);
+
+  // Don't render children until locale is initialized on client
+  if (typeof window !== 'undefined' && !isInitialized) {
+    return null;
+  }
 
   return (
     <I18nContext.Provider value={value}>
