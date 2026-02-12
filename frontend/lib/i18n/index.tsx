@@ -51,7 +51,14 @@ function getInitialLocale(): Locale {
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() => getInitialLocale());
+  const [locale, setLocaleState] = useState<Locale>(() => {
+    const initialLocale = getInitialLocale();
+    // Set initial lang attribute on mount
+    if (typeof window !== 'undefined') {
+      document.documentElement.lang = initialLocale;
+    }
+    return initialLocale;
+  });
 
   const setLocale = (newLocale: Locale) => {
     if (translations[newLocale]) {
