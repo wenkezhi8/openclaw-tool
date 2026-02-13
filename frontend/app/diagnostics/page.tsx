@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,11 +28,8 @@ interface DiagnosticItem {
   description: string;
   status: 'success' | 'error' | 'warning' | 'checking';
   message?: string;
-  action?: {
-    label: string;
-    href?: string;
-    onClick?: () => void;
-  };
+  actionLabel?: string;
+  actionHref?: string;
 }
 
 export default function DiagnosticsPage() {
@@ -40,6 +37,7 @@ export default function DiagnosticsPage() {
   const { success } = useToast();
 
   const [isRunning, setIsRunning] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [diagnostics, setDiagnostics] = useState<DiagnosticItem[]>([
     {
       id: 'cli',
@@ -67,16 +65,13 @@ export default function DiagnosticsPage() {
     },
   ]);
 
-  // Use ref to avoid circular dependency in useCallback
-  const runAllDiagnosticsRef = useRef<() => Promise<void>>();
-
-  const updateDiagnostic = useCallback((id: string, updates: Partial<DiagnosticItem>) => {
+  const updateDiagnostic = (id: string, updates: Partial<DiagnosticItem>) => {
     setDiagnostics((prev) =>
       prev.map((item) => (item.id === id ? { ...item, ...updates } : item))
     );
-  }, []);
+  };
 
-  const checkCli = useCallback(async () => {
+  const checkCli = async () => {
     updateDiagnostic('cli', { status: 'checking' });
     try {
       const response = await apiClient.get(API_ENDPOINTS.INSTALL_STATUS);
@@ -84,31 +79,28 @@ export default function DiagnosticsPage() {
         updateDiagnostic('cli', {
           status: 'success',
           message: `CLI installed v${response.data.version || 'unknown'}`,
-          action: undefined,
+          actionLabel: undefined,
+          actionHref: undefined,
         });
       } else {
         updateDiagnostic('cli', {
           status: 'error',
           message: 'CLI not installed',
-          action: {
-            label: 'Install CLI',
-            href: '/install',
-          },
+          actionLabel: 'Install CLI',
+          actionHref: '/install',
         });
       }
     } catch {
       updateDiagnostic('cli', {
         status: 'error',
         message: 'Check failed',
-        action: {
-          label: 'Retry',
-          onClick: () => runAllDiagnosticsRef.current?.(),
-        },
+        actionLabel: 'Retry',
+        actionHref: undefined,
       });
     }
-  }, [updateDiagnostic]);
+  };
 
-  const checkGateway = useCallback(async () => {
+  const checkGateway = async () => {
     updateDiagnostic('gateway', { status: 'checking' });
     try {
       const response = await apiClient.get(API_ENDPOINTS.GATEWAY_STATUS);
@@ -116,40 +108,35 @@ export default function DiagnosticsPage() {
         updateDiagnostic('gateway', {
           status: 'success',
           message: `Gateway running on port ${response.data.port || 'unknown'}`,
-          action: undefined,
+          actionLabel: undefined,
+          actionHref: undefined,
         });
       } else if (response.data?.status === 'stopped') {
         updateDiagnostic('gateway', {
           status: 'warning',
           message: 'Gateway stopped',
-          action: {
-            label: 'Start Gateway',
-            href: '/gateway',
-          },
+          actionLabel: 'Start Gateway',
+          actionHref: '/gateway',
         });
       } else {
         updateDiagnostic('gateway', {
           status: 'error',
           message: 'Unknown status',
-          action: {
-            label: 'View Details',
-            href: '/gateway',
-          },
+          actionLabel: 'View Details',
+          actionHref: '/gateway',
         });
       }
     } catch {
       updateDiagnostic('gateway', {
         status: 'error',
         message: 'Cannot connect to gateway',
-        action: {
-          label: 'Fix Issue',
-          href: '/gateway',
-        },
+        actionLabel: 'Fix Issue',
+        actionHref: '/gateway',
       });
     }
-  }, [updateDiagnostic]);
+  };
 
-  const checkApiKey = useCallback(async () => {
+  const checkApiKey = async () => {
     updateDiagnostic('apiKey', { status: 'checking' });
     try {
       const response = await apiClient.get(API_ENDPOINTS.CHANNELS);
@@ -160,31 +147,28 @@ export default function DiagnosticsPage() {
         updateDiagnostic('apiKey', {
           status: 'success',
           message: `${configuredChannels.length} model channels configured`,
-          action: undefined,
+          actionLabel: undefined,
+          actionHref: undefined,
         });
       } else {
         updateDiagnostic('apiKey', {
           status: 'warning',
           message: 'No API key configured',
-          action: {
-            label: 'Configure Key',
-            href: '/channels',
-          },
+          actionLabel: 'Configure Key',
+          actionHref: '/channels',
         });
       }
     } catch {
       updateDiagnostic('apiKey', {
         status: 'warning',
         message: 'Cannot check configuration',
-        action: {
-          label: 'Go to Settings',
-          href: '/settings',
-        },
+        actionLabel: 'Go to Settings',
+        actionHref: '/settings',
       });
     }
-  }, [updateDiagnostic]);
+  };
 
-  const checkPlatform = useCallback(async () => {
+  const checkPlatform = async () => {
     updateDiagnostic('platform', { status: 'checking' });
     try {
       const response = await apiClient.get(API_ENDPOINTS.MESSAGING_CHANNELS);
@@ -197,54 +181,48 @@ export default function DiagnosticsPage() {
         updateDiagnostic('platform', {
           status: 'success',
           message: `${connectedChannels.length} platforms connected`,
-          action: undefined,
+          actionLabel: undefined,
+          actionHref: undefined,
         });
       } else if (channels.length > 0) {
         updateDiagnostic('platform', {
           status: 'warning',
           message: 'Platform not connected',
-          action: {
-            label: 'Connect Platform',
-            href: '/messaging',
-          },
+          actionLabel: 'Connect Platform',
+          actionHref: '/messaging',
         });
       } else {
         updateDiagnostic('platform', {
           status: 'warning',
           message: 'No messaging platform configured',
-          action: {
-            label: 'Add Platform',
-            href: '/messaging',
-          },
+          actionLabel: 'Add Platform',
+          actionHref: '/messaging',
         });
       }
     } catch {
       updateDiagnostic('platform', {
         status: 'warning',
         message: 'Cannot check platform status',
-        action: {
-          label: 'View Platforms',
-          href: '/messaging',
-        },
+        actionLabel: 'View Platforms',
+        actionHref: '/messaging',
       });
     }
-  }, [updateDiagnostic]);
+  };
 
-  const runAllDiagnostics = useCallback(async () => {
+  const runAllDiagnostics = async () => {
     setIsRunning(true);
     await Promise.all([checkCli(), checkGateway(), checkApiKey(), checkPlatform()]);
     setIsRunning(false);
     success('Diagnostics complete');
-  }, [checkCli, checkGateway, checkApiKey, checkPlatform, success]);
+  };
 
-  // Store the function in ref
+  // Run diagnostics once on mount
   useEffect(() => {
-    runAllDiagnosticsRef.current = runAllDiagnostics;
-  }, [runAllDiagnostics]);
-
-  useEffect(() => {
-    runAllDiagnostics();
-  }, [runAllDiagnostics]);
+    if (!hasLoaded) {
+      setHasLoaded(true);
+      runAllDiagnostics();
+    }
+  }, [hasLoaded]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -364,24 +342,12 @@ export default function DiagnosticsPage() {
                       {item.message}
                     </p>
                   )}
-                  {item.action && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="mt-3"
-                      asChild={!item.action.onClick}
-                    >
-                      {item.action.onClick ? (
-                        <button onClick={item.action.onClick}>
-                          <Wrench className="h-4 w-4 mr-2" />
-                          {item.action.label}
-                        </button>
-                      ) : item.action.href ? (
-                        <a href={item.action.href}>
-                          <ExternalLink className="h-4 w-4 mr-2" />
-                          {item.action.label}
-                        </a>
-                      ) : null}
+                  {item.actionLabel && item.actionHref && (
+                    <Button variant="outline" size="sm" className="mt-3" asChild>
+                      <a href={item.actionHref}>
+                        <ExternalLink className="h-4 w-4 mr-2" />
+                        {item.actionLabel}
+                      </a>
                     </Button>
                   )}
                 </div>
