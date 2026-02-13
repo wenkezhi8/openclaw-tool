@@ -32,7 +32,19 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+  origin: (origin: string, callback: (err: Error | null, allow: boolean) => void) => {
+    // Allow both localhost and 127.0.0.1
+    const allowedOrigins = [
+      'http://localhost:3000',
+      'http://127.0.0.1:3000',
+      'http://[::1]:3000',
+    ];
+    if (allowedOrigins.includes(origin) || process.env.CORS_ORIGIN === origin) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'), false);
+    }
+  },
   credentials: true,
 }));
 app.use(express.json());
