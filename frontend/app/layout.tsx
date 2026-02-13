@@ -35,9 +35,9 @@ export default function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <I18nProvider>
             <QueryProvider>
-              <div className="min-h-screen flex flex-col">
+              <div className="min-h-screen flex flex-col overflow-x-hidden">
                 <Header />
-                <main className="flex-1 w-full max-w-[1600px] mx-auto px-6 py-6 lg:px-8">
+                <main className="flex-1 w-full max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-6 lg:px-8">
                   {children}
                 </main>
               </div>

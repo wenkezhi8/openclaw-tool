@@ -18,7 +18,7 @@ export function useGatewayStatus() {
       const response = await apiClient.get<GatewayStatusResponse>(API_ENDPOINTS.GATEWAY_STATUS);
       return response.data!;
     },
-    refetchInterval: 5000,
+    refetchInterval: 15000, // Increased from 5s to 15s to reduce CPU usage
   });
 
   return {
@@ -34,7 +34,7 @@ export function useGatewayMetrics(period: string = '1h') {
       const response = await apiClient.get<GatewayMetricsResponse>(API_ENDPOINTS.GATEWAY_METRICS, { period });
       return response.data!;
     },
-    refetchInterval: 10000,
+    refetchInterval: 30000, // Increased from 10s to 30s to reduce CPU usage
   });
 
   return {

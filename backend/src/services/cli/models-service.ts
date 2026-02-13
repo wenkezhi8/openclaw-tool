@@ -73,3 +73,26 @@ export async function deleteModel(id: string): Promise<{ success: boolean; error
 
   return { success: true };
 }
+
+/**
+ * Update Model
+ */
+export async function updateModel(id: string, data: Partial<{ enabled: boolean; name: string }>): Promise<{ success: boolean; data?: Model; error?: string }> {
+  const args = ['models', 'update', id, '--json'];
+
+  if (data.name) {
+    args.push('--name', data.name);
+  }
+
+  if (data.enabled !== undefined) {
+    args.push(data.enabled ? '--enabled' : '--disabled');
+  }
+
+  const result = await executeJsonCommand<Model>(args);
+
+  if (!result.success) {
+    return { success: false, error: result.error || 'Failed to update model' };
+  }
+
+  return { success: true, data: result.data };
+}

@@ -2,6 +2,12 @@ import { WebSocketServer, WebSocket } from 'ws';
 import { v4 as uuidv4 } from 'uuid';
 import { logger } from './logger';
 import type { WsMessage, WsClientMessage, LogEntry } from '../types';
+import type { BrowserStatusEvent, BrowserScreenshotEvent } from '../types/browser';
+
+interface WsClientSubscribeMessage {
+  channel: string;
+  filter?: Record<string, unknown>;
+}
 
 interface WsClient extends WebSocket {
   id: string;
@@ -79,21 +85,23 @@ export class WebSocketService {
           break;
 
         case 'subscribe': {
-          // Handle subscription
-          const channel = (message.data as { channel: string })?.channel;
+          // Handle subscription - channel can be in data or at root level
+          const subscribeMsg = message.data as WsClientSubscribeMessage | undefined;
+          const channel = subscribeMsg?.channel || (message as unknown as { channel: string })?.channel;
           if (channel) {
             client.subscriptions.add(channel);
-            logger.debug(`Client ${client.id} subscribed to ${channel}`);
+            logger.debug(`Client ${client.id} subscribed to ${channel}`, subscribeMsg?.filter ? { filter: subscribeMsg.filter } : undefined);
           }
           break;
         }
 
         case 'unsubscribe': {
-          // Handle unsubscription
-          const unsubChannel = (message.data as { channel: string })?.channel;
-          if (unsubChannel) {
-            client.subscriptions.delete(unsubChannel);
-            logger.debug(`Client ${client.id} unsubscribed from ${unsubChannel}`);
+          // Handle unsubscription - channel can be in data or at root level
+          const unsubMsg = message.data as WsClientSubscribeMessage | undefined;
+          const channel = unsubMsg?.channel || (message as unknown as { channel: string })?.channel;
+          if (channel) {
+            client.subscriptions.delete(channel);
+            logger.debug(`Client ${client.id} unsubscribed from ${channel}`);
           }
           break;
         }
@@ -163,6 +171,30 @@ export class WebSocketService {
       type: 'gateway_status',
       id: uuidv4(),
       data: status,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  /**
+   * Send browser status update
+   */
+  sendBrowserStatus(event: BrowserStatusEvent): void {
+    this.broadcastToChannel('browser_status', {
+      type: 'browser_status',
+      id: uuidv4(),
+      data: event,
+      timestamp: new Date().toISOString(),
+    });
+  }
+
+  /**
+   * Send browser screenshot update
+   */
+  sendBrowserScreenshot(event: BrowserScreenshotEvent): void {
+    this.broadcastToChannel('browser_screenshot', {
+      type: 'browser_screenshot',
+      id: uuidv4(),
+      data: event,
       timestamp: new Date().toISOString(),
     });
   }

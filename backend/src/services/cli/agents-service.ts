@@ -19,13 +19,19 @@ export async function listAgents(params: {
     args.push('--search', params.search);
   }
 
-  const result = await executeJsonCommand<{ agents: Agent[] }>(args);
+  const result = await executeJsonCommand<Agent[] | { agents: Agent[] }>(args);
 
   if (!result.success || !result.data) {
     return { agents: [], pagination: { page: 1, limit: params.limit || 20, total: 0, totalPages: 0 } };
   }
 
-  let agents = result.data.agents || [];
+  // CLI returns either an array directly or { agents: [...] }
+  let agents: Agent[] = [];
+  if (Array.isArray(result.data)) {
+    agents = result.data;
+  } else if (result.data.agents && Array.isArray(result.data.agents)) {
+    agents = result.data.agents;
+  }
 
   // Apply pagination
   const page = params.page || 1;

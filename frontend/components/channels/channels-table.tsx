@@ -55,6 +55,8 @@ export function ChannelsTable({
   onTestConnection,
   text
 }: ChannelsTableProps) {
+  // Ensure channels is always an array (defensive programming)
+  const safeChannels = Array.isArray(channels) ? channels : [];
   const getTypeColor = (type: string) => {
     const colors: Record<string, string> = {
       openai: 'bg-green-500 hover:bg-green-600',
@@ -120,14 +122,14 @@ export function ChannelsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {channels.length === 0 ? (
+          {safeChannels.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="text-center text-muted-foreground">
                 {text?.noChannels || 'No channels found. Add a channel to connect to AI providers.'}
               </TableCell>
             </TableRow>
           ) : (
-            channels.map((channel) => (
+            safeChannels.map((channel) => (
               <TableRow key={channel.id}>
                 <TableCell className="font-medium">{channel.name}</TableCell>
                 <TableCell>

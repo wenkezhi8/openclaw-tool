@@ -157,7 +157,7 @@ export function ExportDialog({ allLogs, filteredLogs, trigger }: ExportDialogPro
 
           <div className="space-y-2">
             <Label>{t('logs.exportModal.dateRange') || 'Scope'}</Label>
-            <RadioGroup value={scope} onValueChange={(value) => setScope(value as ExportScope)}>
+            <RadioGroup value={scope} onValueChange={(value: string) => setScope(value as ExportScope)}>
               <div className="flex items-center space-x-2">
                 <RadioGroupItem value="filtered" id="filtered" />
                 <Label htmlFor="filtered" className="font-normal cursor-pointer">

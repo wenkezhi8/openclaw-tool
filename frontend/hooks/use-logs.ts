@@ -33,6 +33,9 @@ export function useLogs(filter?: LogFilter) {
       if (connected) {
         // Subscribe to logs when connected
         wsClient.subscribe('logs', subscribeParamsRef.current as Record<string, unknown> | undefined);
+      } else {
+        // Unsubscribe when disconnected
+        wsClient.unsubscribe('logs');
       }
     };
 
@@ -53,6 +56,9 @@ export function useLogs(filter?: LogFilter) {
   // Resubscribe when filter changes
   useEffect(() => {
     if (isConnected) {
+      // Unsubscribe first to avoid duplicate subscriptions
+      wsClient.unsubscribe('logs');
+      // Subscribe with new filter
       wsClient.subscribe('logs', filter as Record<string, unknown> | undefined);
     }
   }, [filter, isConnected]);

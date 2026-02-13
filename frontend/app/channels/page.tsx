@@ -33,7 +33,7 @@ export default function ChannelsPage() {
     createChannel(formData, {
       onSuccess: () => {
         setIsFormOpen(false);
-        toast.success(t('messages.deleteSuccess'));
+        toast.success(t('messages.createSuccess'));
       },
     });
   };

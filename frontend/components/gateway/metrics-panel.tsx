@@ -84,7 +84,7 @@ export function GatewayMetricsPanel({
               isRefetching={isRefetching}
               lastUpdateTime={lastUpdateTime}
               autoRefresh
-              refreshInterval={10000}
+              refreshInterval={30000}
             />
           )}
         </div>

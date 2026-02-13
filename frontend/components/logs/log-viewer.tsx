@@ -62,7 +62,7 @@ export function LogViewer({ logs, isConnected }: LogViewerProps) {
             </p>
           ) : (
             logs.map((log, index) => (
-              <div key={index} className="font-mono text-sm flex gap-2">
+              <div key={`${log.timestamp}-${index}`} className="font-mono text-sm flex gap-2">
                 <span className="text-muted-foreground select-none">
                   {formatTime(log.timestamp)}
                 </span>

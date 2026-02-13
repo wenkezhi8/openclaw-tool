@@ -2,25 +2,25 @@
 
 import { useGatewayStatus, useGatewayActions, useGatewayMetrics } from '@/hooks';
 import { GatewayStatusCard, GatewayControlButtons, GatewayMetricsPanel } from '@/components/gateway';
-import { ErrorMessage, LoadingSpinner } from '@/components/common';
+import { LoadingSpinner } from '@/components/common';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Activity, Users, Zap, Server } from 'lucide-react';
+import { Activity, Users, Zap, Server, AlertCircle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useI18n } from '@/lib/i18n';
+import { useQueryClient } from '@tanstack/react-query';
+
+const GATEWAY_QUERY_KEY = [['gateway']] as const;
 
 export default function DashboardPage() {
   const { t } = useI18n();
+  const queryClient = useQueryClient();
   const { data: status, isLoading: statusLoading, error: statusError } = useGatewayStatus();
   const { data: metrics, isLoading: metricsLoading } = useGatewayMetrics();
   const { startGateway, stopGateway, restartGateway, isLoading: actionLoading } = useGatewayActions();
 
-  if (statusError) {
-    return (
-      <ErrorMessage
-        title={t('gateway.errors.loadFailed')}
-        message={t('gateway.errors.loadFailedHint')}
-      />
-    );
-  }
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: GATEWAY_QUERY_KEY });
+  };
 
   return (
     <div className="space-y-6">
@@ -30,6 +30,26 @@ export default function DashboardPage() {
           {t('dashboard.subtitle')}
         </p>
       </div>
+
+      {/* Backend connection warning */}
+      {statusError && (
+        <Card className="border-orange-500/50 bg-orange-500/5">
+          <CardContent className="flex items-center gap-4 p-4">
+            <AlertCircle className="h-5 w-5 text-orange-500 flex-shrink-0" />
+            <div className="flex-1">
+              <h3 className="font-semibold text-orange-500">
+                {t('gateway.errors.loadFailed')}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {t('gateway.errors.loadFailedHint')}
+              </p>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
+              {t('gateway.actions.refresh')}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         <GatewayStatusCard status={status} isLoading={statusLoading} />
@@ -49,6 +69,7 @@ export default function DashboardPage() {
               onStart={startGateway}
               onStop={stopGateway}
               onRestart={restartGateway}
+              onRefresh={handleRefresh}
             />
           </CardContent>
         </Card>

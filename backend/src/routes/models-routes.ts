@@ -13,6 +13,12 @@ router.get('/:id', readRateLimit, modelsController.getModel);
 // POST /api/models - Add new model
 router.post('/', agentRateLimit, modelsController.addModel);
 
+// POST /api/models/:id/test - Test model
+router.post('/:id/test', agentRateLimit, modelsController.testModel);
+
+// PUT /api/models/:id - Update model
+router.put('/:id', agentRateLimit, modelsController.updateModel);
+
 // DELETE /api/models/:id - Delete model
 router.delete('/:id', agentRateLimit, modelsController.deleteModel);
 

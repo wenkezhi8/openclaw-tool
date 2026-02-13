@@ -13,8 +13,14 @@ router.get('/:id', readRateLimit, agentsController.getAgent);
 // POST /api/agents - Create new agent
 router.post('/', agentRateLimit, agentsController.createAgent);
 
+// POST /api/agents/batch - Batch operations on agents
+router.post('/batch', agentRateLimit, agentsController.batchAgents);
+
 // PUT /api/agents/:id - Update agent
 router.put('/:id', agentRateLimit, agentsController.updateAgent);
+
+// PATCH /api/agents/:id - Partial update agent (for status toggle)
+router.patch('/:id', agentRateLimit, agentsController.patchAgent);
 
 // DELETE /api/agents/:id - Delete agent
 router.delete('/:id', agentRateLimit, agentsController.deleteAgent);

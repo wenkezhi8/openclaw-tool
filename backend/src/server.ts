@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import { logger } from './services/logger';
 import { errorHandler } from './middleware/error-handler';
 import { wsService } from './services/websocket-service';
+import { browserService } from './services/browser';
 
 // Routes
 import gatewayRoutes from './routes/gateway-routes';
@@ -13,6 +14,16 @@ import channelsRoutes from './routes/channels-routes';
 import modelsRoutes from './routes/models-routes';
 import installRoutes from './routes/install-routes';
 import healthRoutes from './routes/health-routes';
+import messagingChannelsRoutes from './routes/messaging-channels-routes';
+import skillsRoutes from './routes/skills-routes';
+import browserRoutes from './routes/browser-routes';
+import memoryRoutes from './routes/memory-routes';
+import heartbeatRoutes from './routes/heartbeat-routes';
+import filesystemRoutes from './routes/filesystem-routes';
+import shellRoutes from './routes/shell-routes';
+import auditRoutes from './routes/audit-routes';
+import performanceRoutes from './routes/performance-routes';
+import { performanceService } from './services/performance/performance-service';
 
 const app = express();
 const server = http.createServer(app);
@@ -45,6 +56,15 @@ app.use('/api/agents', agentsRoutes);
 app.use('/api/channels', channelsRoutes);
 app.use('/api/models', modelsRoutes);
 app.use('/api/install', installRoutes);
+app.use('/api/messaging-channels', messagingChannelsRoutes);
+app.use('/api/skills', skillsRoutes);
+app.use('/api/browser', browserRoutes);
+app.use('/api/memory', memoryRoutes);
+app.use('/api/heartbeat', heartbeatRoutes);
+app.use('/api/fs', filesystemRoutes);
+app.use('/api/shell', shellRoutes);
+app.use('/api/audit', auditRoutes);
+app.use('/api/performance', performanceRoutes);
 
 // Root endpoint
 app.get('/', (_req: Request, res: Response) => {
@@ -60,6 +80,15 @@ app.get('/', (_req: Request, res: Response) => {
         channels: '/api/channels/*',
         models: '/api/models/*',
         install: '/api/install/*',
+        messagingChannels: '/api/messaging-channels/*',
+        skills: '/api/skills/*',
+        browser: '/api/browser/*',
+        memory: '/api/memory/*',
+        heartbeat: '/api/heartbeat/*',
+        filesystem: '/api/fs/*',
+        shell: '/api/shell/*',
+        audit: '/api/audit/*',
+        performance: '/api/performance/*',
       },
       websocket: '/ws',
     },
@@ -83,6 +112,9 @@ app.use(errorHandler);
 // Initialize WebSocket service
 wsService.initialize(server);
 
+// Start performance monitoring
+performanceService.start();
+
 // Start server
 server.listen(PORT, () => {
   logger.info(`OpenClaw Manager API server running on port ${PORT}`);
@@ -93,7 +125,11 @@ server.listen(PORT, () => {
 // Graceful shutdown
 process.on('SIGTERM', () => {
   logger.info('SIGTERM received, shutting down gracefully...');
+  performanceService.stop();
   wsService.closeAll();
+  browserService.closeAllSessions().catch((err) => {
+    logger.error('Error closing browser sessions', { error: err });
+  });
   server.close(() => {
     logger.info('Server closed');
     process.exit(0);
@@ -102,7 +138,11 @@ process.on('SIGTERM', () => {
 
 process.on('SIGINT', () => {
   logger.info('SIGINT received, shutting down gracefully...');
+  performanceService.stop();
   wsService.closeAll();
+  browserService.closeAllSessions().catch((err) => {
+    logger.error('Error closing browser sessions', { error: err });
+  });
   server.close(() => {
     logger.info('Server closed');
     process.exit(0);

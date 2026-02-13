@@ -11,14 +11,48 @@ import type {
 
 const INSTALL_QUERY_KEY = ['install'] as const;
 
+/**
+ * Local fallback to detect openclaw installation
+ * This is used when the backend API is unavailable
+ */
+async function detectLocalInstallStatus(): Promise<InstallStatus> {
+  try {
+    // Check if openclaw command exists
+    const response = await fetch('/api/install/check-local', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return data;
+    }
+  } catch (error) {
+    // Silently fall through to default status
+  }
+  return {
+    installed: false,
+    version: undefined,
+    path: undefined,
+    latestVersion: undefined,
+    updateAvailable: false,
+  };
+}
+
 export function useInstallStatus() {
   return useQuery<InstallStatus>({
     queryKey: [...INSTALL_QUERY_KEY, 'status'],
     queryFn: async () => {
-      const response = await apiClient.get<InstallStatus>(API_ENDPOINTS.INSTALL_STATUS);
-      return response.data!;
+      try {
+        const response = await apiClient.get<InstallStatus>(API_ENDPOINTS.INSTALL_STATUS);
+        return response.data!;
+      } catch (error) {
+        // If backend is unavailable, use local detection as fallback
+        console.warn('Backend API unavailable, using local detection:', error);
+        return await detectLocalInstallStatus();
+      }
     },
     refetchInterval: 30000,
+    retry: 2,
   });
 }
 

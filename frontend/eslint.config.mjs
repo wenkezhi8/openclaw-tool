@@ -12,6 +12,16 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Test scripts (development only)
+    "**/*.test.js",
+    "**/check-*.js",
+    "**/test-*.js",
+    "**/*-test.js",
+    "**/comprehensive-test.js",
+    "**/final-qa-test.js",
+    "**/quick-qa-test.js",
+    "**/qa-install-test.js",
+    "**/puppeteer-control.js",
   ]),
   {
     rules: {

@@ -9,6 +9,17 @@ export interface AgentConfig {
   [key: string]: unknown;
 }
 
+// CLI Agent format (returned by OpenClaw CLI)
+export interface CliAgent {
+  id: string;
+  workspace?: string;
+  agentDir?: string;
+  model: string;
+  bindings?: number;
+  isDefault?: boolean;
+  routes?: string[];
+}
+
 export interface Agent {
   id: string;
   name: string;
@@ -18,6 +29,12 @@ export interface Agent {
   model: string;
   createdAt: string;
   updatedAt: string;
+  // Additional fields from CLI
+  workspace?: string;
+  agentDir?: string;
+  bindings?: number;
+  isDefault?: boolean;
+  routes?: string[];
 }
 
 export interface AgentDetail extends Agent {
@@ -46,4 +63,23 @@ export interface AgentListParams {
   status?: AgentStatus | 'all';
   type?: AgentType | 'all';
   search?: string;
+}
+
+// Helper to convert CLI agent to frontend agent
+export function adaptCliAgent(cliAgent: CliAgent): Agent {
+  return {
+    id: cliAgent.id,
+    name: cliAgent.id,
+    description: '',
+    status: 'active',
+    type: 'chat',
+    model: cliAgent.model,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+    workspace: cliAgent.workspace,
+    agentDir: cliAgent.agentDir,
+    bindings: cliAgent.bindings,
+    isDefault: cliAgent.isDefault,
+    routes: cliAgent.routes,
+  };
 }

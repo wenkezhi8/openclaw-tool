@@ -89,6 +89,7 @@ const API_KEY_PATTERNS: Record<ChannelType, RegExp> = {
   anthropic: /^sk-ant-[a-zA-Z0-9_-]{60,}$/,
   azure: /^[a-zA-Z0-9]{32,}$/,
   custom: /.+/, // Any non-empty string for custom
+  api_key: /.+/, // Any non-empty string for api_key type
 };
 
 // Default Base URLs
@@ -97,6 +98,7 @@ const DEFAULT_BASE_URLS: Record<ChannelType, string> = {
   anthropic: 'https://api.anthropic.com',
   azure: '',
   custom: '',
+  api_key: '',
 };
 
 export function ChannelForm({

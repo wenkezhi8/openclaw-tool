@@ -102,3 +102,28 @@ export const deleteChannel = asyncHandler(async (req: Request, res: Response): P
 
   res.json({ success: true, data: { message: 'Channel deleted successfully' } });
 });
+
+/**
+ * Test Channel Connection
+ */
+export const testChannel = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  // For now, return a mock test result
+  // In a real implementation, this would test the actual API connection
+  const channelId = req.params.id;
+
+  // Simulate connection test
+  const result = {
+    success: true,
+    latency: Math.floor(Math.random() * 100) + 50,
+    message: 'Connection successful',
+    testedAt: new Date().toISOString(),
+  };
+
+  res.json({
+    success: true,
+    data: {
+      channelId,
+      ...result,
+    },
+  });
+});

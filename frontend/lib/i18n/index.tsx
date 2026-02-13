@@ -34,7 +34,7 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
 }
 
 function getInitialLocale(): Locale {
-  // Always use defaultLocale on server to avoid hydration mismatch
+  // Always use defaultLocale to avoid hydration mismatch
   if (typeof window === 'undefined') return defaultLocale;
 
   try {
@@ -52,16 +52,23 @@ function getInitialLocale(): Locale {
 }
 
 export function I18nProvider({ children }: { children: ReactNode }) {
-  // Initialize with defaultLocale to ensure server/client match
+  // Always use defaultLocale initially to prevent hydration mismatch
   const [locale, setLocaleState] = useState<Locale>(defaultLocale);
-  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Update locale after mount to avoid hydration mismatch
+  // Update locale after mount on client side only
   useEffect(() => {
-    const initialLocale = getInitialLocale();
-    document.documentElement.lang = initialLocale;
-    setLocaleState(initialLocale);
-    setIsInitialized(true);
+    if (typeof window !== 'undefined') {
+      const savedLocale = localStorage.getItem(LOCALE_STORAGE_KEY) as Locale;
+      const browserLang = navigator.language;
+      const matchedLocale = locales.find(l => browserLang.startsWith(l.split('-')[0]));
+
+      const targetLocale = savedLocale || matchedLocale || defaultLocale;
+
+      if (targetLocale !== defaultLocale) {
+        setLocaleState(targetLocale);
+      }
+      document.documentElement.lang = targetLocale;
+    }
   }, []);
 
   const setLocale = (newLocale: Locale) => {
@@ -87,11 +94,6 @@ export function I18nProvider({ children }: { children: ReactNode }) {
     localeName: localeNames[locale],
     availableLocales: locales,
   }), [locale]);
-
-  // Don't render children until locale is initialized on client
-  if (typeof window !== 'undefined' && !isInitialized) {
-    return null;
-  }
 
   return (
     <I18nContext.Provider value={value}>

@@ -4,11 +4,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient, API_ENDPOINTS } from '@/lib/api';
 import type {
   Channel,
+  CliChannelsResponse,
   CreateChannelRequest,
   UpdateChannelRequest,
   ConnectionTestResult,
   TestChannelRequest,
 } from '@/types/channel';
+import { adaptCliChannel } from '@/types/channel';
 
 const CHANNELS_QUERY_KEY = ['channels'] as const;
 
@@ -16,8 +18,16 @@ export function useChannels() {
   return useQuery<Channel[]>({
     queryKey: CHANNELS_QUERY_KEY,
     queryFn: async () => {
-      const response = await apiClient.get<{ channels: Channel[] }>(API_ENDPOINTS.CHANNELS);
-      return response.data!.channels;
+      const response = await apiClient.get<{ channels: CliChannelsResponse }>(API_ENDPOINTS.CHANNELS);
+      // API returns { channels: { chat: {...}, auth: [...], usage: {...} } }
+      const channelsData = response.data?.channels;
+
+      if (channelsData && typeof channelsData === 'object') {
+        // Convert auth channels to frontend Channel format
+        const authChannels = channelsData.auth || [];
+        return authChannels.map((cliChannel, index) => adaptCliChannel(cliChannel, index));
+      }
+      return [];
     },
   });
 }

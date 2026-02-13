@@ -56,3 +56,21 @@ export const readRateLimit = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+/**
+ * Rate limiter for browser control operations
+ */
+export const browserRateLimit = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: isDev ? 200 : 30,
+  skip: isDev ? () => true : undefined,
+  message: {
+    success: false,
+    error: {
+      code: 'RATE_LIMIT_EXCEEDED',
+      message: 'Too many browser control requests',
+    },
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+});

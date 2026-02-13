@@ -13,6 +13,9 @@ router.get('/:id', readRateLimit, channelsController.getChannel);
 // POST /api/channels - Add new channel
 router.post('/', agentRateLimit, channelsController.addChannel);
 
+// POST /api/channels/:id/test - Test channel connection
+router.post('/:id/test', agentRateLimit, channelsController.testChannel);
+
 // PUT /api/channels/:id - Update channel
 router.put('/:id', agentRateLimit, channelsController.updateChannel);
 

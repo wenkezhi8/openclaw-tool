@@ -2,19 +2,20 @@
 
 import { useState } from 'react';
 import { useInstallStatus, useInstallActions } from '@/hooks';
-import { Loader2 } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
 import {
   InstallStatusCard,
   InstallActionsCard,
   InstallProgressCard,
   InstallSteps,
 } from '@/components/install';
-import type { InstallStep } from '@/types/install';
+import type { InstallStep, InstallStatus } from '@/types/install';
 import { useI18n } from '@/hooks';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 export default function InstallPage() {
   const { t } = useI18n();
-  const { data: status, isLoading } = useInstallStatus();
+  const { data: status, isLoading, error } = useInstallStatus();
   const { install, update, uninstall, isInstalling, isUpdating, isUninstalling } = useInstallActions();
 
   // Progress tracking state
@@ -26,6 +27,17 @@ export default function InstallPage() {
   const handleInstall = () => {
     setShowProgress(true);
     install();
+  };
+
+  // Default status for when API is unavailable
+  // Note: This is only used if status is null/undefined
+  // The hook now has local fallback, so this should rarely be used
+  const defaultStatus: InstallStatus = {
+    installed: false,
+    version: undefined,
+    latestVersion: undefined,
+    updateAvailable: false,
+    path: undefined,
   };
 
   // Demo progress - in production, this would be driven by WebSocket/API
@@ -43,6 +55,9 @@ export default function InstallPage() {
     );
   }
 
+  // Use actual status or default
+  const displayStatus = status || defaultStatus;
+
   return (
     <div className="space-y-6">
       <div>
@@ -51,6 +66,16 @@ export default function InstallPage() {
           {t('install.subtitle') || 'Manage OpenClaw CLI installation'}
         </p>
       </div>
+
+      {/* Error alert if backend is unavailable */}
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>
+            {t('install.backendError') || 'Cannot connect to backend server. Please ensure the backend is running.'}
+          </AlertDescription>
+        </Alert>
+      )}
 
       <div className="grid gap-6 max-w-4xl">
         {/* Progress Card (shown during installation) */}
@@ -76,12 +101,12 @@ export default function InstallPage() {
 
         {/* Status Card */}
         <InstallStatusCard
-          status={status!}
+          status={displayStatus}
         />
 
         {/* Actions Card */}
         <InstallActionsCard
-          status={status!}
+          status={displayStatus}
           isInstalling={isInstalling}
           isUpdating={isUpdating}
           isUninstalling={isUninstalling}

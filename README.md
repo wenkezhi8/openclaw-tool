@@ -109,15 +109,76 @@ openclaw-manager/
 - 配置 Agent 参数
 - 监控 Agent 状态
 
-### 渠道配置
-- 支持多个消息平台
+### 消息渠道配置
+- 支持 **Telegram、Discord、Slack、WhatsApp、WeChat** 等多平台
 - 可视化配置界面
 - 连接状态检测
+
+### Skills 技能管理
+- 技能安装/卸载/启用/禁用
+- **ClawHub Marketplace** 市场集成
+- 技能配置管理
+
+### 浏览器控制
+- Puppeteer 集成
+- 页面导航、截图、点击、输入
+- Cookie 管理
+- 脚本执行
+
+### Memory 记忆系统
+- **SOUL Layer**: Agent 核心记忆
+- **USER Layer**: 用户上下文记忆
+- 记忆持久化存储
+
+### Heartbeat 心跳任务
+- 定时任务管理
+- 任务执行状态监控
+- Cron 表达式支持
+
+### 文件系统
+- 沙箱安全模式
+- 文件读写、目录浏览
+- 文件编辑器
+
+### Shell 命令执行
+- 沙箱模式安全执行
+- 命令白名单控制
+- 实时输出流
+
+### 安全审计
+- 操作日志记录
+- 审计事件追踪
+- 安全报告
+
+### 性能监控
+- 实时性能指标
+- 资源使用统计
+- 健康状态检查
 
 ### 日志查看
 - 实时日志流
 - 日志级别过滤
 - 搜索和导出
+
+## API 文档概述
+
+### 核心路由
+| 路由 | 描述 |
+|------|------|
+| `/api/agents` | Agent 管理 CRUD |
+| `/api/channels` | 消息渠道配置 |
+| `/api/messaging-channels` | 多平台消息 API (Telegram, Discord, Slack, WhatsApp, WeChat) |
+| `/api/skills` | 技能管理 + ClawHub 市场集成 |
+| `/api/browser` | Puppeteer 浏览器控制 |
+| `/api/memory` | 记忆系统 (SOUL/USER layers) |
+| `/api/heartbeat` | 心跳任务管理 |
+| `/api/filesystem` | 沙箱文件系统操作 |
+| `/api/shell` | 沙箱 Shell 命令执行 |
+| `/api/audit` | 安全审计日志 |
+| `/api/performance` | 性能监控指标 |
+| `/api/gateway` | Gateway 状态与控制 |
+| `/api/models` | 模型配置管理 |
+| `/api/logs` | WebSocket 日志流 |
 
 ## 文档
 

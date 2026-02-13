@@ -56,6 +56,9 @@ export function ModelsTable({
 }: ModelsTableProps) {
   const t = text;
 
+  // Ensure models is always an array
+  const modelsArray = Array.isArray(models) ? models : [];
+
   return (
     <div className="rounded-md border">
       <Table>
@@ -71,14 +74,14 @@ export function ModelsTable({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {models.length === 0 ? (
+          {modelsArray.length === 0 ? (
             <TableRow>
               <TableCell colSpan={7} className="text-center text-muted-foreground">
                 {t?.noModels || 'No models found. Models will appear here once channels are configured.'}
               </TableCell>
             </TableRow>
           ) : (
-            models.map((model) => (
+            modelsArray.map((model) => (
               <TableRow key={model.id} className={cn(!model.enabled && 'opacity-50')}>
                 <TableCell className="font-medium">
                   <div className="flex items-center gap-2">

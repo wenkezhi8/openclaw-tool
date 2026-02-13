@@ -4,12 +4,14 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiClient, API_ENDPOINTS } from '@/lib/api';
 import type {
   Model,
+  CliModel,
   CreateModelRequest,
   UpdateModelRequest,
   ModelListParams,
   ModelTestRequest,
   ModelTestResponse,
 } from '@/types/model';
+import { adaptCliModel } from '@/types/model';
 
 const MODELS_QUERY_KEY = ['models'] as const;
 
@@ -17,8 +19,14 @@ export function useModels(params: ModelListParams = {}) {
   return useQuery<Model[]>({
     queryKey: [...MODELS_QUERY_KEY, params],
     queryFn: async () => {
-      const response = await apiClient.get<{ models: Model[] }>(API_ENDPOINTS.MODELS, params as Record<string, unknown>);
-      return response.data!.models;
+      const response = await apiClient.get<{ models: { count: number; models: CliModel[] } }>(API_ENDPOINTS.MODELS, params as Record<string, unknown>);
+      // API returns { models: { count, models: [...] } }
+      const modelsData = response.data?.models;
+      // Handle both nested structure and direct array
+      if (modelsData && typeof modelsData === 'object' && Array.isArray(modelsData.models)) {
+        return modelsData.models.map(adaptCliModel);
+      }
+      return [];
     },
   });
 }

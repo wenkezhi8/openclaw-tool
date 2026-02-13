@@ -171,7 +171,10 @@
     "models": "Models",
     "logs": "Logs",
     "settings": "Settings",
-    "install": "Install"
+    "install": "Install",
+    "messaging": "Messaging",
+    "skills": "Skills",
+    "browser": "Browser"
   },
   "header": {
     "language": "Language",
@@ -466,5 +469,62 @@
     "loadingData": "Loading data...",
     "operationSuccess": "Operation successful",
     "operationFailed": "Operation failed"
+  },
+  "messaging": {
+    "title": "Messaging Channels",
+    "description": "Manage messaging platform integrations",
+    "addChannel": "Add Channel",
+    "noChannels": "No messaging channels configured",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "pairing": "Pairing...",
+    "paired": "Paired",
+    "providers": {
+      "telegram": "Telegram",
+      "discord": "Discord",
+      "slack": "Slack",
+      "whatsapp": "WhatsApp",
+      "wechat": "WeChat"
+    },
+    "status": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "pairing": "Pairing",
+      "error": "Error"
+    },
+    "errors": {
+      "connectFailed": "Failed to connect channel",
+      "disconnectFailed": "Failed to disconnect channel",
+      "loadFailed": "Failed to load channels"
+    }
+  },
+  "skills": {
+    "title": "Skills",
+    "description": "Manage AI skills and browse the ClawHub marketplace",
+    "installed": "Installed",
+    "marketplace": "Marketplace",
+    "install": "Install",
+    "uninstall": "Uninstall",
+    "enable": "Enable",
+    "disable": "Disable",
+    "approve": "Approve",
+    "reject": "Reject",
+    "noSkills": "No skills installed",
+    "searchPlaceholder": "Search skills...",
+    "categories": {
+      "all": "All Categories",
+      "general": "General",
+      "automation": "Automation",
+      "integration": "Integration",
+      "productivity": "Productivity",
+      "communication": "Communication",
+      "data": "Data"
+    },
+    "errors": {
+      "installFailed": "Failed to install skill",
+      "uninstallFailed": "Failed to uninstall skill",
+      "loadFailed": "Failed to load skills",
+      "marketplaceFailed": "Failed to search marketplace"
+    }
   }
 }

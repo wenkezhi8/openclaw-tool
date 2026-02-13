@@ -73,9 +73,15 @@ export interface WSErrorMessage extends WSMessage {
   };
 }
 
+export interface WSPongMessage {
+  type: 'pong';
+  timestamp?: string;
+}
+
 export type WSServerMessage =
   | WSLogMessage
   | WSGatewayStatusMessage
-  | WSErrorMessage;
+  | WSErrorMessage
+  | WSPongMessage;
 
 export type WSStatusHandler = (connected: boolean) => void;

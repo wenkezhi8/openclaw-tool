@@ -85,7 +85,7 @@ export function GatewayStatusCard({
             isRefetching={isRefetching}
             lastUpdateTime={lastUpdateTime}
             autoRefresh
-            refreshInterval={5000}
+            refreshInterval={15000}
             className="pt-2 border-t"
           />
         )}

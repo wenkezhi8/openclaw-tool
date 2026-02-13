@@ -5,6 +5,9 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useGatewayStatus, useGatewayActions, useGatewayMetrics, useGatewayShortcuts } from '@/hooks';
 import { GatewayStatusCard, GatewayControlButtons, GatewayMetricsPanel } from '@/components/gateway';
 import { ErrorMessage } from '@/components/common';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AlertCircle, Server } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks';
 
 const GATEWAY_QUERY_KEY = [['gateway']] as const;
@@ -69,15 +72,6 @@ export default function GatewayPage() {
     true
   );
 
-  if (statusError) {
-    return (
-      <ErrorMessage
-        title={t('gateway.errors.loadFailed')}
-        message={t('gateway.errors.loadFailedHint')}
-      />
-    );
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -88,6 +82,26 @@ export default function GatewayPage() {
           </p>
         </div>
       </div>
+
+      {/* Backend connection warning */}
+      {statusError && (
+        <Card className="border-orange-500/50 bg-orange-500/5">
+          <CardContent className="flex items-center gap-4 p-4">
+            <AlertCircle className="h-5 w-5 text-orange-500 flex-shrink-0" />
+            <div className="flex-1">
+              <h3 className="font-semibold text-orange-500">
+                {t('gateway.errors.loadFailed')}
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                {t('gateway.errors.loadFailedHint')}
+              </p>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleRefresh}>
+              {t('gateway.actions.refresh')}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 md:grid-cols-2">
         <GatewayStatusCard

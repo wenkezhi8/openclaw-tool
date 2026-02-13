@@ -96,3 +96,93 @@ export const deleteAgent = asyncHandler(async (req: Request, res: Response): Pro
 
   res.json({ success: true, data: { message: 'Agent deleted successfully' } });
 });
+
+/**
+ * Patch Agent (partial update - for status toggle)
+ */
+export const patchAgent = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  const result = await agentsService.updateAgent(req.params.id, req.body);
+
+  if (!result.success) {
+    res.status(400).json({
+      success: false,
+      error: {
+        code: 'COMMAND_FAILED',
+        message: result.error || 'Failed to update agent',
+      },
+    });
+    return;
+  }
+
+  res.json({ success: true, data: result.data });
+});
+
+/**
+ * Batch operations on Agents
+ */
+export const batchAgents = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  const { action, ids, status } = req.body;
+
+  if (!action || !ids || !Array.isArray(ids)) {
+    res.status(400).json({
+      success: false,
+      error: {
+        code: 'INVALID_REQUEST',
+        message: 'Action and ids array are required',
+      },
+    });
+    return;
+  }
+
+  let result;
+
+  switch (action) {
+    case 'delete': {
+      // Delete multiple agents
+      let deletedCount = 0;
+      for (const id of ids) {
+        const deleteResult = await agentsService.deleteAgent(id);
+        if (deleteResult.success) {
+          deletedCount++;
+        }
+      }
+      result = { success: true, message: `Deleted ${deletedCount} agents`, deleted: deletedCount };
+      break;
+    }
+
+    case 'update_status': {
+      // Update status for multiple agents
+      if (!status) {
+        res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_REQUEST',
+            message: 'Status is required for update_status action',
+          },
+        });
+        return;
+      }
+      let updatedCount = 0;
+      for (const id of ids) {
+        const updateResult = await agentsService.updateAgent(id, { status });
+        if (updateResult.success) {
+          updatedCount++;
+        }
+      }
+      result = { success: true, message: `Updated ${updatedCount} agents`, updated: updatedCount };
+      break;
+    }
+
+    default:
+      res.status(400).json({
+        success: false,
+        error: {
+          code: 'INVALID_ACTION',
+          message: `Unknown action: ${action}`,
+        },
+      });
+      return;
+  }
+
+  res.json({ success: true, data: result });
+});

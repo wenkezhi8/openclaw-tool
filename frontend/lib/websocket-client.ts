@@ -4,6 +4,7 @@ import type {
   WSServerMessage,
   WSGatewayStatusMessage,
   WSLogMessage,
+  WSPongMessage,
 } from '@/types/log';
 
 export type WSMessageHandler = (message: WSServerMessage) => void;
@@ -17,10 +18,18 @@ export class WebSocketClient {
   private messageHandlers: Map<string, Set<WSMessageHandler>> = new Map();
   private statusHandlers: Set<WSStatusHandler> = new Set();
   private pingInterval: NodeJS.Timeout | null = null;
+  private lastPongTime = Date.now();
+  private connectionTimeout: NodeJS.Timeout | null = null;
 
   connect(): void {
     if (this.ws?.readyState === WebSocket.OPEN) {
       return;
+    }
+
+    // Clear any existing ping interval before reconnecting
+    if (this.pingInterval) {
+      clearInterval(this.pingInterval);
+      this.pingInterval = null;
     }
 
     try {
@@ -29,17 +38,32 @@ export class WebSocketClient {
       this.ws.onopen = () => {
         console.log('WebSocket connected');
         this.reconnectAttempts = 0;
+        this.lastPongTime = Date.now();
         this.statusHandlers.forEach((handler) => handler(true));
 
         // Start ping interval
         this.pingInterval = setInterval(() => {
           this.send({ type: 'ping' });
+
+          // Check for connection timeout (no pong for 60 seconds)
+          const timeSinceLastPong = Date.now() - this.lastPongTime;
+          if (timeSinceLastPong > 60000) {
+            console.warn('WebSocket connection timeout - no pong received');
+            this.ws?.close();
+          }
         }, 30000);
       };
 
       this.ws.onmessage = (event) => {
         try {
           const message: WSServerMessage = JSON.parse(event.data);
+
+          // Handle pong messages for connection health
+          if (message.type === 'pong') {
+            this.lastPongTime = Date.now();
+            return;
+          }
+
           this.handleMessage(message);
         } catch (error) {
           console.error('Failed to parse WebSocket message:', error);
@@ -77,6 +101,11 @@ export class WebSocketClient {
     if (this.pingInterval) {
       clearInterval(this.pingInterval);
       this.pingInterval = null;
+    }
+
+    if (this.connectionTimeout) {
+      clearTimeout(this.connectionTimeout);
+      this.connectionTimeout = null;
     }
 
     if (this.ws) {

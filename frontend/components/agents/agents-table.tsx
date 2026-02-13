@@ -76,6 +76,9 @@ export function AgentsTable({
   isLoading = false,
   texts = {},
 }: AgentsTableProps) {
+  // Ensure agents is always an array (defensive programming)
+  const safeAgents = Array.isArray(agents) ? agents : [];
+
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [batchAction, setBatchAction] = useState<BatchAction>(null);
   const [isAllSelected, setIsAllSelected] = useState(false);
@@ -105,7 +108,7 @@ export function AgentsTable({
   // Handle selection
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      const allIds = new Set(agents.map((a) => a.id));
+      const allIds = new Set(safeAgents.map((a) => a.id));
       setSelectedIds(allIds);
       setIsAllSelected(true);
       setIsSomeSelected(false);
@@ -124,8 +127,8 @@ export function AgentsTable({
       newSelected.delete(id);
     }
     setSelectedIds(newSelected);
-    setIsAllSelected(newSelected.size === agents.length);
-    setIsSomeSelected(newSelected.size > 0 && newSelected.size < agents.length);
+    setIsAllSelected(newSelected.size === safeAgents.length);
+    setIsSomeSelected(newSelected.size > 0 && newSelected.size < safeAgents.length);
   };
 
   const clearSelection = () => {
@@ -232,14 +235,14 @@ export function AgentsTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {agents.length === 0 ? (
+            {safeAgents.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
                   {noAgentsFound}
                 </TableCell>
               </TableRow>
             ) : (
-              agents.map((agent) => {
+              safeAgents.map((agent) => {
                 const isSelected = selectedIds.has(agent.id);
                 return (
                   <TableRow

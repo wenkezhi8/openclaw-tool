@@ -10,8 +10,8 @@ export interface ApiError extends Error {
 export function errorHandler(
   err: Error | ApiError,
   req: Request,
-  _res: Response,
-  next: NextFunction
+  res: Response,
+  _next: NextFunction
 ): void {
   logger.error('API Error', {
     error: err.message,
@@ -20,8 +20,18 @@ export function errorHandler(
     method: req.method,
   });
 
-  // Re-throw for Express to handle
-  next(err);
+  const statusCode = (err as ApiError).statusCode || 500;
+  const code = (err as ApiError).code || 'INTERNAL_ERROR';
+
+  // Return JSON error response
+  res.status(statusCode).json({
+    success: false,
+    error: {
+      code,
+      message: err.message || 'An unexpected error occurred',
+      details: (err as ApiError).details,
+    },
+  });
 }
 
 export function createError(message: string, code: string, statusCode: number = 500): ApiError {

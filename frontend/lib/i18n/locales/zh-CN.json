@@ -171,7 +171,10 @@
     "models": "模型",
     "logs": "日志",
     "settings": "设置",
-    "install": "安装"
+    "install": "安装",
+    "messaging": "消息渠道",
+    "skills": "技能",
+    "browser": "浏览器"
   },
   "header": {
     "language": "语言",
@@ -466,5 +469,62 @@
     "loadingData": "加载数据中...",
     "operationSuccess": "操作成功",
     "operationFailed": "操作失败"
+  },
+  "messaging": {
+    "title": "消息渠道",
+    "description": "管理消息平台集成",
+    "addChannel": "添加渠道",
+    "noChannels": "未配置消息渠道",
+    "connect": "连接",
+    "disconnect": "断开",
+    "pairing": "配对中...",
+    "paired": "已配对",
+    "providers": {
+      "telegram": "Telegram",
+      "discord": "Discord",
+      "slack": "Slack",
+      "whatsapp": "WhatsApp",
+      "wechat": "微信"
+    },
+    "status": {
+      "connected": "已连接",
+      "disconnected": "已断开",
+      "pairing": "配对中",
+      "error": "错误"
+    },
+    "errors": {
+      "connectFailed": "连接渠道失败",
+      "disconnectFailed": "断开渠道失败",
+      "loadFailed": "加载渠道失败"
+    }
+  },
+  "skills": {
+    "title": "技能",
+    "description": "管理 AI 技能并浏览 ClawHub 市场",
+    "installed": "已安装",
+    "marketplace": "市场",
+    "install": "安装",
+    "uninstall": "卸载",
+    "enable": "启用",
+    "disable": "禁用",
+    "approve": "批准",
+    "reject": "拒绝",
+    "noSkills": "未安装技能",
+    "searchPlaceholder": "搜索技能...",
+    "categories": {
+      "all": "全部分类",
+      "general": "通用",
+      "automation": "自动化",
+      "integration": "集成",
+      "productivity": "生产力",
+      "communication": "通讯",
+      "data": "数据"
+    },
+    "errors": {
+      "installFailed": "安装技能失败",
+      "uninstallFailed": "卸载技能失败",
+      "loadFailed": "加载技能失败",
+      "marketplaceFailed": "搜索市场失败"
+    }
   }
 }

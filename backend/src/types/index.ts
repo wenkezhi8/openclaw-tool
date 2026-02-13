@@ -77,6 +77,7 @@ export interface CreateAgentRequest {
 export interface UpdateAgentRequest {
   name?: string;
   description?: string;
+  status?: AgentStatus;
   config?: Partial<AgentConfig>;
 }
 
@@ -199,3 +200,27 @@ export interface LogEntry {
   component: string;
   timestamp: string;
 }
+
+// Messaging Channel Types
+export * from './messaging-channel';
+
+// Skill Types
+export * from './skill';
+
+// Browser Types
+export * from './browser';
+
+// Memory Types
+export * from './memory';
+
+// Heartbeat Types
+export * from './heartbeat';
+
+// Filesystem Types
+export * from './filesystem';
+
+// Shell Types
+export * from './shell';
+
+// Audit Types
+export * from './audit';
