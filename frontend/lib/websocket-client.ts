@@ -70,8 +70,8 @@ export class WebSocketClient {
         }
       };
 
-      this.ws.onclose = () => {
-        console.log('WebSocket disconnected');
+      this.ws.onclose = (event) => {
+        console.log(`WebSocket disconnected (code: ${event.code}, reason: ${event.reason || 'unknown'})`);
         this.statusHandlers.forEach((handler) => handler(false));
 
         if (this.pingInterval) {
@@ -79,8 +79,8 @@ export class WebSocketClient {
           this.pingInterval = null;
         }
 
-        // Attempt to reconnect
-        if (this.reconnectAttempts < this.maxReconnectAttempts) {
+        // Attempt to reconnect (unless it was a normal closure)
+        if (event.code !== 1000 && this.reconnectAttempts < this.maxReconnectAttempts) {
           this.reconnectAttempts++;
           setTimeout(() => {
             console.log(`Reconnecting... Attempt ${this.reconnectAttempts}`);
@@ -89,8 +89,10 @@ export class WebSocketClient {
         }
       };
 
-      this.ws.onerror = (error) => {
-        console.error('WebSocket error:', error);
+      this.ws.onerror = (_event) => {
+        // Note: WebSocket error events don't contain detailed error info
+        // The actual error details are available in the onclose handler
+        console.warn('WebSocket connection error - will attempt to reconnect');
       };
     } catch (error) {
       console.error('Failed to create WebSocket:', error);
