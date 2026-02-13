@@ -23,6 +23,7 @@ import filesystemRoutes from './routes/filesystem-routes';
 import shellRoutes from './routes/shell-routes';
 import auditRoutes from './routes/audit-routes';
 import performanceRoutes from './routes/performance-routes';
+import diagnosticsRoutes from './routes/diagnostics-routes';
 import { performanceService } from './services/performance/performance-service';
 
 const app = express();
@@ -65,6 +66,7 @@ app.use('/api/fs', filesystemRoutes);
 app.use('/api/shell', shellRoutes);
 app.use('/api/audit', auditRoutes);
 app.use('/api/performance', performanceRoutes);
+app.use('/api/diagnostics', diagnosticsRoutes);
 
 // Root endpoint
 app.get('/', (_req: Request, res: Response) => {
@@ -89,6 +91,7 @@ app.get('/', (_req: Request, res: Response) => {
         shell: '/api/shell/*',
         audit: '/api/audit/*',
         performance: '/api/performance/*',
+        diagnostics: '/api/diagnostics/*',
       },
       websocket: '/ws',
     },

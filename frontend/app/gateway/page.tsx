@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { useGatewayStatus, useGatewayActions, useGatewayMetrics, useGatewayShortcuts, useGatewayInstall } from '@/hooks';
 import { GatewayStatusCard, GatewayControlButtons, GatewayMetricsPanel } from '@/components/gateway';
-import { ErrorMessage } from '@/components/common';
+import { ErrorMessage, HelpButton } from '@/components/common';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle, Server, Download, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -89,6 +89,7 @@ export default function GatewayPage() {
             {t('gateway.subtitle')}
           </p>
         </div>
+        <HelpButton page="gateway" />
       </div>
 
       {/* Gateway not installed warning */}

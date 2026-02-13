@@ -1,4 +1,175 @@
 {
+  "errors": {
+    "possibleCauses": "可能原因",
+    "suggestedSolutions": "解决方案",
+    "network": {
+      "title": "网络连接失败",
+      "message": "无法连接到服务器，请检查网络设置。",
+      "causes": [
+        "无网络连接",
+        "防火墙阻止了连接",
+        "DNS 解析失败",
+        "网络代理配置错误"
+      ],
+      "solutions": [
+        "检查您的网络连接",
+        "暂时禁用 VPN 或代理",
+        "验证防火墙设置",
+        "稍后再试"
+      ]
+    },
+    "connectionRefused": {
+      "title": "后端服务未启动",
+      "message": "后端服务未启动，请点击启动。",
+      "causes": [
+        "后端服务器未运行",
+        "后端服务器崩溃",
+        "端口被其他进程占用",
+        "服务器配置错误"
+      ],
+      "solutions": [
+        "启动后端服务",
+        "检查服务器日志",
+        "验证端口可用性",
+        "重启应用程序"
+      ]
+    },
+    "notFound": {
+      "title": "服务器未找到",
+      "message": "无法解析服务器地址。",
+      "causes": [
+        "无效的服务器 URL",
+        "DNS 解析失败",
+        "服务器主机名已更改"
+      ],
+      "solutions": [
+        "检查服务器 URL 配置",
+        "验证 DNS 设置",
+        "联系管理员"
+      ]
+    },
+    "timeout": {
+      "title": "请求超时",
+      "message": "请求耗时过长。",
+      "causes": [
+        "服务器负载过高",
+        "网络延迟过高",
+        "请求数据量过大"
+      ],
+      "solutions": [
+        "稍后重试",
+        "检查网络速度",
+        "减少请求数据量"
+      ]
+    },
+    "unauthorized": {
+      "title": "API 密钥无效或已过期",
+      "message": "您的 API 密钥无效或已过期。",
+      "causes": [
+        "API 密钥已过期",
+        "API 密钥已被撤销",
+        "提供的 API 密钥不正确",
+        "会话已超时"
+      ],
+      "solutions": [
+        "在设置中检查您的 API 密钥",
+        "生成新的 API 密钥",
+        "重新认证您的会话",
+        "联系管理员获取访问权限"
+      ]
+    },
+    "forbidden": {
+      "title": "没有权限",
+      "message": "您没有权限执行此操作。",
+      "causes": [
+        "用户权限不足",
+        "资源访问受限",
+        "账户已暂停",
+        "功能未启用"
+      ],
+      "solutions": [
+        "联系管理员获取访问权限",
+        "验证您的账户状态",
+        "检查订阅计划",
+        "申请必要的权限"
+      ]
+    },
+    "resourceNotFound": {
+      "title": "资源不存在",
+      "message": "请求的资源不存在。",
+      "causes": [
+        "资源已被删除",
+        "无效的资源 ID",
+        "资源已移动到其他位置",
+        "URL 中有拼写错误"
+      ],
+      "solutions": [
+        "验证资源 ID",
+        "检查资源是否已移动",
+        "导航到列表并查找资源",
+        "刷新页面"
+      ]
+    },
+    "serverError": {
+      "title": "服务器错误",
+      "message": "服务器内部错误，请稍后重试。",
+      "causes": [
+        "服务器遇到意外错误",
+        "数据库连接失败",
+        "服务依赖不可用",
+        "服务器代码存在 Bug"
+      ],
+      "solutions": [
+        "稍等片刻后重试",
+        "如果问题持续存在请联系支持",
+        "查看服务器日志了解详情",
+        "尝试其他操作"
+      ]
+    },
+    "serviceUnavailable": {
+      "title": "服务不可用",
+      "message": "服务暂时不可用，请稍后重试。",
+      "causes": [
+        "服务器正在维护",
+        "服务器负载过高",
+        "服务暂时禁用"
+      ],
+      "solutions": [
+        "稍后重试",
+        "查看服务状态页面",
+        "联系支持"
+      ]
+    },
+    "validation": {
+      "title": "验证错误",
+      "message": "提交的数据无效，请检查输入。",
+      "causes": [
+        "缺少必填字段",
+        "数据格式无效",
+        "数据超出大小限制",
+        "输入中包含无效字符"
+      ],
+      "solutions": [
+        "检查表单错误",
+        "查看字段要求",
+        "确保数据格式正确",
+        "删除无效字符"
+      ]
+    },
+    "unknown": {
+      "title": "意外错误",
+      "message": "发生意外错误，请重试。",
+      "causes": [
+        "发生未知错误",
+        "系统遇到问题"
+      ],
+      "solutions": [
+        "重试",
+        "刷新页面",
+        "如果问题持续存在请联系支持"
+      ]
+    }
+  },
   "common": {
     "loading": "加载中...",
     "save": "保存",
@@ -175,7 +346,9 @@
     "messaging": "消息渠道",
     "skills": "技能",
     "browser": "浏览器",
-    "openclaw": "OpenClaw"
+    "openclaw": "OpenClaw",
+    "gettingStarted": "快速开始",
+    "diagnostics": "系统诊断"
   },
   "header": {
     "language": "语言",
@@ -495,6 +668,20 @@
       "saveError": "保存配置失败",
       "configNotFound": "未找到 OpenClaw 配置文件",
       "notConfigured": "OpenClaw 网关尚未配置"
+    },
+    "modelProviders": {
+      "title": "模型提供商配置",
+      "description": "配置 AI 模型提供商的 API 密钥",
+      "configured": "已配置",
+      "notConfigured": "未配置",
+      "configTitle": "配置",
+      "configDescription": "输入您的 API 密钥以启用此提供商",
+      "getKey": "获取 API 密钥",
+      "apiKey": "API 密钥",
+      "apiKeyPlaceholder": "输入 API 密钥",
+      "testSuccess": "连接测试成功",
+      "testError": "连接测试失败，请检查 API 密钥",
+      "saveSuccess": "API 密钥保存成功"
     }
   },
   "messages": {
@@ -535,6 +722,30 @@
       "connectFailed": "连接渠道失败",
       "disconnectFailed": "断开渠道失败",
       "loadFailed": "加载渠道失败"
+    },
+    "tutorial": {
+      "title": "连接教程",
+      "telegram": {
+        "step1": "打开 Telegram 搜索 @BotFather",
+        "step2": "发送 /newbot 创建机器人",
+        "step3": "按提示设置机器人名称",
+        "step4": "复制获得的 Token",
+        "step5": "将 Token 粘贴到下方输入框"
+      },
+      "discord": {
+        "step1": "访问 Discord Developer Portal",
+        "step2": "创建新应用",
+        "step3": "添加 Bot",
+        "step4": "复制 Token",
+        "step5": "邀请 Bot 到服务器"
+      },
+      "default": {
+        "step1": "访问平台开发者门户",
+        "step2": "创建新应用或机器人",
+        "step3": "配置所需权限",
+        "step4": "复制访问凭据",
+        "step5": "在连接表单中输入凭据"
+      }
     }
   },
   "skills": {
@@ -564,6 +775,344 @@
       "uninstallFailed": "卸载技能失败",
       "loadFailed": "加载技能失败",
       "marketplaceFailed": "搜索市场失败"
+    }
+  },
+  "gettingStarted": {
+    "title": "欢迎使用 OpenClaw",
+    "subtitle": "按照以下步骤快速完成配置",
+    "step1": {
+      "title": "安装 CLI",
+      "description": "检测 OpenClaw CLI 安装状态"
+    },
+    "step2": {
+      "title": "配置模型",
+      "description": "设置 AI 模型提供商"
+    },
+    "step3": {
+      "title": "连接平台",
+      "description": "选择要连接的消息平台"
+    },
+    "step4": {
+      "title": "测试连接",
+      "description": "验证配置是否正确"
+    },
+    "step5": {
+      "title": "完成",
+      "description": "开始使用 OpenClaw"
+    },
+    "install": {
+      "title": "检查 CLI 安装",
+      "description": "验证 OpenClaw CLI 是否正确安装在您的系统上。",
+      "installed": "CLI 已安装",
+      "notInstalled": "CLI 未安装",
+      "installHint": "点击下方按钮自动安装 OpenClaw CLI",
+      "goToInstall": "前往安装页面",
+      "skip": "暂时跳过",
+      "installCli": "安装 CLI",
+      "installSuccess": "CLI 安装成功",
+      "installError": "CLI 安装失败"
+    },
+    "model": {
+      "title": "配置模型提供商",
+      "description": "选择您的 AI 模型提供商并输入 API 密钥。",
+      "getKey": "获取 API 密钥",
+      "apiKeyRequired": "API 密钥为必填项",
+      "configSaved": "模型配置已保存",
+      "configError": "保存配置失败",
+      "placeholder": "输入您的 API 密钥..."
+    },
+    "platform": {
+      "title": "选择连接平台",
+      "description": "选择要与 OpenClaw 连接的消息平台。",
+      "token": "机器人令牌",
+      "tokenPlaceholder": "输入您的机器人令牌",
+      "tokenHint": "您可以稍后在通道页面进行配置。",
+      "configSaved": "平台配置已保存"
+    },
+    "test": {
+      "title": "测试连接",
+      "description": "通过测试连接验证您的配置。",
+      "startTest": "开始测试",
+      "testing": "测试中...",
+      "success": "连接测试成功",
+      "error": "连接测试失败",
+      "readyToGo": "您的 OpenClaw 已准备就绪。",
+      "failed": "连接失败",
+      "checkConfig": "请检查您的配置。"
+    },
+    "complete": {
+      "title": "设置完成！",
+      "description": "您的 OpenClaw 已配置完成，可以开始使用了。",
+      "cliReady": "CLI 就绪",
+      "modelConfigured": "模型已配置",
+      "platformConnected": "平台已连接",
+      "goToDashboard": "进入仪表板",
+      "configureMore": "配置更多选项"
+    },
+    "cliInstalled": "CLI 已安装",
+    "cliInstalledDesc": "OpenClaw CLI 已正确安装，可以继续下一步",
+    "cliNotInstalled": "CLI 未安装",
+    "cliNotInstalledDesc": "点击下方按钮自动安装 OpenClaw CLI",
+    "testConnection": "测试连接",
+    "testConnectionDesc": "点击下方按钮验证配置",
+    "runTest": "运行测试",
+    "testSuccess": "测试通过",
+    "testSuccessDesc": "所有配置正确，可以开始使用了",
+    "testFailed": "测试失败",
+    "testFailedDesc": "请检查配置后重试",
+    "retry": "重试",
+    "congratulations": "恭喜！",
+    "completeDesc": "你已完成所有配置，现在可以开始使用 OpenClaw 了",
+    "goToGateway": "网关管理",
+    "goToDashboard": "进入仪表板",
+    "getApiKey": "获取 API 密钥"
+  },
+  "diagnostics": {
+    "title": "系统诊断",
+    "subtitle": "检查系统状态和配置",
+    "runDiagnostics": "运行诊断",
+    "runAgain": "重新诊断",
+    "running": "正在运行诊断...",
+    "complete": "诊断完成",
+    "overallStatus": "整体状态",
+    "allGood": "所有检查通过，系统运行正常",
+    "hasErrors": "存在问题需要修复",
+    "hasWarnings": "存在一些需要注意的问题",
+    "solution": "解决方案",
+    "lastUpdated": "最后更新",
+    "summary": {
+      "title": "概览",
+      "total": "总计",
+      "ok": "正常",
+      "warning": "警告",
+      "error": "错误"
+    },
+    "status": {
+      "ok": "正常",
+      "warning": "警告",
+      "error": "错误"
+    },
+    "items": {
+      "cli_installation": {
+        "name": "CLI 安装状态",
+        "message": "OpenClaw CLI 状态"
+      },
+      "gateway_status": {
+        "name": "网关状态",
+        "message": "网关运行状态"
+      },
+      "api_key_config": {
+        "name": "API 密钥配置",
+        "message": "API 密钥配置状态"
+      },
+      "platform_connectivity": {
+        "name": "平台连接",
+        "message": "AI 平台连接状态"
+      }
+    },
+    "cli": {
+      "name": "OpenClaw CLI",
+      "description": "检测 CLI 是否正确安装",
+      "installed": "CLI 已安装 v{version}",
+      "notInstalled": "CLI 未安装",
+      "install": "安装 CLI",
+      "checkFailed": "检测失败",
+      "retry": "重试"
+    },
+    "gateway": {
+      "name": "网关状态",
+      "description": "检测网关是否正常运行",
+      "running": "网关运行中，端口: {port}",
+      "stopped": "网关已停止",
+      "start": "启动网关",
+      "unknown": "状态未知",
+      "check": "查看详情",
+      "error": "无法连接到网关",
+      "fix": "修复问题"
+    },
+    "apiKey": {
+      "name": "API 密钥",
+      "description": "检测模型 API 密钥配置",
+      "configured": "已配置 {count} 个模型通道",
+      "notConfigured": "未配置 API 密钥",
+      "configure": "配置密钥",
+      "checkFailed": "无法检测配置"
+    },
+    "platform": {
+      "name": "平台连接",
+      "description": "检测消息平台连接状态",
+      "connected": "已连接 {count} 个平台",
+      "notConnected": "平台未连接",
+      "connect": "连接平台",
+      "noChannels": "未配置消息平台",
+      "add": "添加平台",
+      "checkFailed": "无法检测平台状态",
+      "check": "查看平台"
+    },
+    "error": {
+      "title": "诊断失败",
+      "message": "无法运行诊断，请检查后端服务器是否运行。"
+    },
+    "help": {
+      "title": "需要帮助？",
+      "description": "如果遇到问题，可以尝试以下步骤：",
+      "step1": "确保后端服务正在运行",
+      "step2": "检查网络连接",
+      "step3": "查看日志获取详细错误信息",
+      "step4": "重启网关服务",
+      "viewLogs": "查看日志",
+      "gatewayControl": "网关控制"
+    }
+  },
+  "help": {
+    "dashboard": {
+      "title": "仪表板帮助",
+      "description": "了解如何使用 OpenClaw 仪表板",
+      "overview": {
+        "title": "概览",
+        "content1": "仪表板提供 OpenClaw AI 网关状态和性能指标的综合视图。",
+        "content2": "您可以在此页面监控网关状态、查看实时指标以及控制网关。"
+      },
+      "metrics": {
+        "title": "指标",
+        "content1": "总请求数：自网关启动以来处理的 API 请求总数。",
+        "content2": "成功率：成功请求占总请求数的百分比。",
+        "content3": "平均延迟：API 请求的平均响应时间。"
+      },
+      "control": {
+        "title": "网关控制",
+        "content1": "使用控制按钮启动、停止或重启网关。",
+        "content2": "刷新按钮更新当前状态和指标。"
+      }
+    },
+    "gateway": {
+      "title": "网关帮助",
+      "description": "了解如何管理 OpenClaw 网关",
+      "status": {
+        "title": "网关状态",
+        "content1": "运行中：网关正在运行并处理请求。",
+        "content2": "已停止：网关未运行。启动它以处理请求。",
+        "content3": "错误：网关存在问题。查看日志了解详情。"
+      },
+      "control": {
+        "title": "控制操作",
+        "content1": "启动：启动网关服务。",
+        "content2": "停止：停止网关。这将中断所有活动连接。",
+        "content3": "重启：停止并启动网关。用于应用配置更改。"
+      },
+      "shortcuts": {
+        "title": "键盘快捷键",
+        "content1": "按 ? 显示键盘快捷键。",
+        "content2": "R：刷新网关状态。",
+        "content3": "S：启动网关。",
+        "content4": "X：停止网关。"
+      }
+    },
+    "settings": {
+      "title": "设置帮助",
+      "description": "配置您的 OpenClaw Tool 偏好设置",
+      "modelProviders": {
+        "title": "模型提供商",
+        "content1": "为不同的 AI 模型提供商配置 API 密钥。",
+        "content2": "点击【配置】为每个提供商添加或更新 API 密钥。",
+        "content3": "保存前可以测试连接。"
+      },
+      "gatewayConfig": {
+        "title": "网关配置",
+        "content1": "端口：网关监听请求的端口号。",
+        "content2": "令牌：用于保护网关的可选认证令牌。",
+        "content3": "启用【保存后重启】以立即应用更改。"
+      },
+      "apiConfig": {
+        "title": "API 配置",
+        "content1": "配置后端 API 连接设置。",
+        "content2": "API URL：后端 API 的基础 URL。",
+        "content3": "WebSocket URL：实时通信的 URL。"
+      }
+    },
+    "agents": {
+      "title": "代理帮助",
+      "description": "了解如何管理 AI 代理",
+      "overview": {
+        "title": "概览",
+        "content1": "代理是可以执行任务和响应消息的 AI 助手。",
+        "content2": "每个代理都有独特的配置，决定其行为和能力。"
+      },
+      "management": {
+        "title": "代理管理",
+        "content1": "创建：点击【创建代理】添加新的 AI 代理。",
+        "content2": "编辑：点击代理修改其配置。",
+        "content3": "删除：移除不再需要的代理。",
+        "content4": "切换状态：启用或禁用代理而不删除它。"
+      },
+      "filters": {
+        "title": "筛选",
+        "content1": "使用搜索框按名称查找代理。",
+        "content2": "按状态（活跃/非活跃）或类型筛选以缩小列表范围。"
+      }
+    },
+    "channels": {
+      "title": "通道帮助",
+      "description": "了解如何配置 API 通道",
+      "overview": {
+        "title": "概览",
+        "content1": "通道是连接 AI 模型提供商（如 OpenAI、Anthropic 等）的连接。",
+        "content2": "配置通道以使网关能够将请求路由到不同的提供商。"
+      },
+      "configuration": {
+        "title": "通道配置",
+        "content1": "名称：通道的描述性名称。",
+        "content2": "类型：提供商类型（如 OpenAI、Anthropic）。",
+        "content3": "API 密钥：您的提供商认证密钥。",
+        "content4": "优先级：较高优先级的通道优先使用。"
+      },
+      "testing": {
+        "title": "测试",
+        "content1": "使用【测试连接】功能验证您的通道配置。",
+        "content2": "测试成功确认 API 密钥有效且提供商可访问。"
+      }
+    },
+    "models": {
+      "title": "模型帮助",
+      "description": "了解如何管理 AI 模型",
+      "overview": {
+        "title": "概览",
+        "content1": "模型从已配置的通道自动发现。",
+        "content2": "您无法手动添加模型；配置通道后它们会自动出现。"
+      },
+      "configuration": {
+        "title": "模型配置",
+        "content1": "启用/禁用：切换模型可用性而不删除它。",
+        "content2": "配置：为模型设置自定义定价或上下文限制。",
+        "content3": "测试：发送测试请求以验证模型是否正常工作。"
+      },
+      "pricing": {
+        "title": "定价",
+        "content1": "输入价格：每 1K 令牌的输入/提示成本。",
+        "content2": "输出价格：每 1K 令牌的输出/完成成本。",
+        "content3": "定价信息有助于跟踪使用成本。"
+      }
+    },
+    "messaging": {
+      "title": "消息帮助",
+      "description": "了解如何连接消息平台",
+      "overview": {
+        "title": "概览",
+        "content1": "连接消息平台使 AI 代理能够通过它们进行通信。",
+        "content2": "支持的平台包括 Telegram、Discord、Slack、WhatsApp 和微信。"
+      },
+      "connection": {
+        "title": "连接流程",
+        "content1": "每个平台需要不同的凭据（令牌、API 密钥）。",
+        "content2": "按照每个平台提供的教程步骤操作。",
+        "content3": "输入凭据后点击「连接」。"
+      },
+      "troubleshooting": {
+        "title": "故障排除",
+        "content1": "如果连接失败，请验证您的 API 凭据是否正确。",
+        "content2": "检查机器人是否具有必要的权限。",
+        "content3": "参考特定平台的教程了解详细设置说明。"
+      }
     }
   }
 }

@@ -13,6 +13,7 @@ export * from './use-browser';
 export * from './use-memory';
 export * from './use-heartbeat';
 export * from './use-filesystem';
+export * from './use-diagnostics';
 
 // Re-export useI18n from lib (custom implementation, not next-intl)
 export { useI18n } from '@/lib/i18n';

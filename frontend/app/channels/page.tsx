@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useChannels, useChannelActions } from '@/hooks';
 import { ChannelsTable, ChannelForm, TestConnectionDialog } from '@/components/channels';
+import { HelpButton } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
@@ -103,10 +104,13 @@ export default function ChannelsPage() {
             {pageTexts.description}
           </p>
         </div>
-        <Button onClick={() => setIsFormOpen(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          {pageTexts.addChannel}
-        </Button>
+        <div className="flex gap-2">
+          <HelpButton page="channels" />
+          <Button onClick={() => setIsFormOpen(true)}>
+            <Plus className="h-4 w-4 mr-2" />
+            {pageTexts.addChannel}
+          </Button>
+        </div>
       </div>
 
       <ChannelsTable

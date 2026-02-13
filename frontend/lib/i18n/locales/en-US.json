@@ -1,4 +1,175 @@
 {
+  "errors": {
+    "possibleCauses": "Possible Causes",
+    "suggestedSolutions": "Suggested Solutions",
+    "network": {
+      "title": "Network Connection Failed",
+      "message": "Unable to connect to the server. Please check your network settings.",
+      "causes": [
+        "No internet connection",
+        "Firewall blocking the connection",
+        "DNS resolution failed",
+        "Network proxy misconfigured"
+      ],
+      "solutions": [
+        "Check your internet connection",
+        "Disable VPN or proxy temporarily",
+        "Verify firewall settings",
+        "Try again in a few moments"
+      ]
+    },
+    "connectionRefused": {
+      "title": "Backend Service Not Running",
+      "message": "The backend service is not started. Please click to start it.",
+      "causes": [
+        "Backend server is not running",
+        "Backend server crashed",
+        "Port is occupied by another process",
+        "Server configuration error"
+      ],
+      "solutions": [
+        "Start the backend service",
+        "Check server logs for errors",
+        "Verify port availability",
+        "Restart the application"
+      ]
+    },
+    "notFound": {
+      "title": "Server Not Found",
+      "message": "The server address could not be resolved.",
+      "causes": [
+        "Invalid server URL",
+        "DNS resolution failed",
+        "Server hostname changed"
+      ],
+      "solutions": [
+        "Check the server URL configuration",
+        "Verify DNS settings",
+        "Contact administrator"
+      ]
+    },
+    "timeout": {
+      "title": "Request Timeout",
+      "message": "The request took too long to complete.",
+      "causes": [
+        "Server is overloaded",
+        "Network latency is too high",
+        "Request size is too large"
+      ],
+      "solutions": [
+        "Try again later",
+        "Check network speed",
+        "Reduce request size"
+      ]
+    },
+    "unauthorized": {
+      "title": "Invalid or Expired API Key",
+      "message": "Your API key is invalid or has expired.",
+      "causes": [
+        "API key has expired",
+        "API key was revoked",
+        "Incorrect API key provided",
+        "Session has timed out"
+      ],
+      "solutions": [
+        "Check your API key in settings",
+        "Generate a new API key",
+        "Re-authenticate your session",
+        "Contact administrator for access"
+      ]
+    },
+    "forbidden": {
+      "title": "Access Denied",
+      "message": "You do not have permission to perform this action.",
+      "causes": [
+        "Insufficient user privileges",
+        "Resource access restricted",
+        "Account suspended",
+        "Feature not enabled"
+      ],
+      "solutions": [
+        "Contact administrator for access",
+        "Verify your account status",
+        "Check subscription plan",
+        "Request necessary permissions"
+      ]
+    },
+    "resourceNotFound": {
+      "title": "Resource Not Found",
+      "message": "The requested resource does not exist.",
+      "causes": [
+        "Resource was deleted",
+        "Invalid resource ID",
+        "Resource moved to different location",
+        "Typo in the URL"
+      ],
+      "solutions": [
+        "Verify the resource ID",
+        "Check if resource was moved",
+        "Navigate to the list and find the resource",
+        "Refresh the page"
+      ]
+    },
+    "serverError": {
+      "title": "Server Error",
+      "message": "An internal server error occurred. Please try again later.",
+      "causes": [
+        "Server encountered an unexpected error",
+        "Database connection failed",
+        "Service dependency unavailable",
+        "Bug in the server code"
+      ],
+      "solutions": [
+        "Wait a moment and try again",
+        "Contact support if the problem persists",
+        "Check server logs for details",
+        "Try a different operation"
+      ]
+    },
+    "serviceUnavailable": {
+      "title": "Service Unavailable",
+      "message": "The service is temporarily unavailable. Please try again later.",
+      "causes": [
+        "Server is under maintenance",
+        "Server is overloaded",
+        "Service temporarily disabled"
+      ],
+      "solutions": [
+        "Wait and try again later",
+        "Check service status page",
+        "Contact support"
+      ]
+    },
+    "validation": {
+      "title": "Validation Error",
+      "message": "The submitted data is invalid. Please check your input.",
+      "causes": [
+        "Required field missing",
+        "Invalid data format",
+        "Data exceeds size limit",
+        "Invalid characters in input"
+      ],
+      "solutions": [
+        "Review the form for errors",
+        "Check field requirements",
+        "Ensure correct data format",
+        "Remove invalid characters"
+      ]
+    },
+    "unknown": {
+      "title": "Unexpected Error",
+      "message": "An unexpected error occurred. Please try again.",
+      "causes": [
+        "Unknown error occurred",
+        "System encountered an issue"
+      ],
+      "solutions": [
+        "Try again",
+        "Refresh the page",
+        "Contact support if problem persists"
+      ]
+    }
+  },
   "common": {
     "loading": "Loading...",
     "save": "Save",
@@ -175,7 +346,9 @@
     "messaging": "Messaging",
     "skills": "Skills",
     "browser": "Browser",
-    "openclaw": "OpenClaw"
+    "openclaw": "OpenClaw",
+    "gettingStarted": "Getting Started",
+    "diagnostics": "Diagnostics"
   },
   "header": {
     "language": "Language",
@@ -495,6 +668,20 @@
       "saveError": "Failed to save configuration",
       "configNotFound": "OpenClaw configuration file not found",
       "notConfigured": "OpenClaw gateway is not configured yet"
+    },
+    "modelProviders": {
+      "title": "Model Provider Configuration",
+      "description": "Configure API keys for AI model providers",
+      "configured": "Configured",
+      "notConfigured": "Not Configured",
+      "configTitle": "Configuration",
+      "configDescription": "Enter your API key to enable this provider",
+      "getKey": "Get API Key",
+      "apiKey": "API Key",
+      "apiKeyPlaceholder": "Enter API key",
+      "testSuccess": "Connection test successful",
+      "testError": "Connection test failed, please check your API key",
+      "saveSuccess": "API key saved successfully"
     }
   },
   "messages": {
@@ -535,6 +722,30 @@
       "connectFailed": "Failed to connect channel",
       "disconnectFailed": "Failed to disconnect channel",
       "loadFailed": "Failed to load channels"
+    },
+    "tutorial": {
+      "title": "Connection Tutorial",
+      "telegram": {
+        "step1": "Open Telegram and search for @BotFather",
+        "step2": "Send /newbot to create a new bot",
+        "step3": "Follow the prompts to set the bot name",
+        "step4": "Copy the Token you received",
+        "step5": "Paste the Token into the input field below"
+      },
+      "discord": {
+        "step1": "Visit the Discord Developer Portal",
+        "step2": "Create a new application",
+        "step3": "Add a Bot to your application",
+        "step4": "Copy the Bot Token",
+        "step5": "Invite the Bot to your server"
+      },
+      "default": {
+        "step1": "Visit the platform developer portal",
+        "step2": "Create a new application or bot",
+        "step3": "Configure the required permissions",
+        "step4": "Copy the access credentials",
+        "step5": "Enter the credentials in the connection form"
+      }
     }
   },
   "skills": {
@@ -564,6 +775,344 @@
       "uninstallFailed": "Failed to uninstall skill",
       "loadFailed": "Failed to load skills",
       "marketplaceFailed": "Failed to search marketplace"
+    }
+  },
+  "gettingStarted": {
+    "title": "Welcome to OpenClaw",
+    "subtitle": "Follow the steps below to complete the setup",
+    "step1": {
+      "title": "Install CLI",
+      "description": "Check OpenClaw CLI installation status"
+    },
+    "step2": {
+      "title": "Configure Model",
+      "description": "Set up AI model provider"
+    },
+    "step3": {
+      "title": "Connect Platform",
+      "description": "Select messaging platform to connect"
+    },
+    "step4": {
+      "title": "Test Connection",
+      "description": "Verify configuration"
+    },
+    "step5": {
+      "title": "Complete",
+      "description": "Start using OpenClaw"
+    },
+    "install": {
+      "title": "Check CLI Installation",
+      "description": "Verify that OpenClaw CLI is properly installed on your system.",
+      "installed": "CLI Installed",
+      "notInstalled": "CLI Not Installed",
+      "installHint": "Click the button below to automatically install OpenClaw CLI",
+      "goToInstall": "Go to Install Page",
+      "skip": "Skip for Now",
+      "installCli": "Install CLI",
+      "installSuccess": "CLI installed successfully",
+      "installError": "CLI installation failed"
+    },
+    "model": {
+      "title": "Configure Model Provider",
+      "description": "Select your AI model provider and enter your API key.",
+      "getKey": "Get API Key",
+      "apiKeyRequired": "API Key is required",
+      "configSaved": "Model configuration saved",
+      "configError": "Failed to save configuration",
+      "placeholder": "Enter your API key..."
+    },
+    "platform": {
+      "title": "Select Connection Platform",
+      "description": "Choose a messaging platform to connect with OpenClaw.",
+      "token": "Bot Token",
+      "tokenPlaceholder": "Enter your bot token",
+      "tokenHint": "You can configure this later in the Channels page.",
+      "configSaved": "Platform configuration saved"
+    },
+    "test": {
+      "title": "Test Connection",
+      "description": "Verify your configuration by testing the connection.",
+      "startTest": "Start Test",
+      "testing": "Testing...",
+      "success": "Connection test successful",
+      "error": "Connection test failed",
+      "readyToGo": "Your OpenClaw is ready to use.",
+      "failed": "Connection failed",
+      "checkConfig": "Please check your configuration."
+    },
+    "complete": {
+      "title": "Setup Complete!",
+      "description": "Your OpenClaw is now configured and ready to use.",
+      "cliReady": "CLI Ready",
+      "modelConfigured": "Model Configured",
+      "platformConnected": "Platform Connected",
+      "goToDashboard": "Enter Dashboard",
+      "configureMore": "Configure More Options"
+    },
+    "cliInstalled": "CLI Installed",
+    "cliInstalledDesc": "OpenClaw CLI is correctly installed, you can proceed to the next step",
+    "cliNotInstalled": "CLI Not Installed",
+    "cliNotInstalledDesc": "Click the button below to automatically install OpenClaw CLI",
+    "testConnection": "Test Connection",
+    "testConnectionDesc": "Click the button below to verify configuration",
+    "runTest": "Run Test",
+    "testSuccess": "Test Passed",
+    "testSuccessDesc": "All configurations are correct, you can start using now",
+    "testFailed": "Test Failed",
+    "testFailedDesc": "Please check configuration and try again",
+    "retry": "Retry",
+    "congratulations": "Congratulations!",
+    "completeDesc": "You have completed all configurations, you can now start using OpenClaw",
+    "goToGateway": "Gateway Management",
+    "goToDashboard": "Enter Dashboard",
+    "getApiKey": "Get API Key"
+  },
+  "help": {
+    "dashboard": {
+      "title": "Dashboard Help",
+      "description": "Learn how to use the OpenClaw dashboard",
+      "overview": {
+        "title": "Overview",
+        "content1": "The dashboard provides a comprehensive view of your OpenClaw AI gateway status and performance metrics.",
+        "content2": "You can monitor gateway status, view real-time metrics, and control the gateway from this page."
+      },
+      "metrics": {
+        "title": "Metrics",
+        "content1": "Total Requests: The total number of API requests processed since the gateway started.",
+        "content2": "Success Rate: The percentage of successful requests out of total requests.",
+        "content3": "Avg Latency: The average response time for API requests."
+      },
+      "control": {
+        "title": "Gateway Control",
+        "content1": "Use the control buttons to start, stop, or restart the gateway.",
+        "content2": "The refresh button updates the current status and metrics."
+      }
+    },
+    "gateway": {
+      "title": "Gateway Help",
+      "description": "Learn how to manage the OpenClaw gateway",
+      "status": {
+        "title": "Gateway Status",
+        "content1": "Running: The gateway is operational and processing requests.",
+        "content2": "Stopped: The gateway is not running. Start it to process requests.",
+        "content3": "Error: There is an issue with the gateway. Check logs for details."
+      },
+      "control": {
+        "title": "Control Actions",
+        "content1": "Start: Launch the gateway service.",
+        "content2": "Stop: Halt the gateway. This will interrupt all active connections.",
+        "content3": "Restart: Stop and start the gateway. Useful for applying configuration changes."
+      },
+      "shortcuts": {
+        "title": "Keyboard Shortcuts",
+        "content1": "Press ? to show keyboard shortcuts.",
+        "content2": "R: Refresh gateway status.",
+        "content3": "S: Start gateway.",
+        "content4": "X: Stop gateway."
+      }
+    },
+    "settings": {
+      "title": "Settings Help",
+      "description": "Configure your OpenClaw Tool preferences",
+      "modelProviders": {
+        "title": "Model Providers",
+        "content1": "Configure API keys for different AI model providers.",
+        "content2": "Click \"Configure\" to add or update your API key for each provider.",
+        "content3": "You can test the connection before saving."
+      },
+      "gatewayConfig": {
+        "title": "Gateway Configuration",
+        "content1": "Port: The port number where the gateway will listen for requests.",
+        "content2": "Token: Optional authentication token for securing the gateway.",
+        "content3": "Enable \"Restart after save\" to apply changes immediately."
+      },
+      "apiConfig": {
+        "title": "API Configuration",
+        "content1": "Configure the backend API connection settings.",
+        "content2": "API URL: The base URL for the backend API.",
+        "content3": "WebSocket URL: The URL for real-time communication."
+      }
+    },
+    "agents": {
+      "title": "Agents Help",
+      "description": "Learn how to manage AI agents",
+      "overview": {
+        "title": "Overview",
+        "content1": "Agents are AI assistants that can perform tasks and respond to messages.",
+        "content2": "Each agent has a unique configuration that determines its behavior and capabilities."
+      },
+      "management": {
+        "title": "Agent Management",
+        "content1": "Create: Click \"Create Agent\" to add a new AI agent.",
+        "content2": "Edit: Click on an agent to modify its configuration.",
+        "content3": "Delete: Remove an agent that is no longer needed.",
+        "content4": "Toggle Status: Enable or disable an agent without deleting it."
+      },
+      "filters": {
+        "title": "Filtering",
+        "content1": "Use the search box to find agents by name.",
+        "content2": "Filter by status (Active/Inactive) or type to narrow down the list."
+      }
+    },
+    "channels": {
+      "title": "Channels Help",
+      "description": "Learn how to configure API channels",
+      "overview": {
+        "title": "Overview",
+        "content1": "Channels are connections to AI model providers (like OpenAI, Anthropic, etc.).",
+        "content2": "Configure channels to enable the gateway to route requests to different providers."
+      },
+      "configuration": {
+        "title": "Channel Configuration",
+        "content1": "Name: A descriptive name for the channel.",
+        "content2": "Type: The provider type (e.g., OpenAI, Anthropic).",
+        "content3": "API Key: Your authentication key for the provider.",
+        "content4": "Priority: Higher priority channels are used first."
+      },
+      "testing": {
+        "title": "Testing",
+        "content1": "Use the \"Test Connection\" feature to verify your channel configuration.",
+        "content2": "A successful test confirms the API key is valid and the provider is accessible."
+      }
+    },
+    "models": {
+      "title": "Models Help",
+      "description": "Learn how to manage AI models",
+      "overview": {
+        "title": "Overview",
+        "content1": "Models are automatically discovered from configured channels.",
+        "content2": "You cannot add models manually; they appear when you configure channels."
+      },
+      "configuration": {
+        "title": "Model Configuration",
+        "content1": "Enable/Disable: Toggle model availability without removing it.",
+        "content2": "Configure: Set custom pricing or context limits for a model.",
+        "content3": "Test: Send a test request to verify the model is working."
+      },
+      "pricing": {
+        "title": "Pricing",
+        "content1": "Input Price: Cost per 1K tokens for input/prompt.",
+        "content2": "Output Price: Cost per 1K tokens for output/completion.",
+        "content3": "Pricing information helps track usage costs."
+      }
+    },
+    "messaging": {
+      "title": "Messaging Help",
+      "description": "Learn how to connect messaging platforms",
+      "overview": {
+        "title": "Overview",
+        "content1": "Connect messaging platforms to allow AI agents to communicate through them.",
+        "content2": "Supported platforms include Telegram, Discord, Slack, WhatsApp, and WeChat."
+      },
+      "connection": {
+        "title": "Connection Process",
+        "content1": "Each platform requires different credentials (tokens, API keys).",
+        "content2": "Follow the tutorial steps provided for each platform.",
+        "content3": "Click \"Connect\" after entering your credentials."
+      },
+      "troubleshooting": {
+        "title": "Troubleshooting",
+        "content1": "If connection fails, verify your API credentials are correct.",
+        "content2": "Check that the bot has the necessary permissions.",
+        "content3": "Refer to the platform-specific tutorial for detailed setup instructions."
+      }
+    }
+  },
+  "diagnostics": {
+    "title": "System Diagnostics",
+    "subtitle": "Check system status and configuration",
+    "runDiagnostics": "Run Diagnostics",
+    "runAgain": "Run Again",
+    "running": "Running diagnostics...",
+    "complete": "Diagnostics complete",
+    "overallStatus": "Overall Status",
+    "allGood": "All checks passed, system is running normally",
+    "hasErrors": "There are issues that need to be fixed",
+    "hasWarnings": "There are some issues that need attention",
+    "solution": "Solution",
+    "lastUpdated": "Last updated",
+    "summary": {
+      "title": "Summary",
+      "total": "Total",
+      "ok": "OK",
+      "warning": "Warnings",
+      "error": "Errors"
+    },
+    "status": {
+      "ok": "OK",
+      "warning": "Warning",
+      "error": "Error"
+    },
+    "items": {
+      "cli_installation": {
+        "name": "CLI Installation",
+        "message": "OpenClaw CLI status"
+      },
+      "gateway_status": {
+        "name": "Gateway Status",
+        "message": "Gateway running status"
+      },
+      "api_key_config": {
+        "name": "API Key Configuration",
+        "message": "API key configuration status"
+      },
+      "platform_connectivity": {
+        "name": "Platform Connectivity",
+        "message": "AI platform connectivity status"
+      }
+    },
+    "cli": {
+      "name": "OpenClaw CLI",
+      "description": "Check if CLI is properly installed",
+      "installed": "CLI installed v{version}",
+      "notInstalled": "CLI not installed",
+      "install": "Install CLI",
+      "checkFailed": "Check failed",
+      "retry": "Retry"
+    },
+    "gateway": {
+      "name": "Gateway Status",
+      "description": "Check if gateway is running properly",
+      "running": "Gateway running on port: {port}",
+      "stopped": "Gateway stopped",
+      "start": "Start Gateway",
+      "unknown": "Unknown status",
+      "check": "View Details",
+      "error": "Cannot connect to gateway",
+      "fix": "Fix Issue"
+    },
+    "apiKey": {
+      "name": "API Keys",
+      "description": "Check model API key configuration",
+      "configured": "{count} model channels configured",
+      "notConfigured": "No API keys configured",
+      "configure": "Configure Keys",
+      "checkFailed": "Cannot detect configuration"
+    },
+    "platform": {
+      "name": "Platform Connection",
+      "description": "Check messaging platform connection status",
+      "connected": "{count} platforms connected",
+      "notConnected": "Platform not connected",
+      "connect": "Connect Platform",
+      "noChannels": "No messaging platforms configured",
+      "add": "Add Platform",
+      "checkFailed": "Cannot detect platform status",
+      "check": "View Platforms"
+    },
+    "error": {
+      "title": "Diagnostics Failed",
+      "message": "Unable to run diagnostics. Please check if the backend server is running."
+    },
+    "help": {
+      "title": "Need Help?",
+      "description": "If you encounter issues, try the following steps:",
+      "step1": "Ensure the backend service is running",
+      "step2": "Check network connection",
+      "step3": "View logs for detailed error information",
+      "step4": "Restart the gateway service",
+      "viewLogs": "View Logs",
+      "gatewayControl": "Gateway Control"
     }
   }
 }

@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useModels, useModelActions } from '@/hooks';
 import { ModelsTable, ModelTestDialog, ModelConfigDialog } from '@/components/models';
+import { HelpButton } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import { Plus } from 'lucide-react';
 import { toast } from 'sonner';
@@ -89,10 +90,13 @@ export default function ModelsPage() {
             {t('models.list')}
           </p>
         </div>
-        <Button variant="outline" disabled>
-          <Plus className="h-4 w-4 mr-2" />
-          {t('models.add')}
-        </Button>
+        <div className="flex gap-2">
+          <HelpButton page="models" />
+          <Button variant="outline" disabled>
+            <Plus className="h-4 w-4 mr-2" />
+            {t('models.add')}
+          </Button>
+        </div>
       </div>
 
       <ModelsTable

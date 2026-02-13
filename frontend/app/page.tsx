@@ -2,7 +2,7 @@
 
 import { useGatewayStatus, useGatewayActions, useGatewayMetrics } from '@/hooks';
 import { GatewayStatusCard, GatewayControlButtons, GatewayMetricsPanel } from '@/components/gateway';
-import { LoadingSpinner } from '@/components/common';
+import { LoadingSpinner, HelpButton } from '@/components/common';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Activity, Users, Zap, Server, AlertCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -24,11 +24,14 @@ export default function DashboardPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-3xl font-bold tracking-tight">{t('dashboard.title')}</h1>
-        <p className="text-muted-foreground">
-          {t('dashboard.subtitle')}
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">{t('dashboard.title')}</h1>
+          <p className="text-muted-foreground">
+            {t('dashboard.subtitle')}
+          </p>
+        </div>
+        <HelpButton page="dashboard" />
       </div>
 
       {/* Backend connection warning */}

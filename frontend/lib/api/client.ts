@@ -1,6 +1,7 @@
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { API_BASE_URL } from './config';
 import type { ApiResponse, ApiError } from '@/types/api';
+import { getErrorCode, getFriendlyError } from '@/lib/error-messages';
 
 class ApiClient {
   private client: AxiosInstance;
@@ -30,12 +31,25 @@ class ApiClient {
     this.client.interceptors.response.use(
       (response) => response,
       (error: AxiosError<{ error: ApiError }>) => {
+        // If server returned a structured error, use it
         if (error.response?.data?.error) {
-          return Promise.reject(error.response.data.error);
+          const serverError = error.response.data.error;
+          // Enrich with HTTP status code for better error mapping
+          return Promise.reject({
+            ...serverError,
+            status: error.response.status,
+          });
         }
+
+        // Map axios error to friendly error
+        const errorCode = getErrorCode(error);
+        const friendlyError = getFriendlyError(error);
+
         return Promise.reject({
-          code: 'NETWORK_ERROR',
-          message: error.message || 'Network error occurred',
+          code: errorCode,
+          message: friendlyError.message,
+          status: error.response?.status,
+          originalError: error,
         });
       }
     );

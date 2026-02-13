@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { useAgents, useAgentActions } from '@/hooks';
 import { AgentsTable, AgentForm, AgentsFilterBar } from '@/components/agents';
+import { HelpButton } from '@/components/common';
 import { Button } from '@/components/ui/button';
 import { Plus, RefreshCw } from 'lucide-react';
 import type { Agent, AgentDetail, CreateAgentRequest, AgentType, AgentStatus } from '@/types/agent';
@@ -123,6 +124,7 @@ export default function AgentsPage() {
           <p className="text-muted-foreground">{pageTexts.description}</p>
         </div>
         <div className="flex gap-2">
+          <HelpButton page="agents" />
           <Button
             variant="outline"
             size="icon"

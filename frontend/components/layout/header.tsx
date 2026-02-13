@@ -13,6 +13,8 @@ import { useState } from 'react';
 
 const navigation = [
   { key: 'dashboard', href: '/' },
+  { key: 'gettingStarted', href: '/getting-started' },
+  { key: 'diagnostics', href: '/diagnostics' },
   { key: 'install', href: '/install' },
   { key: 'gateway', href: '/gateway' },
   { key: 'agents', href: '/agents' },
@@ -79,7 +81,7 @@ export function Header() {
             </Button>
             <Button variant="ghost" size="icon" asChild className="hidden sm:flex">
               <a
-                href="https://github.com/openclaw/openclaw-tool"
+                href="https://github.com/wenkezhi8/openclaw-tool"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -139,7 +141,7 @@ export function Header() {
                 {t('header.settings')}
               </Link>
               <a
-                href="https://github.com/openclaw/openclaw-tool"
+                href="https://github.com/wenkezhi8/openclaw-tool"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block px-4 py-2 text-sm font-medium transition-colors hover:bg-accent text-foreground/60"

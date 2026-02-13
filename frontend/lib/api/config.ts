@@ -123,4 +123,7 @@ export const API_ENDPOINTS = {
   FS_DIRECTORY: '/fs/directory',
   FS_INFO: '/fs/info',
   FS_CONFIG: '/fs/config',
+
+  // Diagnostics
+  DIAGNOSTICS: '/diagnostics',
 } as const;
