@@ -131,7 +131,7 @@ export function OptimizedLogViewer({ logs, isConnected, onClear }: OptimizedLogV
 
       {/* Virtual Log List */}
       <div className="rounded-lg border bg-black/50 dark:bg-black">
-        <VirtualLogList logs={isPaused ? filteredLogs : logs} />
+        <VirtualLogList logs={filteredLogs} />
       </div>
     </div>
   );

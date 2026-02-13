@@ -65,7 +65,7 @@ export default function ChannelsPage() {
   };
 
   const handleDelete = (channel: Channel) => {
-    if (confirm(t('messages.confirmDelete'), `"${channel.name}"`)) {
+    if (confirm(`${t('messages.confirmDelete')} "${channel.name}"?`)) {
       deleteChannel(channel.id);
       toast.success(t('messages.deleteSuccess'));
     }

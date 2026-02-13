@@ -67,7 +67,7 @@ export function InstallActionsCard({
               {isUpdating ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {t('install.steps.installing') || 'Updating...'}
+                  {t('install.steps.updating') || 'Updating...'}
                 </>
               ) : (
                 <>
@@ -87,7 +87,7 @@ export function InstallActionsCard({
               {isUninstalling ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  {t('install.steps.installing') || 'Uninstalling...'}
+                  {t('install.steps.uninstalling') || 'Uninstalling...'}
                 </>
               ) : (
                 <>

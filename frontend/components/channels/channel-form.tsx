@@ -257,7 +257,10 @@ export function ChannelForm({
       case 'visible':
         return apiKey;
       case 'masked':
-        return apiKey ? `${apiKey.slice(0, 8)}${'*'.repeat(Math.min(20, apiKey.length - 8))}` : '';
+        if (!apiKey) return '';
+        const visiblePart = apiKey.slice(0, 8);
+        const maskedLength = Math.max(0, Math.min(20, apiKey.length - 8));
+        return `${visiblePart}${'*'.repeat(maskedLength)}`;
       case 'hidden':
         return '';
       default:

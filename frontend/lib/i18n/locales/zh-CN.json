@@ -317,7 +317,21 @@
     "testSuccess": "测试成功",
     "testError": "测试失败",
     "configTitle": "配置模型",
-    "save": "保存配置"
+    "save": "保存配置",
+    "noModels": "未找到模型。配置通道后，模型将显示在此处。",
+    "name": "名称",
+    "id": "ID",
+    "channel": "通道",
+    "contextLength": "上下文长度",
+    "pricing": "价格 (每1K令牌)",
+    "enabled": "启用",
+    "actions": "操作",
+    "n_a": "无",
+    "in": "输入",
+    "out": "输出",
+    "delete": "删除",
+    "configure": "配置",
+    "test": "测试"
   },
   "logs": {
     "title": "系统日志",

@@ -101,6 +101,22 @@ export default function ModelsPage() {
         onDelete={handleDelete}
         onTest={handleTest}
         onConfigure={handleConfigure}
+        text={{
+          noModels: t('models.noModels'),
+          name: t('models.name'),
+          id: t('models.id'),
+          channel: t('models.channel'),
+          contextLength: t('models.contextLength'),
+          pricing: t('models.pricing'),
+          enabled: t('models.enabled'),
+          actions: t('models.actions'),
+          n_a: t('models.n_a'),
+          in: t('models.in'),
+          out: t('models.out'),
+          delete: t('models.delete'),
+          configure: t('models.configure'),
+          test: t('models.test'),
+        }}
       />
 
       <div className="rounded-lg border p-6 text-center">

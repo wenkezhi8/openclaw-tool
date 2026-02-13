@@ -317,7 +317,21 @@
     "testSuccess": "Test successful",
     "testError": "Test failed",
     "configTitle": "Configure Model",
-    "save": "Save Configuration"
+    "save": "Save Configuration",
+    "noModels": "No models found. Models will appear here once channels are configured.",
+    "name": "Name",
+    "id": "ID",
+    "channel": "Channel",
+    "contextLength": "Context Length",
+    "pricing": "Pricing (per 1K tokens)",
+    "enabled": "Enabled",
+    "actions": "Actions",
+    "n_a": "N/A",
+    "in": "In",
+    "out": "Out",
+    "delete": "Delete",
+    "configure": "Configure",
+    "test": "Test"
   },
   "logs": {
     "title": "System Logs",

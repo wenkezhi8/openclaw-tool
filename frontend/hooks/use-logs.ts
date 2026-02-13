@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { wsClient } from '@/lib/websocket-client';
-import type { LogEntry, LogFilter, WSServerMessage, WSStatusHandler } from '@/types/log';
+import type { LogEntry, LogFilter, WSLogMessage, WSStatusHandler } from '@/types/log';
 
 export function useLogs(filter?: LogFilter) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
@@ -19,9 +19,9 @@ export function useLogs(filter?: LogFilter) {
     let statusUnsubscribe: (() => void) | null = null;
 
     // Handle incoming messages
-    const handleMessage = (message: WSServerMessage) => {
-      if (message.type === 'log') {
-        const logMessage = message as unknown as { data: LogEntry };
+    const handleMessage = (message: unknown) => {
+      const logMessage = message as WSLogMessage;
+      if (logMessage.type === 'log' && logMessage.data) {
         setLogs((prev) => [logMessage.data, ...prev].slice(0, 1000)); // Keep last 1000 logs
       }
     };

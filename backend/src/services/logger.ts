@@ -1,4 +1,5 @@
 import winston from 'winston';
+import Transport from 'winston-transport';
 
 const logFormat = winston.format.combine(
   winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
@@ -19,6 +20,31 @@ const consoleFormat = winston.format.combine(
   })
 );
 
+// Custom transport to stream logs to WebSocket
+// Uses lazy import to avoid circular dependency
+class WebSocketTransport extends Transport {
+  constructor(opts?: Transport.TransportStreamOptions) {
+    super(opts);
+  }
+
+  log(info: any, callback: () => void) {
+    // Lazy import to avoid circular dependency
+    import('./websocket-service').then(({ wsService }) => {
+      const logEntry = {
+        level: info.level as 'debug' | 'info' | 'warn' | 'error',
+        message: info.message,
+        component: 'gateway',
+        timestamp: info.timestamp || new Date().toISOString(),
+      };
+      wsService.sendLog(logEntry);
+    }).catch(() => {
+      // Ignore errors during import
+    });
+
+    callback();
+  }
+}
+
 export const logger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: logFormat,
@@ -36,6 +62,8 @@ export const logger = winston.createLogger({
     new winston.transports.File({
       filename: 'logs/combined.log',
     }),
+    // WebSocket transport for streaming logs
+    new WebSocketTransport(),
   ],
 });
 

@@ -99,7 +99,7 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {metrics
+              {metrics && metrics.requests.total > 0
                 ? ((metrics.requests.success / metrics.requests.total) * 100).toFixed(1)
                 : '0'}%
             </div>
