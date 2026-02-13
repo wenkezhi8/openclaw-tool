@@ -157,3 +157,45 @@ export const getGatewayDashboard = asyncHandler(async (_req: Request, res: Respo
     data: config,
   });
 });
+
+/**
+ * Update Gateway Configuration
+ */
+export const updateGatewayConfiguration = asyncHandler(async (req: Request, res: Response): Promise<void> => {
+  const { port, token, restart } = req.body;
+
+  const result = await openclawConfigService.updateGatewayConfig({ port, token });
+
+  if (!result.success) {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'UPDATE_FAILED',
+        message: result.message,
+      },
+    });
+    return;
+  }
+
+  // Restart gateway if requested
+  if (restart) {
+    const restartResult = await gatewayService.restartGateway(port ? { port } : undefined);
+    if (restartResult.status === 'error') {
+      res.json({
+        success: true,
+        data: {
+          message: 'Configuration saved, but gateway restart failed',
+          restartError: restartResult.lastError,
+        },
+      });
+      return;
+    }
+  }
+
+  res.json({
+    success: true,
+    data: {
+      message: restart ? 'Configuration saved and gateway restarted' : 'Configuration saved',
+    },
+  });
+});

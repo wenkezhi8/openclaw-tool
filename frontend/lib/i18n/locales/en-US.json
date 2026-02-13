@@ -480,6 +480,21 @@
       "version": "Version",
       "license": "License",
       "repository": "Repository"
+    },
+    "openclawConfig": {
+      "title": "OpenClaw Gateway Configuration",
+      "description": "Manage OpenClaw gateway port and authentication token",
+      "port": "Gateway Port",
+      "token": "Authentication Token",
+      "tokenPlaceholder": "Enter authentication token",
+      "restartAfterSave": "Restart gateway after saving",
+      "save": "Save Configuration",
+      "saving": "Saving...",
+      "saveSuccess": "Configuration saved successfully",
+      "saveSuccessRestart": "Configuration saved and gateway restarted",
+      "saveError": "Failed to save configuration",
+      "configNotFound": "OpenClaw configuration file not found",
+      "notConfigured": "OpenClaw gateway is not configured yet"
     }
   },
   "messages": {

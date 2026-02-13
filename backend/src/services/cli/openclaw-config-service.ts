@@ -1,4 +1,4 @@
-import { readFile } from 'fs/promises';
+import { readFile, writeFile } from 'fs/promises';
 import { homedir } from 'os';
 import { join } from 'path';
 import { logger } from '../logger';
@@ -15,6 +15,7 @@ interface OpenClawGatewayConfig {
 
 interface OpenClawConfig {
   gateway?: OpenClawGatewayConfig;
+  [key: string]: unknown;
 }
 
 const CONFIG_PATH = join(homedir(), '.openclaw', 'openclaw.json');
@@ -29,6 +30,67 @@ export async function readOpenClawConfig(): Promise<OpenClawConfig | null> {
   } catch (error) {
     logger.debug('Failed to read OpenClaw config file', { error });
     return null;
+  }
+}
+
+/**
+ * Write OpenClaw configuration file
+ */
+export async function writeOpenClawConfig(config: OpenClawConfig): Promise<boolean> {
+  try {
+    const content = JSON.stringify(config, null, 2);
+    await writeFile(CONFIG_PATH, content, 'utf-8');
+    logger.info('OpenClaw configuration saved');
+    return true;
+  } catch (error) {
+    logger.error('Failed to write OpenClaw config file', { error });
+    return false;
+  }
+}
+
+/**
+ * Update gateway configuration
+ */
+export async function updateGatewayConfig(options: {
+  port?: number;
+  token?: string;
+}): Promise<{ success: boolean; message: string }> {
+  const config = await readOpenClawConfig();
+
+  if (!config) {
+    return { success: false, message: 'OpenClaw configuration file not found' };
+  }
+
+  // Ensure gateway object exists
+  if (!config.gateway) {
+    config.gateway = {
+      port: 18789,
+      mode: 'local',
+      bind: 'loopback',
+      auth: {
+        mode: 'token',
+        token: '',
+      },
+    };
+  }
+
+  // Update port if provided
+  if (options.port !== undefined) {
+    config.gateway.port = options.port;
+  }
+
+  // Update token if provided
+  if (options.token !== undefined) {
+    config.gateway.auth.mode = 'token';
+    config.gateway.auth.token = options.token;
+  }
+
+  const saved = await writeOpenClawConfig(config);
+
+  if (saved) {
+    return { success: true, message: 'Configuration saved successfully' };
+  } else {
+    return { success: false, message: 'Failed to save configuration' };
   }
 }
 

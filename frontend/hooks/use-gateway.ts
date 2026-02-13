@@ -122,3 +122,37 @@ export function useGatewayDashboard() {
     staleTime: 60000, // Cache for 1 minute
   });
 }
+
+export interface GatewayConfigRequest {
+  port?: number;
+  token?: string;
+  restart?: boolean;
+}
+
+export interface GatewayConfigResponse {
+  message: string;
+  restartError?: string;
+}
+
+export function useGatewayConfig() {
+  const queryClient = useQueryClient();
+
+  const updateMutation = useMutation({
+    mutationFn: async (data: GatewayConfigRequest) => {
+      const response = await apiClient.put<GatewayConfigResponse>(API_ENDPOINTS.GATEWAY_CONFIG, data);
+      return response.data!;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [...GATEWAY_QUERY_KEY, 'dashboard'] });
+      queryClient.invalidateQueries({ queryKey: [...GATEWAY_QUERY_KEY, 'status'] });
+    },
+  });
+
+  return {
+    updateConfig: (data: GatewayConfigRequest) => updateMutation.mutate(data),
+    isUpdating: updateMutation.isPending,
+    updateError: updateMutation.error,
+    updateSuccess: updateMutation.isSuccess,
+    reset: updateMutation.reset,
+  };
+}

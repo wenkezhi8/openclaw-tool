@@ -480,6 +480,21 @@
       "version": "版本",
       "license": "许可证",
       "repository": "仓库"
+    },
+    "openclawConfig": {
+      "title": "OpenClaw 网关配置",
+      "description": "管理 OpenClaw 网关的端口和认证令牌",
+      "port": "网关端口",
+      "token": "认证令牌",
+      "tokenPlaceholder": "输入认证令牌",
+      "restartAfterSave": "保存后重启网关",
+      "save": "保存配置",
+      "saving": "保存中...",
+      "saveSuccess": "配置保存成功",
+      "saveSuccessRestart": "配置已保存，网关已重启",
+      "saveError": "保存配置失败",
+      "configNotFound": "未找到 OpenClaw 配置文件",
+      "notConfigured": "OpenClaw 网关尚未配置"
     }
   },
   "messages": {

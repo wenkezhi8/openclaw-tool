@@ -28,4 +28,7 @@ router.get('/installed', gatewayRateLimit, gatewayController.checkGatewayInstall
 // GET /api/gateway/dashboard - Get gateway dashboard URL
 router.get('/dashboard', gatewayRateLimit, gatewayController.getGatewayDashboard);
 
+// PUT /api/gateway/config - Update gateway configuration
+router.put('/config', gatewayRateLimit, gatewayController.updateGatewayConfiguration);
+
 export default router;
