@@ -32,43 +32,7 @@ const PORT = process.env.PORT || 3001;
 // Middleware
 app.use(helmet());
 app.use(cors({
-  origin: (origin: string, callback: (err: Error | null, allow: boolean) => void) => {
-    // In development, allow all origins
-    // In production, configure CORS_ORIGIN environment variable
-    if (process.env.NODE_ENV === 'development' || !process.env.CORS_ORIGIN) {
-      // Allow all common local development origins
-      const allowedOrigins = [
-        'http://localhost:3000',
-        'http://127.0.0.1:3000',
-        'http://[::1]:3000',
-      ];
-      // Also allow any localhost/127.0.0.1 port variations
-      const isLocalOrigin = origin && (
-        origin.startsWith('http://localhost:') ||
-        origin.startsWith('http://127.0.0.1:') ||
-        origin.startsWith('http://[::1]:') ||
-        origin.startsWith('http://192.168.') ||
-        origin.startsWith('http://10.') ||
-        origin.startsWith('http://172.')
-      );
-      if (allowedOrigins.includes(origin) || isLocalOrigin) {
-        callback(null, true);
-      } else if (origin) {
-        // In development, allow any origin for flexibility
-        callback(null, true);
-      } else {
-        callback(null, true);
-      }
-    } else {
-      // Production: only allow configured origin
-      const allowedOrigins = process.env.CORS_ORIGIN!.split(',').map(o => o.trim());
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'), false);
-      }
-    }
-  },
+  origin: true, // Allow all origins
   credentials: true,
 }));
 app.use(express.json());
