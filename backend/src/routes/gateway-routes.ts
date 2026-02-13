@@ -25,4 +25,7 @@ router.post('/install', gatewayRateLimit, gatewayController.installGateway);
 // GET /api/gateway/installed - Check if gateway service is installed
 router.get('/installed', gatewayRateLimit, gatewayController.checkGatewayInstalled);
 
+// GET /api/gateway/dashboard - Get gateway dashboard URL
+router.get('/dashboard', gatewayRateLimit, gatewayController.getGatewayDashboard);
+
 export default router;

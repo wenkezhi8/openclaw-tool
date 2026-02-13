@@ -174,7 +174,8 @@
     "install": "Install",
     "messaging": "Messaging",
     "skills": "Skills",
-    "browser": "Browser"
+    "browser": "Browser",
+    "openclaw": "OpenClaw"
   },
   "header": {
     "language": "Language",

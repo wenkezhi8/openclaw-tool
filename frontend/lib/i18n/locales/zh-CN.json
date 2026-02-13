@@ -174,7 +174,8 @@
     "install": "安装",
     "messaging": "消息渠道",
     "skills": "技能",
-    "browser": "浏览器"
+    "browser": "浏览器",
+    "openclaw": "OpenClaw"
   },
   "header": {
     "language": "语言",

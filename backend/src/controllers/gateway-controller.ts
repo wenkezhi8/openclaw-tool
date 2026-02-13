@@ -1,5 +1,6 @@
 import { Response } from 'express';
 import * as gatewayService from '../services/cli/gateway-service';
+import * as openclawConfigService from '../services/cli/openclaw-config-service';
 import { asyncHandler } from '../middleware/async-handler';
 import type { Request } from 'express';
 
@@ -130,4 +131,29 @@ export const installGateway = asyncHandler(async (_req: Request, res: Response):
 export const checkGatewayInstalled = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
   const isInstalled = await gatewayService.isGatewayServiceInstalled();
   res.json({ success: true, data: { installed: isInstalled } });
+});
+
+/**
+ * Get Gateway Dashboard URL
+ */
+export const getGatewayDashboard = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
+  const config = await openclawConfigService.getGatewayConfig();
+
+  if (!config) {
+    res.json({
+      success: true,
+      data: {
+        port: null,
+        token: null,
+        dashboardUrl: null,
+        message: 'OpenClaw configuration not found',
+      },
+    });
+    return;
+  }
+
+  res.json({
+    success: true,
+    data: config,
+  });
 });

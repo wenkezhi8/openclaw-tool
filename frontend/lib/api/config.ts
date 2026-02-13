@@ -12,6 +12,7 @@ export const API_ENDPOINTS = {
   GATEWAY_METRICS: '/gateway/metrics',
   GATEWAY_INSTALL: '/gateway/install',
   GATEWAY_INSTALLED: '/gateway/installed',
+  GATEWAY_DASHBOARD: '/gateway/dashboard',
 
   // Agents
   AGENTS: '/agents',

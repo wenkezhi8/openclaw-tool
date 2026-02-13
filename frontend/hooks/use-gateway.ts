@@ -104,3 +104,21 @@ export function useGatewayInstall() {
     installSuccess: installMutation.isSuccess,
   };
 }
+
+export interface GatewayDashboardResponse {
+  port: number | null;
+  token: string | null;
+  dashboardUrl: string | null;
+  message?: string;
+}
+
+export function useGatewayDashboard() {
+  return useQuery<GatewayDashboardResponse>({
+    queryKey: [...GATEWAY_QUERY_KEY, 'dashboard'],
+    queryFn: async () => {
+      const response = await apiClient.get<GatewayDashboardResponse>(API_ENDPOINTS.GATEWAY_DASHBOARD);
+      return response.data!;
+    },
+    staleTime: 60000, // Cache for 1 minute
+  });
+}
