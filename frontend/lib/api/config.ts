@@ -1,6 +1,46 @@
 // API Configuration
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:3001/api';
-export const WS_BASE_URL = process.env.NEXT_PUBLIC_WS_URL || 'ws://127.0.0.1:3001/ws';
+// Dynamic API URL based on current hostname to avoid CORS issues
+function getApiBaseUrl(): string {
+  // Use environment variable if set
+  if (process.env.NEXT_PUBLIC_API_URL) {
+    return process.env.NEXT_PUBLIC_API_URL;
+  }
+
+  // In browser, dynamically determine API URL based on current hostname
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol; // 'http:' or 'https:'
+    const hostname = window.location.hostname;
+    const wsProtocol = protocol === 'https:' ? 'wss:' : 'ws:';
+
+    // Default backend port is 3001
+    return `${protocol}//${hostname}:3001/api`;
+  }
+
+  // Server-side fallback
+  return 'http://localhost:3001/api';
+}
+
+function getWsBaseUrl(): string {
+  // Use environment variable if set
+  if (process.env.NEXT_PUBLIC_WS_URL) {
+    return process.env.NEXT_PUBLIC_WS_URL;
+  }
+
+  // In browser, dynamically determine WS URL based on current hostname
+  if (typeof window !== 'undefined') {
+    const protocol = window.location.protocol;
+    const hostname = window.location.hostname;
+    const wsProtocol = protocol === 'https:' ? 'wss:' : 'ws:';
+
+    return `${wsProtocol}//${hostname}:3001/ws`;
+  }
+
+  // Server-side fallback
+  return 'ws://localhost:3001/ws';
+}
+
+export const API_BASE_URL = getApiBaseUrl();
+export const WS_BASE_URL = getWsBaseUrl();
 
 // API Endpoints
 export const API_ENDPOINTS = {
