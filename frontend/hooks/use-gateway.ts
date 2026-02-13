@@ -83,3 +83,24 @@ export function useGatewayActions() {
     isLoading: startMutation.isPending || stopMutation.isPending || restartMutation.isPending,
   };
 }
+
+export function useGatewayInstall() {
+  const queryClient = useQueryClient();
+
+  const installMutation = useMutation({
+    mutationFn: async () => {
+      const response = await apiClient.post<GatewayActionResponse>(API_ENDPOINTS.GATEWAY_INSTALL);
+      return response.data!;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: GATEWAY_QUERY_KEY });
+    },
+  });
+
+  return {
+    installGateway: () => installMutation.mutate(),
+    isInstalling: installMutation.isPending,
+    installError: installMutation.error,
+    installSuccess: installMutation.isSuccess,
+  };
+}

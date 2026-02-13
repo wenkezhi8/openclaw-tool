@@ -180,7 +180,8 @@
     "language": "Language",
     "theme": "Theme",
     "toggleTheme": "Toggle theme",
-    "logout": "Logout"
+    "logout": "Logout",
+    "settings": "Settings"
   },
   "dashboard": {
     "title": "Dashboard",
@@ -244,6 +245,14 @@
     "seconds": "seconds",
     "megabytes": "MB",
     "percent": "%",
+    "usageCost": "Usage Cost",
+    "totalCost": "Total Cost (30 days)",
+    "totalTokens": "Total Tokens (30 days)",
+    "latestDay": "Latest Day",
+    "latestDayCost": "Today's Cost",
+    "latestDayTokens": "Today's Tokens",
+    "estimatedRequests": "Estimated Requests",
+    "period30Days": "30-day Statistics",
     "confirmations": {
       "start": "Are you sure you want to start the gateway?",
       "stop": "Are you sure you want to stop the gateway? This will interrupt all active connections.",
@@ -426,7 +435,7 @@
   },
   "settings": {
     "title": "Settings",
-    "subtitle": "Configure your OpenClaw Manager preferences",
+    "subtitle": "Configure your OpenClaw Tool preferences",
     "general": "General",
     "appearance": "Appearance",
     "language": "Language",
@@ -452,7 +461,7 @@
     },
     "about": {
       "title": "About",
-      "description": "OpenClaw Manager Information",
+      "description": "OpenClaw Tool Information",
       "version": "Version",
       "license": "License",
       "repository": "Repository"

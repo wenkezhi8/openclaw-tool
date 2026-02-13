@@ -2,11 +2,11 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useGatewayStatus, useGatewayActions, useGatewayMetrics, useGatewayShortcuts } from '@/hooks';
+import { useGatewayStatus, useGatewayActions, useGatewayMetrics, useGatewayShortcuts, useGatewayInstall } from '@/hooks';
 import { GatewayStatusCard, GatewayControlButtons, GatewayMetricsPanel } from '@/components/gateway';
 import { ErrorMessage } from '@/components/common';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { AlertCircle, Server } from 'lucide-react';
+import { AlertCircle, Server, Download, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useI18n } from '@/hooks';
 
@@ -18,6 +18,7 @@ export default function GatewayPage() {
   const { data: status, isLoading: statusLoading, isRefetching: statusRefetching, error: statusError } = useGatewayStatus();
   const { data: metrics, isLoading: metricsLoading, isRefetching: metricsRefetching } = useGatewayMetrics('24h');
   const { startGateway, stopGateway, restartGateway, isLoading: actionLoading } = useGatewayActions();
+  const { installGateway, isInstalling, installSuccess } = useGatewayInstall();
 
   const [lastStatusUpdate, setLastStatusUpdate] = useState<Date | undefined>();
   const [lastMetricsUpdate, setLastMetricsUpdate] = useState<Date | undefined>();
@@ -63,6 +64,10 @@ export default function GatewayPage() {
     restartGateway();
   }, [restartGateway]);
 
+  const handleInstall = useCallback(() => {
+    installGateway();
+  }, [installGateway]);
+
   // Keyboard shortcuts
   useGatewayShortcuts(
     handleRefresh,
@@ -71,6 +76,9 @@ export default function GatewayPage() {
     handleRestart,
     true
   );
+
+  // Check if gateway service is not installed
+  const isNotInstalled = status?.status === 'not_installed';
 
   return (
     <div className="space-y-6">
@@ -82,6 +90,43 @@ export default function GatewayPage() {
           </p>
         </div>
       </div>
+
+      {/* Gateway not installed warning */}
+      {isNotInstalled && (
+        <Card className="border-blue-500/50 bg-blue-500/5">
+          <CardContent className="flex items-center gap-4 p-4">
+            <Download className="h-5 w-5 text-blue-500 flex-shrink-0" />
+            <div className="flex-1">
+              <h3 className="font-semibold text-blue-500">
+                Gateway Service Not Installed
+              </h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                The OpenClaw Gateway service needs to be installed before you can start it.
+                This will register the gateway as a system service.
+              </p>
+            </div>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={handleInstall}
+              disabled={isInstalling}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              {isInstalling ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Installing...
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  Install Service
+                </>
+              )}
+            </Button>
+          </CardContent>
+        </Card>
+      )}
 
       {/* Backend connection warning */}
       {statusError && (
@@ -124,6 +169,7 @@ export default function GatewayPage() {
             onStop={handleStop}
             onRestart={handleRestart}
             onRefresh={handleRefresh}
+            disabled={isNotInstalled}
           />
         </div>
       </div>
@@ -133,6 +179,7 @@ export default function GatewayPage() {
         isLoading={metricsLoading}
         isRefetching={metricsRefetching}
         lastUpdateTime={lastMetricsUpdate}
+        gatewayRunning={status?.status === 'running'}
       />
     </div>
   );

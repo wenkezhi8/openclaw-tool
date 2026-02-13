@@ -1,7 +1,7 @@
-OpenClaw Manager - Project Directory Structure
-==============================================
+OpenClaw Tool - Project Directory Structure
+===========================================
 
-openclaw-manager/
+openclaw-tool/
 ├── frontend/                          # Next.js 15 Frontend Application
 │   ├── app/
 │   │   ├── layout.tsx                 # Root layout with providers

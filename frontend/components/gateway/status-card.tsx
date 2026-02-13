@@ -100,42 +100,52 @@ interface StatusBadgeProps {
 }
 
 function StatusBadge({ status, texts }: StatusBadgeProps) {
-  const getStatusVariant = (status?: string): 'default' | 'secondary' | 'destructive' | 'outline' => {
+  const getStatusConfig = (status?: string) => {
     switch (status) {
       case 'running':
-        return 'default';
+        return {
+          variant: 'default' as const,
+          className: 'bg-green-600 hover:bg-green-700 text-white',
+          dotClass: 'bg-white animate-pulse',
+          text: texts.running
+        };
       case 'stopped':
-        return 'secondary';
+        return {
+          variant: 'secondary' as const,
+          className: 'bg-gray-500 hover:bg-gray-600 text-white',
+          dotClass: 'bg-white',
+          text: texts.stopped
+        };
       case 'error':
-        return 'destructive';
+        return {
+          variant: 'destructive' as const,
+          className: 'bg-red-600 hover:bg-red-700 text-white',
+          dotClass: 'bg-white',
+          text: texts.error
+        };
+      case 'not_installed':
+        return {
+          variant: 'outline' as const,
+          className: 'border-orange-500 text-orange-600',
+          dotClass: 'bg-orange-500',
+          text: 'Not Installed'
+        };
       default:
-        return 'outline';
+        return {
+          variant: 'outline' as const,
+          className: 'border-yellow-500 text-yellow-600',
+          dotClass: 'bg-yellow-500',
+          text: texts.unknown
+        };
     }
   };
 
-  const getStatusText = (status?: string): string => {
-    switch (status) {
-      case 'running':
-        return texts.running;
-      case 'stopped':
-        return texts.stopped;
-      case 'error':
-        return texts.error;
-      default:
-        return texts.unknown;
-    }
-  };
+  const config = getStatusConfig(status);
 
   return (
-    <Badge variant={getStatusVariant(status)} className="capitalize">
-      <span className={cn(
-        'mr-1.5 h-2 w-2 rounded-full',
-        status === 'running' && 'bg-current animate-pulse',
-        status === 'stopped' && 'bg-current',
-        status === 'error' && 'bg-current',
-        !status && 'bg-muted-foreground'
-      )} />
-      {getStatusText(status)}
+    <Badge variant={config.variant} className={cn('capitalize', config.className)}>
+      <span className={cn('mr-1.5 h-2 w-2 rounded-full', config.dotClass)} />
+      {config.text}
     </Badge>
   );
 }
@@ -148,28 +158,28 @@ interface MetricsGridProps {
 function MetricsGrid({ status, texts }: MetricsGridProps) {
   const metrics = [
     {
+      icon: Activity,
+      label: texts.pid,
+      value: status.pid?.toString() || '-',
+    },
+    {
       icon: Clock,
       label: texts.uptime,
-      value: formatUptime(status.uptime, texts),
+      value: status.uptime ? formatUptime(status.uptime, texts) : '-',
     },
     {
       icon: Cpu,
       label: texts.cpuUsage,
-      value: status.cpu ? `${status.cpu.toFixed(1)}%` : 'N/A',
+      value: status.cpu ? `${status.cpu.toFixed(1)}%` : '-',
       progress: status.cpu ? status.cpu : undefined,
     },
     {
       icon: HardDrive,
       label: texts.memoryUsage,
-      value: formatMemory(status.memory?.rss, texts),
+      value: status.memory?.rss ? formatMemory(status.memory.rss, texts) : '-',
       details: status.memory ? [
         `Heap: ${formatMemory(status.memory.heapUsed, texts)} / ${formatMemory(status.memory.heapTotal, texts)}`,
       ] : undefined,
-    },
-    {
-      icon: Activity,
-      label: texts.pid,
-      value: status.pid?.toString() || 'N/A',
     },
   ];
 

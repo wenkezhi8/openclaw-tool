@@ -113,12 +113,12 @@ export default function SettingsPage() {
             <div className="flex justify-between">
               <span className="text-muted-foreground">{t('settings.about.repository')}</span>
               <a
-                href="https://github.com/openclaw/openclaw-manager"
+                href="https://github.com/openclaw/openclaw-tool"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-primary hover:underline"
               >
-                github.com/openclaw/openclaw-manager
+                github.com/openclaw/openclaw-tool
               </a>
             </div>
           </CardContent>

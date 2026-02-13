@@ -8,6 +8,7 @@ import {
   InstallActionsCard,
   InstallProgressCard,
   InstallSteps,
+  InstallTerminal,
 } from '@/components/install';
 import type { InstallStep, InstallStatus } from '@/types/install';
 import { useI18n } from '@/hooks';
@@ -77,43 +78,52 @@ export default function InstallPage() {
         </Alert>
       )}
 
-      <div className="grid gap-6 max-w-4xl">
-        {/* Progress Card (shown during installation) */}
-        {showProgress && (
-          <>
-            <InstallProgressCard
-              progress={demoProgress}
-              onRetry={() => {
-                setShowProgress(false);
-                handleInstall();
-              }}
-              onRollback={() => {
-                setShowProgress(false);
-                setCompletedSteps([]);
-              }}
-            />
-            <InstallSteps
-              currentStep={demoProgress.step}
-              completedSteps={completedSteps}
-            />
-          </>
-        )}
+      {/* Two-column layout: Settings on left, Terminal on right */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Left Column - Installation Controls */}
+        <div className="space-y-6">
+          {/* Progress Card (shown during installation) */}
+          {showProgress && (
+            <>
+              <InstallProgressCard
+                progress={demoProgress}
+                onRetry={() => {
+                  setShowProgress(false);
+                  handleInstall();
+                }}
+                onRollback={() => {
+                  setShowProgress(false);
+                  setCompletedSteps([]);
+                }}
+              />
+              <InstallSteps
+                currentStep={demoProgress.step}
+                completedSteps={completedSteps}
+              />
+            </>
+          )}
 
-        {/* Status Card */}
-        <InstallStatusCard
-          status={displayStatus}
-        />
+          {/* Status Card */}
+          <InstallStatusCard
+            status={displayStatus}
+          />
 
-        {/* Actions Card */}
-        <InstallActionsCard
-          status={displayStatus}
-          isInstalling={isInstalling}
-          isUpdating={isUpdating}
-          isUninstalling={isUninstalling}
-          onInstall={handleInstall}
-          onUpdate={update}
-          onUninstall={uninstall}
-        />
+          {/* Actions Card */}
+          <InstallActionsCard
+            status={displayStatus}
+            isInstalling={isInstalling}
+            isUpdating={isUpdating}
+            isUninstalling={isUninstalling}
+            onInstall={handleInstall}
+            onUpdate={update}
+            onUninstall={uninstall}
+          />
+        </div>
+
+        {/* Right Column - Terminal */}
+        <div className="lg:sticky lg:top-4 lg:self-start">
+          <InstallTerminal className="h-[500px]" />
+        </div>
       </div>
     </div>
   );

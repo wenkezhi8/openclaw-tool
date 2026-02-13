@@ -1,6 +1,6 @@
-# OpenClaw Manager - 安装部署指南
+# OpenClaw Tool - 安装部署指南
 
-本文档详细说明如何在不同环境中安装和部署 OpenClaw Manager。
+本文档详细说明如何在不同环境中安装和部署 OpenClaw Tool。
 
 ## 目录
 
@@ -27,7 +27,7 @@
 
 ### 可选依赖
 
-- OpenClaw CLI（可通过 Manager 安装）
+- OpenClaw CLI（可通过 Tool 安装）
 - Docker（用于容器化部署）
 - Nginx（用于反向代理）
 
@@ -38,8 +38,8 @@
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/yourusername/openclaw-manager.git
-cd openclaw-manager
+git clone https://github.com/yourusername/openclaw-tool.git
+cd openclaw-tool
 ```
 
 ### 2. 安装依赖
@@ -492,6 +492,6 @@ pm2 link <public-key> <secret-key>
 
 如遇到问题，请访问：
 
-- GitHub Issues: https://github.com/yourusername/openclaw-manager/issues
+- GitHub Issues: https://github.com/yourusername/openclaw-tool/issues
 - 文档: https://docs.openclaw.com
 - 社区: https://discord.gg/openclaw

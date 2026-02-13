@@ -12,7 +12,7 @@ export interface ApiError {
 }
 
 // Gateway Types
-export type GatewayStatus = 'running' | 'stopped' | 'error';
+export type GatewayStatus = 'running' | 'stopped' | 'error' | 'not_installed';
 
 export interface GatewayState {
   status: GatewayStatus;
@@ -30,6 +30,13 @@ export interface GatewayState {
 }
 
 export interface GatewayMetrics {
+  // Usage cost data from OpenClaw CLI
+  totalCost: number;
+  totalTokens: number;
+  latestDay: string;
+  latestDayCost: number;
+  latestDayTokens: number;
+  // Keep for backward compatibility
   requests: {
     total: number;
     success: number;

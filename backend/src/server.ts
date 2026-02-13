@@ -69,7 +69,7 @@ app.use('/api/performance', performanceRoutes);
 // Root endpoint
 app.get('/', (_req: Request, res: Response) => {
   res.json({
-    name: 'OpenClaw Manager API',
+    name: 'OpenClaw Tool API',
     version: '1.0.0',
     status: 'running',
     endpoints: {
@@ -117,7 +117,7 @@ performanceService.start();
 
 // Start server
 server.listen(PORT, () => {
-  logger.info(`OpenClaw Manager API server running on port ${PORT}`);
+  logger.info(`OpenClaw Tool API server running on port ${PORT}`);
   logger.info(`WebSocket server available at ws://localhost:${PORT}/ws`);
   logger.info(`Health check available at http://localhost:${PORT}/health`);
 });

@@ -33,7 +33,7 @@ export function Header() {
           <div className="mr-2 flex flex-1 items-center">
             <Link href="/" className="mr-4 flex items-center space-x-2">
               <Activity className="h-6 w-6" />
-              <span className="hidden font-bold sm:inline-block">OpenClaw Manager</span>
+              <span className="hidden font-bold sm:inline-block">OpenClaw Tool</span>
             </Link>
             {/* Desktop navigation */}
             <nav className="hidden md:flex items-center space-x-1 lg:space-x-6 text-sm font-medium">
@@ -62,7 +62,7 @@ export function Header() {
             </Button>
             <Button variant="ghost" size="icon" asChild className="hidden sm:flex">
               <a
-                href="https://github.com/openclaw/openclaw-manager"
+                href="https://github.com/openclaw/openclaw-tool"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -111,7 +111,7 @@ export function Header() {
                 {t('header.settings')}
               </Link>
               <a
-                href="https://github.com/openclaw/openclaw-manager"
+                href="https://github.com/openclaw/openclaw-tool"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="block px-4 py-2 text-sm font-medium transition-colors hover:bg-accent text-foreground/60"

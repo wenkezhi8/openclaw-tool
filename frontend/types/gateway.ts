@@ -1,5 +1,5 @@
 // Gateway Types
-export type GatewayStatus = 'running' | 'stopped' | 'error';
+export type GatewayStatus = 'running' | 'stopped' | 'error' | 'not_installed';
 
 export interface GatewayMemoryInfo {
   rss: number;
@@ -25,6 +25,13 @@ export interface GatewayActionResponse {
 }
 
 export interface GatewayMetricsResponse {
+  // Usage cost data from OpenClaw CLI
+  totalCost: number;
+  totalTokens: number;
+  latestDay: string;
+  latestDayCost: number;
+  latestDayTokens: number;
+  // Keep for backward compatibility
   requests: {
     total: number;
     success: number;

@@ -22,6 +22,7 @@ export interface GatewayControlButtonsProps {
   onStop: () => void;
   onRestart: () => void;
   onRefresh?: () => void;
+  disabled?: boolean;
 }
 
 export function GatewayControlButtons({
@@ -31,6 +32,7 @@ export function GatewayControlButtons({
   onStop,
   onRestart,
   onRefresh,
+  disabled = false,
 }: GatewayControlButtonsProps) {
   const { t } = useI18n();
   const [confirmDialog, setConfirmDialog] = useState<'start' | 'stop' | 'restart' | null>(null);
@@ -105,7 +107,7 @@ export function GatewayControlButtons({
         {!isRunning ? (
           <Button
             onClick={() => handleAction('start')}
-            disabled={isLoading}
+            disabled={isLoading || disabled}
             variant="default"
             size="sm"
           >
@@ -116,7 +118,7 @@ export function GatewayControlButtons({
           <>
             <Button
               onClick={() => handleAction('restart')}
-              disabled={isLoading}
+              disabled={isLoading || disabled}
               variant="outline"
               size="sm"
             >
@@ -125,7 +127,7 @@ export function GatewayControlButtons({
             </Button>
             <Button
               onClick={() => handleAction('stop')}
-              disabled={isLoading}
+              disabled={isLoading || disabled}
               variant="destructive"
               size="sm"
             >

@@ -19,4 +19,10 @@ router.post('/restart', gatewayRateLimit, gatewayController.restartGateway);
 // GET /api/gateway/metrics - Get gateway metrics
 router.get('/metrics', gatewayRateLimit, gatewayController.getGatewayMetrics);
 
+// POST /api/gateway/install - Install gateway service
+router.post('/install', gatewayRateLimit, gatewayController.installGateway);
+
+// GET /api/gateway/installed - Check if gateway service is installed
+router.get('/installed', gatewayRateLimit, gatewayController.checkGatewayInstalled);
+
 export default router;

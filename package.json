@@ -1,5 +1,5 @@
 {
-  "name": "openclaw-manager",
+  "name": "openclaw-tool",
   "scripts": {
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:frontend": "cd frontend && npm run dev",

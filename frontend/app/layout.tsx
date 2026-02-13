@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'OpenClaw Manager',
+  title: 'OpenClaw Tool',
   description: 'Web-based management platform for OpenClaw AI Gateway and Agent system',
 };
 

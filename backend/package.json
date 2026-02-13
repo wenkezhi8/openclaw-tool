@@ -1,7 +1,7 @@
 {
-  "name": "openclaw-manager-backend",
+  "name": "openclaw-tool-backend",
   "version": "1.0.0",
-  "description": "OpenClaw Manager Backend - REST API and WebSocket Server",
+  "description": "OpenClaw Tool Backend - REST API and WebSocket Server",
   "main": "dist/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",

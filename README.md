@@ -1,14 +1,14 @@
-# OpenClaw Manager
+# OpenClaw Tool
 
 一个现代化的 Web 管理面板，用于管理 OpenClaw AI Gateway 和 Agent 平台。
 
-![OpenClaw Manager](https://img.shields.io/badge/OpenClaw-Manager-blue)
+![OpenClaw Tool](https://img.shields.io/badge/OpenClaw-Tool-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-15-black)
 ![Node.js](https://img.shields.io/badge/Node.js-20-green)
 
 ## 简介
 
-OpenClaw Manager 提供了一个直观的 Web 界面来管理 OpenClaw 的所有核心功能：
+OpenClaw Tool 提供了一个直观的 Web 界面来管理 OpenClaw 的所有核心功能：
 
 - **Gateway 管理** - 启动/停止/重启 Gateway，实时监控状态
 - **Agent 管理** - 创建、编辑、删除和管理 AI Agents
@@ -44,8 +44,8 @@ OpenClaw Manager 提供了一个直观的 Web 界面来管理 OpenClaw 的所有
 
 ```bash
 # 克隆项目
-git clone https://github.com/yourusername/openclaw-manager.git
-cd openclaw-manager
+git clone https://github.com/yourusername/openclaw-tool.git
+cd openclaw-tool
 
 # 安装依赖
 npm install
@@ -83,7 +83,7 @@ npm start
 ## 项目结构
 
 ```
-openclaw-manager/
+openclaw-tool/
 ├── frontend/          # Next.js 前端应用
 │   ├── app/          # App Router 页面
 │   ├── components/   # React 组件
@@ -197,4 +197,4 @@ MIT License
 
 ## 联系方式
 
-- GitHub Issues: https://github.com/yourusername/openclaw-manager/issues
+- GitHub Issues: https://github.com/yourusername/openclaw-tool/issues

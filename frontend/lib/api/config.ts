@@ -10,6 +10,8 @@ export const API_ENDPOINTS = {
   GATEWAY_STOP: '/gateway/stop',
   GATEWAY_RESTART: '/gateway/restart',
   GATEWAY_METRICS: '/gateway/metrics',
+  GATEWAY_INSTALL: '/gateway/install',
+  GATEWAY_INSTALLED: '/gateway/installed',
 
   // Agents
   AGENTS: '/agents',

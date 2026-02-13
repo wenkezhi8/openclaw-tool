@@ -100,3 +100,34 @@ export const getGatewayMetrics = asyncHandler(async (_req: Request, res: Respons
   const metrics = await gatewayService.getGatewayMetrics();
   res.json({ success: true, data: metrics });
 });
+
+/**
+ * Install Gateway Service
+ */
+export const installGateway = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
+  const result = await gatewayService.installGateway();
+
+  if (!result.success) {
+    res.status(500).json({
+      success: false,
+      error: {
+        code: 'INSTALL_FAILED',
+        message: result.message,
+      },
+    });
+    return;
+  }
+
+  res.json({
+    success: true,
+    data: { message: result.message },
+  });
+});
+
+/**
+ * Check if Gateway Service is Installed
+ */
+export const checkGatewayInstalled = asyncHandler(async (_req: Request, res: Response): Promise<void> => {
+  const isInstalled = await gatewayService.isGatewayServiceInstalled();
+  res.json({ success: true, data: { installed: isInstalled } });
+});

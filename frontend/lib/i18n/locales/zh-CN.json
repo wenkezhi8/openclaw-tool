@@ -180,7 +180,8 @@
     "language": "语言",
     "theme": "主题",
     "toggleTheme": "切换主题",
-    "logout": "退出登录"
+    "logout": "退出登录",
+    "settings": "设置"
   },
   "dashboard": {
     "title": "仪表板",
@@ -244,6 +245,14 @@
     "seconds": "秒",
     "megabytes": "MB",
     "percent": "%",
+    "usageCost": "使用成本",
+    "totalCost": "总费用 (30天)",
+    "totalTokens": "总 Tokens (30天)",
+    "latestDay": "最新一天",
+    "latestDayCost": "今日费用",
+    "latestDayTokens": "今日 Tokens",
+    "estimatedRequests": "预估请求数",
+    "period30Days": "30天统计",
     "confirmations": {
       "start": "确定要启动网关吗？",
       "stop": "确定要停止网关吗？这将中断所有活动连接。",
@@ -426,7 +435,7 @@
   },
   "settings": {
     "title": "设置",
-    "subtitle": "配置您的 OpenClaw Manager 偏好设置",
+    "subtitle": "配置您的 OpenClaw Tool 偏好设置",
     "general": "常规",
     "appearance": "外观",
     "language": "语言",
@@ -452,7 +461,7 @@
     },
     "about": {
       "title": "关于",
-      "description": "OpenClaw Manager 信息",
+      "description": "OpenClaw Tool 信息",
       "version": "版本",
       "license": "许可证",
       "repository": "仓库"

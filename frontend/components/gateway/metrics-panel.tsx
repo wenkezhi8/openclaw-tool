@@ -1,7 +1,7 @@
 'use client';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { TrendingUp, TrendingDown, Activity, Zap } from 'lucide-react';
+import { DollarSign, Coins, TrendingUp, Calendar, Activity, BarChart3 } from 'lucide-react';
 import type { GatewayMetricsResponse } from '@/types/gateway';
 import { cn } from '@/lib/utils';
 import { RefreshIndicator } from './refresh-indicator';
@@ -12,6 +12,7 @@ export interface GatewayMetricsPanelProps {
   isLoading: boolean;
   isRefetching?: boolean;
   lastUpdateTime?: Date;
+  gatewayRunning?: boolean;
 }
 
 export function GatewayMetricsPanel({
@@ -19,22 +20,46 @@ export function GatewayMetricsPanel({
   isLoading,
   isRefetching = false,
   lastUpdateTime,
+  gatewayRunning = false,
 }: GatewayMetricsPanelProps) {
   const { t } = useI18n();
 
   const texts = {
     title: t('gateway.metrics'),
-    totalRequests: t('gateway.totalRequests'),
-    throughput: t('gateway.throughput'),
-    requestsPerSecond: t('gateway.requestsPerSecond'),
-    successRate: t('gateway.successRate'),
-    errors: t('common.error'),
-    p50Latency: t('gateway.p50Latency'),
-    p95Latency: t('gateway.p95Latency'),
-    p99Latency: t('gateway.p99Latency'),
-    milliseconds: t('gateway.milliseconds'),
-    percent: t('gateway.percent'),
+    usageCost: t('gateway.usageCost'),
+    totalCost: t('gateway.totalCost'),
+    totalTokens: t('gateway.totalTokens'),
+    latestDay: t('gateway.latestDay'),
+    latestDayCost: t('gateway.latestDayCost'),
+    latestDayTokens: t('gateway.latestDayTokens'),
+    estimatedRequests: t('gateway.estimatedRequests'),
+    notRunning: t('gateway.notRunning'),
+    period30Days: t('gateway.period30Days'),
   };
+
+  // Show empty state when gateway is not running
+  if (!gatewayRunning) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Activity className="h-5 w-5" />
+            {texts.title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-3">
+              <BarChart3 className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {texts.notRunning}
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
 
   if (isLoading) {
     return (
@@ -55,96 +80,103 @@ export function GatewayMetricsPanel({
                 </div>
               ))}
             </div>
-            <div className="h-px bg-muted" />
-            <div className="space-y-2">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-4 bg-muted rounded" />
-              ))}
-            </div>
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  const successRate = metrics
-    ? ((metrics.requests.success / metrics.requests.total) * 100).toFixed(2)
-    : '0.00';
+  // Format numbers for display
+  const formatCost = (cost: number) => {
+    if (cost === 0) return '$0.00';
+    if (cost < 0.01) return `< $0.01`;
+    return `$${cost.toFixed(4)}`;
+  };
+
+  const formatTokens = (tokens: number) => {
+    if (tokens >= 1000000) {
+      return `${(tokens / 1000000).toFixed(2)}M`;
+    }
+    if (tokens >= 1000) {
+      return `${(tokens / 1000).toFixed(1)}K`;
+    }
+    return tokens.toString();
+  };
 
   return (
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <Activity className="h-5 w-5" />
-            {texts.title}
+            <DollarSign className="h-5 w-5" />
+            {texts.usageCost}
           </CardTitle>
-          {lastUpdateTime && (
-            <RefreshIndicator
-              isRefetching={isRefetching}
-              lastUpdateTime={lastUpdateTime}
-              autoRefresh
-              refreshInterval={30000}
-            />
-          )}
+          <div className="flex items-center gap-2">
+            {metrics?.latestDay && (
+              <span className="text-xs text-muted-foreground">
+                {texts.period30Days}
+              </span>
+            )}
+            {lastUpdateTime && (
+              <RefreshIndicator
+                isRefetching={isRefetching}
+                lastUpdateTime={lastUpdateTime}
+                autoRefresh
+                refreshInterval={30000}
+              />
+            )}
+          </div>
         </div>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        {/* 30-day summary */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           <MetricCard
-            icon={Zap}
-            label={texts.totalRequests}
-            value={metrics?.requests.total || 0}
-            variant="default"
+            icon={DollarSign}
+            label={texts.totalCost}
+            value={formatCost(metrics?.totalCost || 0)}
+            variant="success"
           />
           <MetricCard
-            icon={Activity}
-            label={texts.throughput}
-            value={metrics?.throughput || 0}
-            unit={texts.requestsPerSecond}
+            icon={Coins}
+            label={texts.totalTokens}
+            value={formatTokens(metrics?.totalTokens || 0)}
             variant="default"
           />
           <MetricCard
             icon={TrendingUp}
-            label={texts.successRate}
-            value={successRate}
-            unit={texts.percent}
-            variant="success"
+            label={texts.latestDayCost}
+            value={formatCost(metrics?.latestDayCost || 0)}
+            variant="default"
           />
           <MetricCard
-            icon={TrendingDown}
-            label={texts.errors}
-            value={metrics?.requests.error || 0}
-            variant="error"
+            icon={Calendar}
+            label={texts.latestDayTokens}
+            value={formatTokens(metrics?.latestDayTokens || 0)}
+            variant="default"
           />
         </div>
-        {metrics && (
-          <>
-            <div className="mt-6 pt-4 border-t">
-              <h3 className="text-sm font-medium mb-3">Latency Distribution</h3>
-              <LatencyBars metrics={metrics} />
+
+        {/* Latest day info */}
+        {metrics?.latestDay && (
+          <div className="pt-4 border-t">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">{texts.latestDay}:</span>
+              <span className="font-medium">{metrics.latestDay}</span>
             </div>
-            <div className="mt-4 pt-4 border-t space-y-2">
-              <LatencyRow
-                label={texts.p50Latency}
-                value={metrics.latency.p50}
-                max={Math.max(metrics.latency.p50, metrics.latency.p95, metrics.latency.p99)}
-                unit={texts.milliseconds}
-              />
-              <LatencyRow
-                label={texts.p95Latency}
-                value={metrics.latency.p95}
-                max={Math.max(metrics.latency.p50, metrics.latency.p95, metrics.latency.p99)}
-                unit={texts.milliseconds}
-              />
-              <LatencyRow
-                label={texts.p99Latency}
-                value={metrics.latency.p99}
-                max={Math.max(metrics.latency.p50, metrics.latency.p95, metrics.latency.p99)}
-                unit={texts.milliseconds}
-              />
+          </div>
+        )}
+
+        {/* Estimated requests (if available) */}
+        {metrics?.requests?.total && metrics.requests.total > 0 && (
+          <div className="pt-4 border-t mt-4">
+            <div className="flex items-center justify-between text-sm">
+              <span className="text-muted-foreground">{texts.estimatedRequests}:</span>
+              <span className="font-medium tabular-nums">
+                {metrics.requests.total.toLocaleString()}
+              </span>
             </div>
-          </>
+          </div>
         )}
       </CardContent>
     </Card>
@@ -154,12 +186,11 @@ export function GatewayMetricsPanel({
 interface MetricCardProps {
   icon: React.ComponentType<{ className?: string }>;
   label: string;
-  value: number | string;
-  unit?: string;
+  value: string;
   variant?: 'default' | 'success' | 'error';
 }
 
-function MetricCard({ icon: Icon, label, value, unit, variant = 'default' }: MetricCardProps) {
+function MetricCard({ icon: Icon, label, value, variant = 'default' }: MetricCardProps) {
   const getValueColor = () => {
     switch (variant) {
       case 'success':
@@ -189,99 +220,8 @@ function MetricCard({ icon: Icon, label, value, unit, variant = 'default' }: Met
         <p className="text-xs text-muted-foreground">{label}</p>
       </div>
       <p className={cn('text-xl font-bold tabular-nums', getValueColor())}>
-        {typeof value === 'number' ? value.toLocaleString() : value}
-        {unit && <span className="text-sm font-normal text-muted-foreground ml-1">{unit}</span>}
+        {value}
       </p>
-    </div>
-  );
-}
-
-interface LatencyRowProps {
-  label: string;
-  value: number;
-  max: number;
-  unit: string;
-}
-
-function LatencyRow({ label, value, max, unit }: LatencyRowProps) {
-  const percentage = max > 0 ? (value / max) * 100 : 0;
-
-  return (
-    <div className="space-y-1">
-      <div className="flex justify-between text-sm">
-        <span className="text-muted-foreground">{label}</span>
-        <span className="font-medium tabular-nums">
-          {value}
-          <span className="text-muted-foreground text-xs ml-1">{unit}</span>
-        </span>
-      </div>
-      <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-        <div
-          className={cn(
-            'h-full transition-all duration-500',
-            percentage > 80
-              ? 'bg-orange-500'
-              : percentage > 50
-              ? 'bg-yellow-500'
-              : 'bg-green-500'
-          )}
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-    </div>
-  );
-}
-
-function LatencyBars({
-  metrics,
-}: {
-  metrics: GatewayMetricsResponse;
-}) {
-  const maxValue = Math.max(metrics.latency.p50, metrics.latency.p95, metrics.latency.p99);
-
-  return (
-    <div className="flex items-end gap-1 h-16">
-      <LatencyBar
-        value={metrics.latency.p50}
-        max={maxValue}
-        label="p50"
-        color="bg-green-500"
-      />
-      <LatencyBar
-        value={metrics.latency.p95}
-        max={maxValue}
-        label="p95"
-        color="bg-yellow-500"
-      />
-      <LatencyBar
-        value={metrics.latency.p99}
-        max={maxValue}
-        label="p99"
-        color="bg-orange-500"
-      />
-    </div>
-  );
-}
-
-interface LatencyBarProps {
-  value: number;
-  max: number;
-  label: string;
-  color: string;
-}
-
-function LatencyBar({ value, max, label, color }: LatencyBarProps) {
-  const height = max > 0 ? (value / max) * 100 : 0;
-
-  return (
-    <div className="flex-1 flex flex-col items-center gap-1">
-      <div className="w-full bg-muted rounded-t-sm relative h-12">
-        <div
-          className={cn('absolute bottom-0 w-full rounded-t-sm transition-all duration-500', color)}
-          style={{ height: `${height}%` }}
-        />
-      </div>
-      <span className="text-xs text-muted-foreground">{label}</span>
     </div>
   );
 }
