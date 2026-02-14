@@ -93,6 +93,11 @@ export function GatewayMetricsPanel({
     return `$${cost.toFixed(4)}`;
   };
 
+  // Check if using self-hosted model (cost is 0 but has token usage)
+  const hasTokenUsage = (metrics?.totalTokens || 0) > 0;
+  const isZeroCost = (metrics?.totalCost || 0) === 0;
+  const isSelfHostedModel = hasTokenUsage && isZeroCost;
+
   const formatTokens = (tokens: number) => {
     if (tokens >= 1000000) {
       return `${(tokens / 1000000).toFixed(2)}M`;
@@ -129,6 +134,14 @@ export function GatewayMetricsPanel({
         </div>
       </CardHeader>
       <CardContent>
+        {/* Self-hosted model notice */}
+        {isSelfHostedModel && (
+          <div className="mb-4 p-3 rounded-lg bg-green-500/10 border border-green-500/20">
+            <p className="text-sm text-green-600 dark:text-green-400">
+              Using self-hosted models - no API costs incurred
+            </p>
+          </div>
+        )}
         {/* 30-day summary */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
           <MetricCard

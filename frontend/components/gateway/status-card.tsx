@@ -14,12 +14,14 @@ export interface GatewayStatusCardProps {
   isLoading: boolean;
   isRefetching?: boolean;
   lastUpdateTime?: Date;
+  error?: Error | null;
 }
 
 export function GatewayStatusCard({
   status,
   isRefetching = false,
   lastUpdateTime,
+  error,
 }: GatewayStatusCardProps) {
   const { t } = useI18n();
 
@@ -43,6 +45,9 @@ export function GatewayStatusCard({
     megabytes: t('gateway.megabytes'),
   };
 
+  // Determine effective status - if there's an error, show error state
+  const effectiveStatus = error ? 'error' : status?.status;
+
   return (
     <Card>
       <CardHeader>
@@ -51,11 +56,20 @@ export function GatewayStatusCard({
             <Server className="h-5 w-5" />
             {texts.title}
           </span>
-          <StatusBadge status={status?.status} texts={texts} />
+          <StatusBadge status={effectiveStatus} texts={texts} />
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {status?.status === 'running' ? (
+        {error ? (
+          <div className="text-center py-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-destructive/10 mb-3">
+              <Server className="h-8 w-8 text-destructive" />
+            </div>
+            <p className="text-sm text-muted-foreground">
+              {texts.error || 'Unable to connect to backend'}
+            </p>
+          </div>
+        ) : status?.status === 'running' ? (
           <>
             <MetricsGrid status={status} texts={texts} />
             {status.port && (

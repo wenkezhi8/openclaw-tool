@@ -62,7 +62,7 @@ function InstalledSkillsTab() {
               <CardContent>
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground line-clamp-2">{skill.description}</p>
-                  <p className="text-xs text-muted-foreground">v{skill.version}</p>
+                  <p className="text-xs text-muted-foreground">v{skill.version || '1.0.0'}</p>
                   <div className="flex gap-2 pt-2">
                     <Button
                       variant="outline"
@@ -143,7 +143,7 @@ function MarketplaceTab() {
                 <div className="space-y-2">
                   <p className="text-sm text-muted-foreground line-clamp-2">{skill.description}</p>
                   <div className="flex items-center gap-4 text-xs text-muted-foreground">
-                    <span>v{skill.version}</span>
+                    <span>v{skill.version || '1.0.0'}</span>
                     <span className="flex items-center gap-1">
                       <Download className="h-3 w-3" />
                       {skill.downloads}

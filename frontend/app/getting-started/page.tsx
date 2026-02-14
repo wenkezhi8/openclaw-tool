@@ -87,7 +87,7 @@ export default function GettingStartedPage() {
 
   const checkCliInstallation = async () => {
     try {
-      const response = await apiClient.get(API_ENDPOINTS.INSTALL_STATUS);
+      const response = await apiClient.get<{ installed?: boolean }>(API_ENDPOINTS.INSTALL_STATUS);
       setCliInstalled(response.data?.installed ?? false);
     } catch {
       setCliInstalled(false);
@@ -128,7 +128,7 @@ export default function GettingStartedPage() {
     setTestResult('pending');
     try {
       // Test gateway status
-      const response = await apiClient.get(API_ENDPOINTS.GATEWAY_STATUS);
+      const response = await apiClient.get<{ status?: string }>(API_ENDPOINTS.GATEWAY_STATUS);
       if (response.data?.status === 'running') {
         setTestResult('success');
         success(t('gettingStarted.testSuccess', '连接测试成功'));

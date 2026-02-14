@@ -1,6 +1,6 @@
 import { useI18n } from '@/lib/i18n';
 
-export type HelpPageKey = 'dashboard' | 'gateway' | 'settings' | 'agents' | 'channels' | 'models' | 'messaging';
+export type HelpPageKey = 'dashboard' | 'gateway' | 'settings' | 'agents' | 'providers' | 'models' | 'channels';
 
 export interface HelpSection {
   title: string;
@@ -136,31 +136,31 @@ export function useHelpContent(page: HelpPageKey): HelpContent {
         },
       ],
     },
-    channels: {
-      title: t('help.channels.title', 'Channels Help'),
-      description: t('help.channels.description', 'Learn how to configure API channels'),
+    providers: {
+      title: t('help.providers.title', 'Model Providers Help'),
+      description: t('help.providers.description', 'Learn how to configure AI model providers'),
       sections: [
         {
-          title: t('help.channels.overview.title', 'Overview'),
+          title: t('help.providers.overview.title', 'Overview'),
           content: [
-            t('help.channels.overview.content1', 'Channels are connections to AI model providers (like OpenAI, Anthropic, etc.).'),
-            t('help.channels.overview.content2', 'Configure channels to enable the gateway to route requests to different providers.'),
+            t('help.providers.overview.content1', 'Providers are connections to AI model providers (like OpenAI, Anthropic, etc.).'),
+            t('help.providers.overview.content2', 'Configure providers to enable the gateway to route requests to different providers.'),
           ],
         },
         {
-          title: t('help.channels.configuration.title', 'Channel Configuration'),
+          title: t('help.providers.configuration.title', 'Provider Configuration'),
           content: [
-            t('help.channels.configuration.content1', 'Name: A descriptive name for the channel.'),
-            t('help.channels.configuration.content2', 'Type: The provider type (e.g., OpenAI, Anthropic).'),
-            t('help.channels.configuration.content3', 'API Key: Your authentication key for the provider.'),
-            t('help.channels.configuration.content4', 'Priority: Higher priority channels are used first.'),
+            t('help.providers.configuration.content1', 'Name: A descriptive name for the provider.'),
+            t('help.providers.configuration.content2', 'Type: The provider type (e.g., OpenAI, Anthropic).'),
+            t('help.providers.configuration.content3', 'API Key: Your authentication key for the provider.'),
+            t('help.providers.configuration.content4', 'Priority: Higher priority providers are used first.'),
           ],
         },
         {
-          title: t('help.channels.testing.title', 'Testing'),
+          title: t('help.providers.testing.title', 'Testing'),
           content: [
-            t('help.channels.testing.content1', 'Use the "Test Connection" feature to verify your channel configuration.'),
-            t('help.channels.testing.content2', 'A successful test confirms the API key is valid and the provider is accessible.'),
+            t('help.providers.testing.content1', 'Use the "Test Connection" feature to verify your provider configuration.'),
+            t('help.providers.testing.content2', 'A successful test confirms the API key is valid and the provider is accessible.'),
           ],
         },
       ],
@@ -194,31 +194,31 @@ export function useHelpContent(page: HelpPageKey): HelpContent {
         },
       ],
     },
-    messaging: {
-      title: t('help.messaging.title', 'Messaging Help'),
-      description: t('help.messaging.description', 'Learn how to connect messaging platforms'),
+    channels: {
+      title: t('help.channels.title', 'Channels Help'),
+      description: t('help.channels.description', 'Learn how to connect messaging platforms'),
       sections: [
         {
-          title: t('help.messaging.overview.title', 'Overview'),
+          title: t('help.channels.overview.title', 'Overview'),
           content: [
-            t('help.messaging.overview.content1', 'Connect messaging platforms to allow AI agents to communicate through them.'),
-            t('help.messaging.overview.content2', 'Supported platforms include Telegram, Discord, Slack, WhatsApp, and WeChat.'),
+            t('help.channels.overview.content1', 'Connect messaging platforms to allow AI agents to communicate through them.'),
+            t('help.channels.overview.content2', 'Supported platforms include Telegram, Discord, Slack, WhatsApp, and WeChat.'),
           ],
         },
         {
-          title: t('help.messaging.connection.title', 'Connection Process'),
+          title: t('help.channels.connection.title', 'Connection Process'),
           content: [
-            t('help.messaging.connection.content1', 'Each platform requires different credentials (tokens, API keys).'),
-            t('help.messaging.connection.content2', 'Follow the tutorial steps provided for each platform.'),
-            t('help.messaging.connection.content3', 'Click "Connect" after entering your credentials.'),
+            t('help.channels.connection.content1', 'Each platform requires different credentials (tokens, API keys).'),
+            t('help.channels.connection.content2', 'Follow the tutorial steps provided for each platform.'),
+            t('help.channels.connection.content3', 'Click "Connect" after entering your credentials.'),
           ],
         },
         {
-          title: t('help.messaging.troubleshooting.title', 'Troubleshooting'),
+          title: t('help.channels.troubleshooting.title', 'Troubleshooting'),
           content: [
-            t('help.messaging.troubleshooting.content1', 'If connection fails, verify your API credentials are correct.'),
-            t('help.messaging.troubleshooting.content2', 'Check that the bot has the necessary permissions.'),
-            t('help.messaging.troubleshooting.content3', 'Refer to the platform-specific tutorial for detailed setup instructions.'),
+            t('help.channels.troubleshooting.content1', 'If connection fails, verify your API credentials are correct.'),
+            t('help.channels.troubleshooting.content2', 'Check that the bot has the necessary permissions.'),
+            t('help.channels.troubleshooting.content3', 'Refer to the platform-specific tutorial for detailed setup instructions.'),
           ],
         },
       ],
@@ -230,5 +230,5 @@ export function useHelpContent(page: HelpPageKey): HelpContent {
 
 // Get all help page keys
 export function getHelpPageKeys(): HelpPageKey[] {
-  return ['dashboard', 'gateway', 'settings', 'agents', 'channels', 'models', 'messaging'];
+  return ['dashboard', 'gateway', 'settings', 'agents', 'providers', 'models', 'channels'];
 }

@@ -55,7 +55,7 @@ export default function DashboardPage() {
       )}
 
       <div className="grid gap-6 md:grid-cols-2">
-        <GatewayStatusCard status={status} isLoading={statusLoading} />
+        <GatewayStatusCard status={status} isLoading={statusLoading} error={statusError} />
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">

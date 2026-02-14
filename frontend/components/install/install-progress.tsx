@@ -19,6 +19,7 @@ interface InstallProgressCardProps {
 const stepIcons: Record<InstallStep, React.ReactNode> = {
   checking: <Loader2 className="h-5 w-5 animate-spin text-blue-500" />,
   downloading: <Loader2 className="h-5 w-5 animate-spin text-blue-500" />,
+  extracting: <Loader2 className="h-5 w-5 animate-spin text-blue-500" />,
   installing: <Loader2 className="h-5 w-5 animate-spin text-blue-500" />,
   verifying: <Loader2 className="h-5 w-5 animate-spin text-blue-500" />,
   configuring: <Loader2 className="h-5 w-5 animate-spin text-blue-500" />,
@@ -29,6 +30,7 @@ const stepIcons: Record<InstallStep, React.ReactNode> = {
 const stepColors: Record<InstallStep, string> = {
   checking: 'text-blue-600 dark:text-blue-400',
   downloading: 'text-blue-600 dark:text-blue-400',
+  extracting: 'text-blue-600 dark:text-blue-400',
   installing: 'text-blue-600 dark:text-blue-400',
   verifying: 'text-blue-600 dark:text-blue-400',
   configuring: 'text-blue-600 dark:text-blue-400',
@@ -39,6 +41,7 @@ const stepColors: Record<InstallStep, string> = {
 const stepBgColors: Record<InstallStep, string> = {
   checking: 'bg-blue-500/10 border-blue-500/20',
   downloading: 'bg-blue-500/10 border-blue-500/20',
+  extracting: 'bg-blue-500/10 border-blue-500/20',
   installing: 'bg-blue-500/10 border-blue-500/20',
   verifying: 'bg-blue-500/10 border-blue-500/20',
   configuring: 'bg-blue-500/10 border-blue-500/20',

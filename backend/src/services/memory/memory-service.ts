@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { logger } from '../logger';
 import type {
   MemoryStatus,
@@ -13,10 +14,21 @@ import type {
   CliUserMemory,
 } from '../../types/memory';
 
+// Get OpenClaw workspace directory
+function getOpenClawWorkspace(): string {
+  // Use OPENCLAW_WORKSPACE env var if set, otherwise use default
+  if (process.env.OPENCLAW_WORKSPACE) {
+    return process.env.OPENCLAW_WORKSPACE;
+  }
+  // Default to ~/.openclaw/workspace
+  return path.join(os.homedir(), '.openclaw', 'workspace');
+}
+
 // Default paths for memory storage
-const DEFAULT_SOUL_PATH = path.join(process.cwd(), 'SOUL.md');
-const DEFAULT_USER_MEMORY_PATH = path.join(process.cwd(), 'memory');
-const DEFAULT_BACKUP_PATH = path.join(process.cwd(), 'backups', 'memory');
+const OPENCLAW_WORKSPACE = getOpenClawWorkspace();
+const DEFAULT_SOUL_PATH = path.join(OPENCLAW_WORKSPACE, 'SOUL.md');
+const DEFAULT_USER_MEMORY_PATH = path.join(OPENCLAW_WORKSPACE, 'memory');
+const DEFAULT_BACKUP_PATH = path.join(OPENCLAW_WORKSPACE, 'backups', 'memory');
 
 // Cache for performance optimization
 interface MemoryCache {

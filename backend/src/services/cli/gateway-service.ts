@@ -316,8 +316,6 @@ export async function getGatewayMetrics(_period: string = '1h'): Promise<Gateway
     // Total: $0.0000 · 241k tokens
     // Latest day: 2026-02-14 · $0.0000 · 241k tokens
 
-    const lines = output.split('\n');
-
     // Parse "Total: $0.0000 · 241k tokens"
     const totalMatch = output.match(/Total:\s*\$([0-9.]+)\s*·\s*([0-9.]+[km]?)\s*tokens/i);
     if (totalMatch) {
@@ -362,27 +360,4 @@ function parseTokenCount(str: string): number {
   }
 
   return value;
-}
-
-/**
- * Parse uptime string to seconds
- */
-function parseUptime(uptimeStr: string): number {
-  if (!uptimeStr) return 0;
-
-  const parts = uptimeStr.split(' ');
-  let totalSeconds = 0;
-
-  for (const part of parts) {
-    const value = parseInt(part, 10);
-    if (part.includes('h') || part.includes('hour')) {
-      totalSeconds += value * 3600;
-    } else if (part.includes('m') || part.includes('min')) {
-      totalSeconds += value * 60;
-    } else if (part.includes('s') || part.includes('sec')) {
-      totalSeconds += value;
-    }
-  }
-
-  return totalSeconds;
 }

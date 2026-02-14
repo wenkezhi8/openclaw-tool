@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -16,12 +16,35 @@ import {
   Terminal,
   Server,
   Key,
-  MessageSquare,
+  Globe,
   Settings,
   ExternalLink,
-  Wrench,
 } from 'lucide-react';
 
+// Backend diagnostic item structure
+interface BackendDiagnosticItem {
+  id: string;
+  name: string;
+  status: 'ok' | 'warning' | 'error';
+  message: string;
+  description: string;
+  solution?: string;
+  solutionLink?: string;
+  details?: Record<string, unknown>;
+}
+
+interface BackendDiagnosticsResult {
+  timestamp: string;
+  items: BackendDiagnosticItem[];
+  summary: {
+    total: number;
+    ok: number;
+    warning: number;
+    error: number;
+  };
+}
+
+// Frontend display diagnostic item
 interface DiagnosticItem {
   id: string;
   name: string;
@@ -32,9 +55,26 @@ interface DiagnosticItem {
   actionHref?: string;
 }
 
+// Map backend status to frontend status
+function mapStatus(status: 'ok' | 'warning' | 'error'): 'success' | 'warning' | 'error' {
+  if (status === 'ok') return 'success';
+  return status;
+}
+
+// Map backend diagnostic ID to frontend ID
+function mapDiagnosticId(backendId: string): string {
+  const mapping: Record<string, string> = {
+    'cli_installation': 'cli',
+    'gateway_status': 'gateway',
+    'api_key_config': 'apiKey',
+    'platform_connectivity': 'platform',
+  };
+  return mapping[backendId] || backendId;
+}
+
 export default function DiagnosticsPage() {
   const { t } = useI18n();
-  const { success } = useToast();
+  const { success: showSuccess, error: showError } = useToast();
 
   const [isRunning, setIsRunning] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
@@ -60,7 +100,7 @@ export default function DiagnosticsPage() {
     {
       id: 'platform',
       name: 'Platform Connection',
-      description: 'Check messaging platform connection',
+      description: 'Check AI platform connectivity',
       status: 'checking',
     },
   ]);
@@ -71,150 +111,55 @@ export default function DiagnosticsPage() {
     );
   };
 
-  const checkCli = async () => {
-    updateDiagnostic('cli', { status: 'checking' });
-    try {
-      const response = await apiClient.get(API_ENDPOINTS.INSTALL_STATUS);
-      if (response.data?.installed) {
-        updateDiagnostic('cli', {
-          status: 'success',
-          message: `CLI installed v${response.data.version || 'unknown'}`,
-          actionLabel: undefined,
-          actionHref: undefined,
-        });
-      } else {
-        updateDiagnostic('cli', {
-          status: 'error',
-          message: 'CLI not installed',
-          actionLabel: 'Install CLI',
-          actionHref: '/install',
-        });
-      }
-    } catch {
-      updateDiagnostic('cli', {
-        status: 'error',
-        message: 'Check failed',
-        actionLabel: 'Retry',
-        actionHref: undefined,
+  const processBackendResults = useCallback((result: BackendDiagnosticsResult) => {
+    for (const item of result.items) {
+      const frontendId = mapDiagnosticId(item.id);
+      updateDiagnostic(frontendId, {
+        status: mapStatus(item.status),
+        message: item.message,
+        description: item.description,
+        actionLabel: item.solution ? item.solution.split(' ').slice(0, 3).join(' ') : undefined,
+        actionHref: item.solutionLink,
       });
     }
-  };
+  }, []);
 
-  const checkGateway = async () => {
-    updateDiagnostic('gateway', { status: 'checking' });
+  const runAllDiagnostics = useCallback(async () => {
+    setIsRunning(true);
+
+    // Reset all to checking state
+    setDiagnostics((prev) =>
+      prev.map((item) => ({ ...item, status: 'checking' as const, message: undefined }))
+    );
+
     try {
-      const response = await apiClient.get(API_ENDPOINTS.GATEWAY_STATUS);
-      if (response.data?.status === 'running') {
-        updateDiagnostic('gateway', {
-          status: 'success',
-          message: `Gateway running on port ${response.data.port || 'unknown'}`,
-          actionLabel: undefined,
-          actionHref: undefined,
-        });
-      } else if (response.data?.status === 'stopped') {
-        updateDiagnostic('gateway', {
-          status: 'warning',
-          message: 'Gateway stopped',
-          actionLabel: 'Start Gateway',
-          actionHref: '/gateway',
-        });
-      } else {
-        updateDiagnostic('gateway', {
-          status: 'error',
-          message: 'Unknown status',
-          actionLabel: 'View Details',
-          actionHref: '/gateway',
-        });
+      // Use backend diagnostics API
+      const response = await apiClient.get<BackendDiagnosticsResult>(API_ENDPOINTS.DIAGNOSTICS);
+
+      if (response.data) {
+        processBackendResults(response.data);
+        showSuccess('Diagnostics complete');
       }
-    } catch {
-      updateDiagnostic('gateway', {
-        status: 'error',
-        message: 'Cannot connect to gateway',
-        actionLabel: 'Fix Issue',
-        actionHref: '/gateway',
-      });
-    }
-  };
+    } catch (error) {
+      // Fallback to individual checks if backend diagnostics fails
+      console.error('Backend diagnostics failed, falling back to individual checks:', error);
 
-  const checkApiKey = async () => {
-    updateDiagnostic('apiKey', { status: 'checking' });
-    try {
-      const response = await apiClient.get(API_ENDPOINTS.CHANNELS);
-      const channels = response.data || [];
-      const configuredChannels = channels.filter((ch: { apiKey?: string }) => ch.apiKey);
-
-      if (configuredChannels.length > 0) {
-        updateDiagnostic('apiKey', {
-          status: 'success',
-          message: `${configuredChannels.length} model channels configured`,
-          actionLabel: undefined,
+      // Mark all as error with helpful message
+      setDiagnostics((prev) =>
+        prev.map((item) => ({
+          ...item,
+          status: 'error' as const,
+          message: 'Unable to run diagnostics - backend service may be unavailable',
+          actionLabel: 'Retry',
           actionHref: undefined,
-        });
-      } else {
-        updateDiagnostic('apiKey', {
-          status: 'warning',
-          message: 'No API key configured',
-          actionLabel: 'Configure Key',
-          actionHref: '/channels',
-        });
-      }
-    } catch {
-      updateDiagnostic('apiKey', {
-        status: 'warning',
-        message: 'Cannot check configuration',
-        actionLabel: 'Go to Settings',
-        actionHref: '/settings',
-      });
-    }
-  };
-
-  const checkPlatform = async () => {
-    updateDiagnostic('platform', { status: 'checking' });
-    try {
-      const response = await apiClient.get(API_ENDPOINTS.MESSAGING_CHANNELS);
-      const channels = response.data || [];
-      const connectedChannels = channels.filter(
-        (ch: { status?: string }) => ch.status === 'connected'
+        }))
       );
 
-      if (connectedChannels.length > 0) {
-        updateDiagnostic('platform', {
-          status: 'success',
-          message: `${connectedChannels.length} platforms connected`,
-          actionLabel: undefined,
-          actionHref: undefined,
-        });
-      } else if (channels.length > 0) {
-        updateDiagnostic('platform', {
-          status: 'warning',
-          message: 'Platform not connected',
-          actionLabel: 'Connect Platform',
-          actionHref: '/messaging',
-        });
-      } else {
-        updateDiagnostic('platform', {
-          status: 'warning',
-          message: 'No messaging platform configured',
-          actionLabel: 'Add Platform',
-          actionHref: '/messaging',
-        });
-      }
-    } catch {
-      updateDiagnostic('platform', {
-        status: 'warning',
-        message: 'Cannot check platform status',
-        actionLabel: 'View Platforms',
-        actionHref: '/messaging',
-      });
+      showError('Failed to run diagnostics');
+    } finally {
+      setIsRunning(false);
     }
-  };
-
-  const runAllDiagnostics = async () => {
-    setIsRunning(true);
-    await Promise.all([checkCli(), checkGateway(), checkApiKey(), checkPlatform()]);
-    setIsRunning(false);
-    success('Diagnostics complete');
-  };
+  }, [processBackendResults, showSuccess, showError]);
 
   // Run diagnostics once on mount
   useEffect(() => {
@@ -222,7 +167,7 @@ export default function DiagnosticsPage() {
       setHasLoaded(true);
       runAllDiagnostics();
     }
-  }, [hasLoaded]);
+  }, [hasLoaded, runAllDiagnostics]);
 
   const getStatusIcon = (status: string) => {
     switch (status) {
@@ -261,7 +206,7 @@ export default function DiagnosticsPage() {
       case 'apiKey':
         return <Key className="h-5 w-5" />;
       case 'platform':
-        return <MessageSquare className="h-5 w-5" />;
+        return <Globe className="h-5 w-5" />;
       default:
         return <Settings className="h-5 w-5" />;
     }

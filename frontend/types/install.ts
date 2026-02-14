@@ -27,6 +27,7 @@ export interface UpdateResponse {
 export type InstallStep =
   | 'checking'
   | 'downloading'
+  | 'extracting'
   | 'installing'
   | 'verifying'
   | 'configuring'

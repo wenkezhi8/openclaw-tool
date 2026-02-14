@@ -1,8 +1,7 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { wsClient } from '@/lib/websocket-client';
 import type { LogEntry } from '@/types/log';
@@ -10,17 +9,61 @@ import { Terminal, Trash2, Filter } from 'lucide-react';
 
 type OperationType = 'all' | 'install' | 'update' | 'uninstall';
 
-interface InstallTerminalProps {
-  className?: string;
+// External log entry for simulated logs
+interface ExternalLogEntry {
+  timestamp: string;
+  level: 'info' | 'warn' | 'error' | 'debug';
+  message: string;
+  operation?: 'install' | 'update' | 'uninstall';
 }
 
-export function InstallTerminal({ className }: InstallTerminalProps) {
+interface InstallTerminalProps {
+  className?: string;
+  simulatedLogs?: ExternalLogEntry[];
+}
+
+export function InstallTerminal({ className, simulatedLogs = [] }: InstallTerminalProps) {
   const [logs, setLogs] = useState<LogEntry[]>([]);
   const [isConnected, setIsConnected] = useState(false);
   const [filter, setFilter] = useState<OperationType>('all');
   const [isPaused, setIsPaused] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const pausedLogsRef = useRef<LogEntry[]>([]);
+  const prevSimulatedLogsLengthRef = useRef(0);
+
+  // Store operation types as state instead of ref for render access
+  const [logOperationTypes, setLogOperationTypes] = useState<Map<string, OperationType>>(new Map());
+
+  // Handle simulated logs from parent component
+  useEffect(() => {
+    if (simulatedLogs.length > prevSimulatedLogsLengthRef.current) {
+      const newLogs = simulatedLogs.slice(prevSimulatedLogsLengthRef.current);
+      const convertedLogs: LogEntry[] = newLogs.map(log => ({
+        timestamp: log.timestamp,
+        level: log.level,
+        message: log.message,
+        component: 'gateway' as const,
+      }));
+
+      // Update operation types for new logs
+      setLogOperationTypes(prev => {
+        const newOpTypes = new Map(prev);
+        newLogs.forEach(log => {
+          if (log.operation) {
+            newOpTypes.set(log.timestamp, log.operation);
+          }
+        });
+        return newOpTypes;
+      });
+
+      if (!isPaused) {
+        setLogs((prev) => [...prev.slice(-500), ...convertedLogs]);
+      } else {
+        pausedLogsRef.current.push(...convertedLogs);
+      }
+    }
+    prevSimulatedLogsLengthRef.current = simulatedLogs.length;
+  }, [simulatedLogs, isPaused]);
 
   useEffect(() => {
     // Connect to WebSocket
@@ -54,16 +97,6 @@ export function InstallTerminal({ className }: InstallTerminalProps) {
     }
   }, [logs.length, isPaused]);
 
-  const getLevelColor = (level: string) => {
-    const colors: Record<string, string> = {
-      debug: 'text-gray-400',
-      info: 'text-green-400',
-      warn: 'text-yellow-400',
-      error: 'text-red-400',
-    };
-    return colors[level] || 'text-gray-400';
-  };
-
   const getLevelBadgeColor = (level: string) => {
     const colors: Record<string, string> = {
       debug: 'bg-gray-600',
@@ -87,6 +120,7 @@ export function InstallTerminal({ className }: InstallTerminalProps) {
   const clearLogs = () => {
     setLogs([]);
     pausedLogsRef.current = [];
+    setLogOperationTypes(new Map());
   };
 
   const togglePause = () => {
@@ -98,19 +132,28 @@ export function InstallTerminal({ className }: InstallTerminalProps) {
     setIsPaused(!isPaused);
   };
 
-  // Detect operation type from log message
-  const getOperationType = (message: string): OperationType => {
+  // Detect operation type from log message or use provided operation
+  const getOperationType = useCallback((message: string, providedOp?: OperationType): OperationType => {
+    // First check if we have an explicit operation type
+    if (providedOp) {
+      return providedOp;
+    }
+    // Fall back to message detection
     const lowerMsg = message.toLowerCase();
     if (lowerMsg.includes('install') || lowerMsg.includes('安装')) return 'install';
     if (lowerMsg.includes('update') || lowerMsg.includes('updating') || lowerMsg.includes('更新')) return 'update';
     if (lowerMsg.includes('uninstall') || lowerMsg.includes('remove') || lowerMsg.includes('卸载')) return 'uninstall';
     return 'all';
-  };
+  }, []);
 
-  // Filter logs based on selected operation type
-  const filteredLogs = filter === 'all'
-    ? logs
-    : logs.filter(log => getOperationType(log.message) === filter);
+  // Filter logs based on selected operation type - using useMemo to avoid ref access during render
+  const filteredLogs = useMemo(() => {
+    if (filter === 'all') return logs;
+    return logs.filter(log => {
+      const storedOp = logOperationTypes.get(log.timestamp);
+      return getOperationType(log.message, storedOp) === filter;
+    });
+  }, [logs, filter, logOperationTypes, getOperationType]);
 
   const filterButtons: { type: OperationType; label: string }[] = [
     { type: 'all', label: 'All' },
@@ -172,7 +215,7 @@ export function InstallTerminal({ className }: InstallTerminalProps) {
                 : 'text-gray-400 hover:text-white hover:bg-gray-700'
             )}
           >
-            {isPaused ? '▶ Resume' : '⏸ Pause'}
+            {isPaused ? 'Resume' : 'Pause'}
           </button>
           <button
             onClick={clearLogs}
@@ -199,7 +242,8 @@ export function InstallTerminal({ className }: InstallTerminalProps) {
             </div>
           ) : (
             filteredLogs.map((log, index) => {
-              const opType = getOperationType(log.message);
+              const storedOp = logOperationTypes.get(log.timestamp);
+              const opType = getOperationType(log.message, storedOp);
               return (
                 <div key={`${log.timestamp}-${index}`} className="flex gap-2 py-0.5 group">
                   <span className="text-gray-500 select-none shrink-0">

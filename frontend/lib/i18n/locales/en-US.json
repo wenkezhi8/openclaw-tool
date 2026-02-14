@@ -338,17 +338,20 @@
     "dashboard": "Dashboard",
     "gateway": "Gateway",
     "agents": "Agents",
-    "channels": "Channels",
+    "providers": "Model Providers",
     "models": "Models",
+    "channels": "Channels",
     "logs": "Logs",
     "settings": "Settings",
     "install": "Install",
-    "messaging": "Messaging",
     "skills": "Skills",
+    "memory": "Memory",
     "browser": "Browser",
     "openclaw": "OpenClaw",
     "gettingStarted": "Getting Started",
-    "diagnostics": "Diagnostics"
+    "diagnostics": "Diagnostics",
+    "persona": "Persona",
+    "heartbeats": "Heartbeats"
   },
   "header": {
     "language": "Language",
@@ -463,14 +466,14 @@
     "status": "Status",
     "config": "Configuration"
   },
-  "channels": {
-    "title": "Channel Management",
-    "list": "Channel List",
-    "create": "Create Channel",
-    "edit": "Edit Channel",
-    "delete": "Delete Channel",
-    "channelName": "Channel Name",
-    "channelType": "Channel Type",
+  "providers": {
+    "title": "Model Providers",
+    "list": "Provider List",
+    "create": "Create Provider",
+    "edit": "Edit Provider",
+    "delete": "Delete Provider",
+    "providerName": "Provider Name",
+    "providerType": "Provider Type",
     "status": "Status",
     "config": "Configuration",
     "testTitle": "Test Connection",
@@ -485,17 +488,17 @@
     "add": "Add Model",
     "edit": "Edit Model",
     "confirmDelete": "Are you sure you want to delete \"{name}\"?",
-    "autoDiscovery": "Models are automatically discovered from configured channels. Add a channel to see available models.",
+    "autoDiscovery": "Models are automatically discovered from configured providers. Add a provider to see available models.",
     "testTitle": "Test Model",
     "testing": "Testing...",
     "testSuccess": "Test successful",
     "testError": "Test failed",
     "configTitle": "Configure Model",
     "save": "Save Configuration",
-    "noModels": "No models found. Models will appear here once channels are configured.",
+    "noModels": "No models found. Models will appear here once providers are configured.",
     "name": "Name",
     "id": "ID",
-    "channel": "Channel",
+    "channel": "Provider",
     "contextLength": "Context Length",
     "pricing": "Pricing (per 1K tokens)",
     "enabled": "Enabled",
@@ -748,6 +751,58 @@
       }
     }
   },
+  "channels": {
+    "title": "Channels",
+    "description": "Manage messaging platform integrations",
+    "addChannel": "Add Channel",
+    "noChannels": "No channels configured",
+    "connect": "Connect",
+    "disconnect": "Disconnect",
+    "pairing": "Pairing...",
+    "paired": "Paired",
+    "providers": {
+      "telegram": "Telegram",
+      "discord": "Discord",
+      "slack": "Slack",
+      "whatsapp": "WhatsApp",
+      "wechat": "WeChat"
+    },
+    "statusLabels": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "pairing": "Pairing",
+      "error": "Error"
+    },
+    "errors": {
+      "connectFailed": "Failed to connect channel",
+      "disconnectFailed": "Failed to disconnect channel",
+      "loadFailed": "Failed to load channels"
+    },
+    "tutorial": {
+      "title": "Connection Tutorial",
+      "telegram": {
+        "step1": "Open Telegram and search for @BotFather",
+        "step2": "Send /newbot to create a new bot",
+        "step3": "Follow the prompts to set the bot name",
+        "step4": "Copy the Token you received",
+        "step5": "Paste the Token into the input field below"
+      },
+      "discord": {
+        "step1": "Visit the Discord Developer Portal",
+        "step2": "Create a new application",
+        "step3": "Add a Bot to your application",
+        "step4": "Copy the Bot Token",
+        "step5": "Invite the Bot to your server"
+      },
+      "default": {
+        "step1": "Visit the platform developer portal",
+        "step2": "Create a new application or bot",
+        "step3": "Configure the required permissions",
+        "step4": "Copy the access credentials",
+        "step5": "Enter the credentials in the connection form"
+      }
+    }
+  },
   "skills": {
     "title": "Skills",
     "description": "Manage AI skills and browse the ClawHub marketplace",
@@ -775,6 +830,51 @@
       "uninstallFailed": "Failed to uninstall skill",
       "loadFailed": "Failed to load skills",
       "marketplaceFailed": "Failed to search marketplace"
+    }
+  },
+  "memory": {
+    "title": "Memory System",
+    "description": "Manage agent memory, SOUL configuration, and user memories",
+    "status": {
+      "title": "Memory Status",
+      "soulConfig": "SOUL Config",
+      "active": "Active",
+      "notFound": "Not Found",
+      "memoryFiles": "Memory Files",
+      "totalSize": "Total Size",
+      "lastBackup": "Last Backup",
+      "never": "Never",
+      "backup": "Backup",
+      "backingUp": "Backing up..."
+    },
+    "soul": {
+      "title": "SOUL Configuration",
+      "notFound": "No SOUL configuration found. Create a SOUL.md file to define your agent's personality.",
+      "personality": "Personality",
+      "tone": "Tone",
+      "capabilities": "Capabilities",
+      "behaviorGuidelines": "Behavior Guidelines",
+      "systemPrompt": "System Prompt"
+    },
+    "userMemory": {
+      "title": "User Memory",
+      "search": "Search memory...",
+      "searchButton": "Search",
+      "clear": "Clear",
+      "allTypes": "All types",
+      "preference": "Preference",
+      "fact": "Fact",
+      "context": "Context",
+      "noMemories": "No memories found",
+      "tryDifferent": "Try a different search term",
+      "page": "Page",
+      "of": "of"
+    },
+    "errors": {
+      "loadStatusFailed": "Failed to load memory status",
+      "loadConfigFailed": "Failed to load SOUL configuration",
+      "deleteFailed": "Failed to delete memory",
+      "backupFailed": "Failed to backup memory"
     }
   },
   "gettingStarted": {
@@ -954,24 +1054,24 @@
         "content2": "Filter by status (Active/Inactive) or type to narrow down the list."
       }
     },
-    "channels": {
-      "title": "Channels Help",
-      "description": "Learn how to configure API channels",
+    "providers": {
+      "title": "Model Providers Help",
+      "description": "Learn how to configure AI model providers",
       "overview": {
         "title": "Overview",
-        "content1": "Channels are connections to AI model providers (like OpenAI, Anthropic, etc.).",
-        "content2": "Configure channels to enable the gateway to route requests to different providers."
+        "content1": "Providers are connections to AI model providers (like OpenAI, Anthropic, etc.).",
+        "content2": "Configure providers to enable the gateway to route requests to different providers."
       },
       "configuration": {
-        "title": "Channel Configuration",
-        "content1": "Name: A descriptive name for the channel.",
+        "title": "Provider Configuration",
+        "content1": "Name: A descriptive name for the provider.",
         "content2": "Type: The provider type (e.g., OpenAI, Anthropic).",
         "content3": "API Key: Your authentication key for the provider.",
-        "content4": "Priority: Higher priority channels are used first."
+        "content4": "Priority: Higher priority providers are used first."
       },
       "testing": {
         "title": "Testing",
-        "content1": "Use the \"Test Connection\" feature to verify your channel configuration.",
+        "content1": "Use the \"Test Connection\" feature to verify your provider configuration.",
         "content2": "A successful test confirms the API key is valid and the provider is accessible."
       }
     },
@@ -980,8 +1080,8 @@
       "description": "Learn how to manage AI models",
       "overview": {
         "title": "Overview",
-        "content1": "Models are automatically discovered from configured channels.",
-        "content2": "You cannot add models manually; they appear when you configure channels."
+        "content1": "Models are automatically discovered from configured providers.",
+        "content2": "You cannot add models manually; they appear when you configure providers."
       },
       "configuration": {
         "title": "Model Configuration",
@@ -1113,6 +1213,63 @@
       "step4": "Restart the gateway service",
       "viewLogs": "View Logs",
       "gatewayControl": "Gateway Control"
+    }
+  },
+  "persona": {
+    "title": "Persona Management",
+    "pageDescription": "Manage AI personality settings and system prompts",
+    "addPersona": "Add Persona",
+    "editPersona": "Edit Persona",
+    "name": "Name",
+    "namePlaceholder": "Enter persona name",
+    "personaDescription": "Description",
+    "descriptionPlaceholder": "Brief description of this persona",
+    "systemPrompt": "System Prompt",
+    "systemPromptPlaceholder": "Enter the system prompt that defines this persona",
+    "active": "Active",
+    "inactive": "Inactive",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "noPersonas": "No personas configured",
+    "noPersonasDesc": "Create a persona to get started",
+    "lastUpdated": "Last updated",
+    "errors": {
+      "loadFailed": "Failed to load personas",
+      "saveFailed": "Failed to save persona",
+      "deleteFailed": "Failed to delete persona"
+    }
+  },
+  "heartbeats": {
+    "title": "Heartbeats",
+    "pageDescription": "Manage scheduled tasks and automated heartbeats",
+    "addTask": "Add Task",
+    "editTask": "Edit Task",
+    "taskName": "Task Name",
+    "taskNamePlaceholder": "Enter task name",
+    "taskDescription": "Description",
+    "descriptionPlaceholder": "Describe what this task does",
+    "cronExpression": "Cron Expression",
+    "cronPlaceholder": "e.g., 0 * * * * (every hour)",
+    "action": "Action",
+    "actionPlaceholder": "Action to execute",
+    "enabled": "Enabled",
+    "running": "Running",
+    "stopped": "Stopped",
+    "error": "Error",
+    "lastRun": "Last Run",
+    "nextRun": "Next Run",
+    "schedule": "Schedule",
+    "noTasks": "No tasks configured",
+    "noTasksDesc": "Create a task to get started",
+    "start": "Start",
+    "stop": "Stop",
+    "executeNow": "Execute Now",
+    "cronHelp": "Format: minute hour day-of-month month day-of-week",
+    "errors": {
+      "loadFailed": "Failed to load tasks",
+      "saveFailed": "Failed to save task",
+      "deleteFailed": "Failed to delete task",
+      "executeFailed": "Failed to execute task"
     }
   }
 }

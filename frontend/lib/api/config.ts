@@ -1,19 +1,15 @@
 // API Configuration
-// Dynamic API URL based on current hostname to avoid CORS issues
+// Use relative URL to leverage Next.js rewrites for API proxying
 function getApiBaseUrl(): string {
   // Use environment variable if set
   if (process.env.NEXT_PUBLIC_API_URL) {
     return process.env.NEXT_PUBLIC_API_URL;
   }
 
-  // In browser, dynamically determine API URL based on current hostname
+  // In browser, use relative URL to leverage Next.js rewrites
+  // This avoids CORS issues and uses the proxy configured in next.config.ts
   if (typeof window !== 'undefined') {
-    const protocol = window.location.protocol; // 'http:' or 'https:'
-    const hostname = window.location.hostname;
-    const wsProtocol = protocol === 'https:' ? 'wss:' : 'ws:';
-
-    // Default backend port is 3001
-    return `${protocol}//${hostname}:3001/api`;
+    return '/api';
   }
 
   // Server-side fallback
@@ -30,9 +26,14 @@ function getWsBaseUrl(): string {
   if (typeof window !== 'undefined') {
     const protocol = window.location.protocol;
     const hostname = window.location.hostname;
+    const port = window.location.port || (protocol === 'https:' ? '443' : '80');
     const wsProtocol = protocol === 'https:' ? 'wss:' : 'ws:';
 
-    return `${wsProtocol}//${hostname}:3001/ws`;
+    // If accessing via frontend port (3000), use backend port (3001) for WebSocket
+    // Otherwise use the same port
+    const wsPort = port === '3000' ? '3001' : port;
+
+    return `${wsProtocol}//${hostname}:${wsPort}/ws`;
   }
 
   // Server-side fallback

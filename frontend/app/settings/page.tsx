@@ -104,12 +104,33 @@ export default function SettingsPage() {
     }
   }, [updateError, error, t]);
 
-  const handleSaveApiConfig = () => {
-    success(t('messages.saveSuccess'));
+  const [apiConfigLoading, setApiConfigLoading] = useState(false);
+  const [gatewayConfigLoading, setGatewayConfigLoading] = useState(false);
+
+  const handleSaveApiConfig = async () => {
+    setApiConfigLoading(true);
+    try {
+      // Simulate save
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      success(t('messages.saveSuccess'));
+    } catch (err) {
+      error(t('messages.saveError'));
+    } finally {
+      setApiConfigLoading(false);
+    }
   };
 
-  const handleSaveGatewayConfig = () => {
-    success(t('messages.saveSuccess'));
+  const handleSaveGatewayConfig = async () => {
+    setGatewayConfigLoading(true);
+    try {
+      // Simulate save
+      await new Promise((resolve) => setTimeout(resolve, 800));
+      success(t('messages.saveSuccess'));
+    } catch (err) {
+      error(t('messages.saveError'));
+    } finally {
+      setGatewayConfigLoading(false);
+    }
   };
 
   const handleSaveOpenClawConfig = () => {
@@ -302,7 +323,9 @@ export default function SettingsPage() {
                 placeholder={t('settings.apiConfig.apiKeyPlaceholder')}
               />
             </div>
-            <Button onClick={handleSaveApiConfig}>{t('settings.apiConfig.save')}</Button>
+            <Button onClick={handleSaveApiConfig} disabled={apiConfigLoading}>
+              {apiConfigLoading ? t('common.loading') : t('settings.apiConfig.save')}
+            </Button>
           </CardContent>
         </Card>
 
@@ -332,7 +355,9 @@ export default function SettingsPage() {
                 placeholder="4"
               />
             </div>
-            <Button onClick={handleSaveGatewayConfig} variant="outline">{t('settings.gatewayConfig.save')}</Button>
+            <Button onClick={handleSaveGatewayConfig} variant="outline" disabled={gatewayConfigLoading}>
+              {gatewayConfigLoading ? t('common.loading') : t('settings.gatewayConfig.save')}
+            </Button>
           </CardContent>
         </Card>
 
