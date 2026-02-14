@@ -602,11 +602,17 @@
     "confirmUninstall": "Are you sure you want to uninstall OpenClaw CLI? This action cannot be undone.",
     "steps": {
       "checking": "Checking system requirements",
+      "checkingDescription": "Verifying system requirements and dependencies",
       "downloading": "Downloading OpenClaw CLI",
+      "downloadingDescription": "Downloading OpenClaw CLI package",
       "installing": "Installing OpenClaw CLI",
+      "installingDescription": "Installing OpenClaw CLI to system",
       "verifying": "Verifying installation",
+      "verifyingDescription": "Verifying installation integrity",
       "configuring": "Configuring environment",
-      "complete": "Installation complete"
+      "configuringDescription": "Configuring environment variables and settings",
+      "complete": "Installation complete",
+      "completeDescription": "Installation completed successfully"
     },
     "progressDetail": {
       "currentStep": "Current Step",

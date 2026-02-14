@@ -602,11 +602,17 @@
     "confirmUninstall": "确定要卸载 OpenClaw CLI 吗？此操作无法撤销。",
     "steps": {
       "checking": "检查系统要求",
+      "checkingDescription": "验证系统要求和依赖项",
       "downloading": "下载 OpenClaw CLI",
+      "downloadingDescription": "下载 OpenClaw CLI 安装包",
       "installing": "安装 OpenClaw CLI",
+      "installingDescription": "将 OpenClaw CLI 安装到系统",
       "verifying": "验证安装",
+      "verifyingDescription": "验证安装完整性",
       "configuring": "配置环境",
-      "complete": "安装完成"
+      "configuringDescription": "配置环境变量和设置",
+      "complete": "安装完成",
+      "completeDescription": "安装成功完成"
     },
     "progressDetail": {
       "currentStep": "当前步骤",

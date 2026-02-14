@@ -24,7 +24,7 @@ interface TerminalLog {
 
 export default function InstallPage() {
   const { t } = useI18n();
-  const { data: status, isLoading, error } = useInstallStatus();
+  const { data: status, isLoading, error, refetch } = useInstallStatus();
   const { install, update, uninstall, isInstalling, isUpdating, isUninstalling } = useInstallActions();
 
   // Progress tracking state
@@ -95,6 +95,11 @@ export default function InstallPage() {
       } else {
         setIsSimulating(false);
         setCompletedSteps(['checking', 'downloading', 'extracting', 'configuring', 'complete']);
+        // Hide progress and refresh status after a short delay
+        setTimeout(() => {
+          setShowProgress(false);
+          refetch();
+        }, 1500);
       }
     };
 
@@ -158,6 +163,10 @@ export default function InstallPage() {
       } else {
         setIsSimulating(false);
         setCompletedSteps([]);
+        // Refresh status after uninstall
+        setTimeout(() => {
+          refetch();
+        }, 500);
       }
     };
 
