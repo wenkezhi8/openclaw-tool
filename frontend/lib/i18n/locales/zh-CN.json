@@ -353,6 +353,13 @@
     "persona": "人格设定",
     "heartbeats": "定时任务"
   },
+  "navGroups": {
+    "quickAccess": "快捷入口",
+    "monitor": "监控",
+    "config": "配置",
+    "ai": "AI",
+    "tools": "工具"
+  },
   "header": {
     "language": "语言",
     "theme": "主题",

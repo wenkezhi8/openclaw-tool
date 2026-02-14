@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useI18n } from '@/hooks';
+import { useI18n, useHeartbeatTasks, useHeartbeatActions } from '@/hooks';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -27,93 +27,19 @@ import {
   Clock,
   ChevronLeft,
   ChevronRight,
-  Zap,
+  AlertCircle,
+  Loader2,
 } from 'lucide-react';
 import { LoadingSpinner } from '@/components/common';
 import { toast } from 'sonner';
+import type { HeartbeatTask, HeartbeatTaskStatus, CreateHeartbeatTaskRequest, UpdateHeartbeatTaskRequest } from '@/types/heartbeat';
 
-type TaskStatus = 'running' | 'stopped' | 'error';
-
-interface HeartbeatTask {
-  id: string;
-  name: string;
-  description: string;
-  cronExpression: string;
-  action: string;
-  status: TaskStatus;
-  enabled: boolean;
-  lastRun?: string;
-  nextRun?: string;
-  createdAt: string;
-}
-
-// Mock data for heartbeat tasks
-const mockTasks: HeartbeatTask[] = [
-  {
-    id: '1',
-    name: 'Daily Report',
-    description: 'Generate and send daily summary report',
-    cronExpression: '0 9 * * *',
-    action: 'generate_daily_report',
-    status: 'running',
-    enabled: true,
-    lastRun: '2024-01-20T09:00:00Z',
-    nextRun: '2024-01-21T09:00:00Z',
-    createdAt: '2024-01-15T10:00:00Z',
-  },
-  {
-    id: '2',
-    name: 'Cache Cleanup',
-    description: 'Clean up expired cache entries every hour',
-    cronExpression: '0 * * * *',
-    action: 'cleanup_cache',
-    status: 'running',
-    enabled: true,
-    lastRun: '2024-01-20T15:00:00Z',
-    nextRun: '2024-01-20T16:00:00Z',
-    createdAt: '2024-01-10T08:30:00Z',
-  },
-  {
-    id: '3',
-    name: 'Weekly Backup',
-    description: 'Create weekly backup of all data',
-    cronExpression: '0 2 * * 0',
-    action: 'create_backup',
-    status: 'stopped',
-    enabled: false,
-    lastRun: '2024-01-14T02:00:00Z',
-    nextRun: '2024-01-21T02:00:00Z',
-    createdAt: '2024-01-01T12:00:00Z',
-  },
-  {
-    id: '4',
-    name: 'Health Check',
-    description: 'Check system health every 5 minutes',
-    cronExpression: '*/5 * * * *',
-    action: 'health_check',
-    status: 'running',
-    enabled: true,
-    lastRun: '2024-01-20T15:30:00Z',
-    nextRun: '2024-01-20T15:35:00Z',
-    createdAt: '2024-01-05T14:20:00Z',
-  },
-  {
-    id: '5',
-    name: 'Log Rotation',
-    description: 'Rotate and compress old log files daily',
-    cronExpression: '0 0 * * *',
-    action: 'rotate_logs',
-    status: 'error',
-    enabled: true,
-    lastRun: '2024-01-20T00:00:00Z',
-    createdAt: '2024-01-08T09:15:00Z',
-  },
-];
-
-const statusColors: Record<TaskStatus, string> = {
+const statusColors: Record<HeartbeatTaskStatus, string> = {
+  pending: 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
   running: 'bg-green-500/10 text-green-500 border-green-500/20',
-  stopped: 'bg-gray-500/10 text-gray-500 border-gray-500/20',
-  error: 'bg-red-500/10 text-red-500 border-red-500/20',
+  completed: 'bg-blue-500/10 text-blue-500 border-blue-500/20',
+  failed: 'bg-red-500/10 text-red-500 border-red-500/20',
+  disabled: 'bg-gray-500/10 text-gray-500 border-gray-500/20',
 };
 
 function formatDate(dateString?: string): string {
@@ -121,10 +47,22 @@ function formatDate(dateString?: string): string {
   return new Date(dateString).toLocaleString();
 }
 
-function parseCronExpression(expression: string): string {
+function parseSchedule(schedule: string): string {
+  // Check if it's an interval format like "30m", "1h", "1d"
+  const intervalMatch = schedule.match(/^(\d+)([mhd])$/);
+  if (intervalMatch) {
+    const [, value, unit] = intervalMatch;
+    const unitNames: Record<string, string> = {
+      m: 'minute(s)',
+      h: 'hour(s)',
+      d: 'day(s)',
+    };
+    return `Every ${value} ${unitNames[unit] || unit}`;
+  }
+
   // Simple cron expression parser for display
-  const parts = expression.split(' ');
-  if (parts.length !== 5) return expression;
+  const parts = schedule.split(' ');
+  if (parts.length !== 5) return schedule;
 
   const [minute, hour, dayOfMonth, month, dayOfWeek] = parts;
 
@@ -145,22 +83,24 @@ function parseCronExpression(expression: string): string {
     return 'Weekly on Sunday at 2:00 AM';
   }
 
-  return expression;
+  return schedule;
 }
 
 export default function HeartbeatsPage() {
   const { t } = useI18n();
-  const [tasks, setTasks] = useState<HeartbeatTask[]>(mockTasks);
-  const [isLoading] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState<HeartbeatTask | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
+
+  // Use real API hooks
+  const { data, isLoading, isError, error, refetch } = useHeartbeatTasks(currentPage, itemsPerPage);
+  const actions = useHeartbeatActions();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingTask, setEditingTask] = useState<HeartbeatTask | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
+    title: '',
     description: '',
-    cronExpression: '0 * * * *',
-    action: '',
+    schedule: '0 * * * *',
     enabled: true,
   });
 
@@ -173,19 +113,22 @@ export default function HeartbeatsPage() {
     taskNamePlaceholder: t('heartbeats.taskNamePlaceholder') || 'Enter task name',
     taskDescription: t('heartbeats.taskDescription') || 'Description',
     descriptionPlaceholder: t('heartbeats.descriptionPlaceholder') || 'Describe what this task does',
-    cronExpression: t('heartbeats.cronExpression') || 'Cron Expression',
-    cronPlaceholder: t('heartbeats.cronPlaceholder') || 'e.g., 0 * * * * (every hour)',
-    action: t('heartbeats.action') || 'Action',
-    actionPlaceholder: t('heartbeats.actionPlaceholder') || 'Action to execute',
+    cronExpression: t('heartbeats.cronExpression') || 'Schedule',
+    cronPlaceholder: t('heartbeats.cronPlaceholder') || 'e.g., 0 * * * * (every hour) or 30m',
     enabled: t('heartbeats.enabled') || 'Enabled',
     running: t('heartbeats.running') || 'Running',
     stopped: t('heartbeats.stopped') || 'Stopped',
+    pending: t('heartbeats.pending') || 'Pending',
+    completed: t('heartbeats.completed') || 'Completed',
+    failed: t('heartbeats.failed') || 'Failed',
+    disabled: t('heartbeats.disabled') || 'Disabled',
     error: t('heartbeats.error') || 'Error',
     lastRun: t('heartbeats.lastRun') || 'Last Run',
     nextRun: t('heartbeats.nextRun') || 'Next Run',
     schedule: t('heartbeats.schedule') || 'Schedule',
     noTasks: t('heartbeats.noTasks') || 'No tasks configured',
     noTasksDesc: t('heartbeats.noTasksDesc') || 'Create a task to get started',
+    noTasksGuide: t('heartbeats.noTasksGuide') || 'Click "Add Task" to create your first scheduled task',
     cancel: t('common.cancel') || 'Cancel',
     save: t('common.save') || 'Save',
     delete: t('common.delete') || 'Delete',
@@ -193,33 +136,42 @@ export default function HeartbeatsPage() {
     start: t('heartbeats.start') || 'Start',
     stop: t('heartbeats.stop') || 'Stop',
     executeNow: t('heartbeats.executeNow') || 'Execute Now',
-    cronHelp: t('heartbeats.cronHelp') || 'Format: minute hour day-of-month month day-of-week',
+    cronHelp: t('heartbeats.cronHelp') || 'Format: minute hour day-of-month month day-of-week, or interval like 30m, 1h, 1d',
+    loadError: t('heartbeats.loadError') || 'Failed to load tasks',
+    retry: t('common.retry') || 'Retry',
   };
 
-  // Pagination
-  const totalPages = Math.ceil(tasks.length / itemsPerPage);
-  const paginatedTasks = tasks.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
+  // Get tasks from API response
+  const tasks = data?.tasks ?? [];
+  const totalPages = data?.totalPages ?? 1;
+
+  // Get status text
+  const getStatusText = (status: HeartbeatTaskStatus) => {
+    switch (status) {
+      case 'pending': return pageTexts.pending;
+      case 'running': return pageTexts.running;
+      case 'completed': return pageTexts.completed;
+      case 'failed': return pageTexts.failed;
+      case 'disabled': return pageTexts.disabled;
+      default: return status;
+    }
+  };
 
   const handleOpenDialog = (task?: HeartbeatTask) => {
     if (task) {
       setEditingTask(task);
       setFormData({
-        name: task.name,
+        title: task.title,
         description: task.description,
-        cronExpression: task.cronExpression,
-        action: task.action,
+        schedule: task.schedule,
         enabled: task.enabled,
       });
     } else {
       setEditingTask(null);
       setFormData({
-        name: '',
+        title: '',
         description: '',
-        cronExpression: '0 * * * *',
-        action: '',
+        schedule: '0 * * * *',
         enabled: true,
       });
     }
@@ -230,90 +182,97 @@ export default function HeartbeatsPage() {
     setIsDialogOpen(false);
     setEditingTask(null);
     setFormData({
-      name: '',
+      title: '',
       description: '',
-      cronExpression: '0 * * * *',
-      action: '',
+      schedule: '0 * * * *',
       enabled: true,
     });
   };
 
   const handleSave = () => {
-    if (!formData.name.trim()) {
+    if (!formData.title.trim()) {
       toast.error('Task name is required');
-      return;
-    }
-    if (!formData.action.trim()) {
-      toast.error('Action is required');
       return;
     }
 
     if (editingTask) {
       // Update existing task
-      setTasks((prev) =>
-        prev.map((t) =>
-          t.id === editingTask.id
-            ? {
-                ...t,
-                ...formData,
-              }
-            : t
-        )
+      const request: UpdateHeartbeatTaskRequest = {
+        title: formData.title,
+        description: formData.description,
+        schedule: formData.schedule,
+        enabled: formData.enabled,
+      };
+      actions.updateTask(
+        { id: editingTask.id, request },
+        {
+          onSuccess: () => {
+            toast.success('Task updated successfully');
+            handleCloseDialog();
+          },
+          onError: (err) => {
+            toast.error(`Failed to update task: ${err instanceof Error ? err.message : 'Unknown error'}`);
+          },
+        }
       );
-      toast.success('Task updated successfully');
     } else {
       // Create new task
-      const newTask: HeartbeatTask = {
-        id: Date.now().toString(),
-        ...formData,
-        status: formData.enabled ? 'running' : 'stopped',
-        createdAt: new Date().toISOString(),
+      const request: CreateHeartbeatTaskRequest = {
+        title: formData.title,
+        description: formData.description,
+        schedule: formData.schedule,
+        enabled: formData.enabled,
       };
-      setTasks((prev) => [...prev, newTask]);
-      toast.success('Task created successfully');
+      actions.addTask(request, {
+        onSuccess: () => {
+          toast.success('Task created successfully');
+          handleCloseDialog();
+        },
+        onError: (err) => {
+          toast.error(`Failed to create task: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        },
+      });
     }
-
-    handleCloseDialog();
   };
 
   const handleDelete = (id: string) => {
-    setTasks((prev) => prev.filter((t) => t.id !== id));
-    toast.success('Task deleted successfully');
+    actions.deleteTask(id, {
+      onSuccess: () => {
+        toast.success('Task deleted successfully');
+      },
+      onError: (err) => {
+        toast.error(`Failed to delete task: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      },
+    });
   };
 
-  const handleToggleStatus = (id: string) => {
-    setTasks((prev) =>
-      prev.map((t) => {
-        if (t.id === id) {
-          const newEnabled = !t.enabled;
-          return {
-            ...t,
-            enabled: newEnabled,
-            status: newEnabled ? 'running' : 'stopped',
-          };
-        }
-        return t;
-      })
+  const handleToggleStatus = (task: HeartbeatTask) => {
+    const newEnabled = !task.enabled;
+    const request: UpdateHeartbeatTaskRequest = {
+      enabled: newEnabled,
+    };
+    actions.updateTask(
+      { id: task.id, request },
+      {
+        onSuccess: () => {
+          toast.success(newEnabled ? 'Task started' : 'Task stopped');
+        },
+        onError: (err) => {
+          toast.error(`Failed to update task: ${err instanceof Error ? err.message : 'Unknown error'}`);
+        },
+      }
     );
-    const task = tasks.find((t) => t.id === id);
-    toast.success(task?.enabled ? 'Task stopped' : 'Task started');
   };
 
-  const handleExecuteNow = (id: string) => {
-    const task = tasks.find((t) => t.id === id);
-    if (task) {
-      setTasks((prev) =>
-        prev.map((t) =>
-          t.id === id
-            ? {
-                ...t,
-                lastRun: new Date().toISOString(),
-              }
-            : t
-        )
-      );
-      toast.success(`Executing task: ${task.name}`);
-    }
+  const handleExecuteNow = (task: HeartbeatTask) => {
+    actions.executeTask(task.id, {
+      onSuccess: () => {
+        toast.success(`Executing task: ${task.title}`);
+      },
+      onError: (err) => {
+        toast.error(`Failed to execute task: ${err instanceof Error ? err.message : 'Unknown error'}`);
+      },
+    });
   };
 
   return (
@@ -328,7 +287,7 @@ export default function HeartbeatsPage() {
           <p className="text-muted-foreground">{pageTexts.pageDescription}</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" size="icon">
+          <Button variant="outline" size="icon" onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4" />
           </Button>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -346,12 +305,12 @@ export default function HeartbeatsPage() {
               </DialogHeader>
               <div className="space-y-4 pt-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">{pageTexts.taskName}</Label>
+                  <Label htmlFor="title">{pageTexts.taskName}</Label>
                   <Input
-                    id="name"
-                    value={formData.name}
+                    id="title"
+                    value={formData.title}
                     onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, name: e.target.value }))
+                      setFormData((prev) => ({ ...prev, title: e.target.value }))
                     }
                     placeholder={pageTexts.taskNamePlaceholder}
                   />
@@ -372,30 +331,19 @@ export default function HeartbeatsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="cron">{pageTexts.cronExpression}</Label>
+                  <Label htmlFor="schedule">{pageTexts.cronExpression}</Label>
                   <Input
-                    id="cron"
-                    value={formData.cronExpression}
+                    id="schedule"
+                    value={formData.schedule}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
-                        cronExpression: e.target.value,
+                        schedule: e.target.value,
                       }))
                     }
                     placeholder={pageTexts.cronPlaceholder}
                   />
                   <p className="text-xs text-muted-foreground">{pageTexts.cronHelp}</p>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="action">{pageTexts.action}</Label>
-                  <Input
-                    id="action"
-                    value={formData.action}
-                    onChange={(e) =>
-                      setFormData((prev) => ({ ...prev, action: e.target.value }))
-                    }
-                    placeholder={pageTexts.actionPlaceholder}
-                  />
                 </div>
                 <div className="flex items-center justify-between">
                   <Label htmlFor="enabled">{pageTexts.enabled}</Label>
@@ -413,8 +361,11 @@ export default function HeartbeatsPage() {
                   </Button>
                   <Button
                     onClick={handleSave}
-                    disabled={!formData.name.trim() || !formData.action.trim()}
+                    disabled={!formData.title.trim() || actions.isAddingTask || actions.isUpdatingTask}
                   >
+                    {(actions.isAddingTask || actions.isUpdatingTask) && (
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    )}
                     {pageTexts.save}
                   </Button>
                 </div>
@@ -431,35 +382,40 @@ export default function HeartbeatsPage() {
             <LoadingSpinner />
           </CardContent>
         </Card>
+      ) : isError ? (
+        <Card>
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+            <p className="text-muted-foreground">{pageTexts.loadError}</p>
+            <p className="text-sm text-muted-foreground mt-1 mb-4">
+              {error instanceof Error ? error.message : 'Unknown error'}
+            </p>
+            <Button variant="outline" onClick={() => refetch()}>
+              <RefreshCw className="h-4 w-4 mr-2" />
+              {pageTexts.retry}
+            </Button>
+          </CardContent>
+        </Card>
       ) : tasks.length > 0 ? (
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Clock className="h-5 w-5" />
-              Tasks ({tasks.length})
+              Tasks ({data?.total ?? tasks.length})
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {paginatedTasks.map((task) => (
+            {tasks.map((task) => (
               <div
                 key={task.id}
                 className="flex items-start justify-between p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
               >
                 <div className="flex-1 min-w-0 space-y-2">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium">{task.name}</span>
+                    <span className="font-medium">{task.title}</span>
                     <Badge className={statusColors[task.status]}>
-                      {task.status === 'running'
-                        ? pageTexts.running
-                        : task.status === 'stopped'
-                          ? pageTexts.stopped
-                          : pageTexts.error}
+                      {getStatusText(task.status)}
                     </Badge>
-                    {!task.enabled && (
-                      <Badge variant="outline" className="text-yellow-500">
-                        {pageTexts.stopped}
-                      </Badge>
-                    )}
                   </div>
                   <p className="text-sm text-muted-foreground line-clamp-1">
                     {task.description}
@@ -467,11 +423,7 @@ export default function HeartbeatsPage() {
                   <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Clock className="h-3 w-3" />
-                      {parseCronExpression(task.cronExpression)}
-                    </span>
-                    <span className="flex items-center gap-1">
-                      <Zap className="h-3 w-3" />
-                      {task.action}
+                      {parseSchedule(task.schedule)}
                     </span>
                   </div>
                   <div className="flex items-center gap-4 text-xs text-muted-foreground">
@@ -489,18 +441,26 @@ export default function HeartbeatsPage() {
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleExecuteNow(task.id)}
+                    onClick={() => handleExecuteNow(task)}
                     title={pageTexts.executeNow}
+                    disabled={actions.isExecutingTask}
                   >
-                    <Play className="h-4 w-4" />
+                    {actions.isExecutingTask ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Play className="h-4 w-4" />
+                    )}
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    onClick={() => handleToggleStatus(task.id)}
+                    onClick={() => handleToggleStatus(task)}
                     title={task.enabled ? pageTexts.stop : pageTexts.start}
+                    disabled={actions.isUpdatingTask}
                   >
-                    {task.enabled ? (
+                    {actions.isUpdatingTask ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : task.enabled ? (
                       <Pause className="h-4 w-4" />
                     ) : (
                       <Play className="h-4 w-4" />
@@ -520,8 +480,13 @@ export default function HeartbeatsPage() {
                     onClick={() => handleDelete(task.id)}
                     className="text-destructive hover:text-destructive"
                     title={pageTexts.delete}
+                    disabled={actions.isDeletingTask}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    {actions.isDeletingTask ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </div>
@@ -561,9 +526,13 @@ export default function HeartbeatsPage() {
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Heart className="h-12 w-12 text-muted-foreground mb-4" />
             <p className="text-muted-foreground">{pageTexts.noTasks}</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              {pageTexts.noTasksDesc}
+            <p className="text-sm text-muted-foreground mt-1 mb-4">
+              {pageTexts.noTasksGuide}
             </p>
+            <Button onClick={() => handleOpenDialog()}>
+              <Plus className="h-4 w-4 mr-2" />
+              {pageTexts.addTask}
+            </Button>
           </CardContent>
         </Card>
       )}

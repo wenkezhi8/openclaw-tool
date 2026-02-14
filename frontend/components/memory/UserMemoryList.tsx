@@ -6,6 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -13,7 +15,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Brain, Trash2, Search, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Brain, Trash2, Search, RefreshCw, ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { LoadingSpinner } from '@/components/common';
 import type { UserMemoryType } from '@/types/memory';
 
@@ -32,9 +42,15 @@ export function UserMemoryList() {
   const [type, setType] = useState<UserMemoryType | undefined>(undefined);
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newMemory, setNewMemory] = useState({
+    content: '',
+    type: 'fact' as UserMemoryType,
+    tags: '',
+  });
 
   const { data, isLoading, refetch } = useUserMemory(page, 10, type);
-  const { deleteMemory, isDeleting } = useMemoryActions();
+  const { deleteMemory, createMemory, isDeleting, isCreating } = useMemoryActions();
   const searchResult = useSearchMemory(isSearching ? { query: searchQuery, type, limit: 50 } : { query: '' });
 
   const memories = isSearching ? searchResult.data?.memories : data?.memories;
@@ -54,6 +70,21 @@ export function UserMemoryList() {
     setIsSearching(false);
   };
 
+  const handleAddMemory = () => {
+    if (!newMemory.content.trim()) return;
+
+    createMemory({
+      content: newMemory.content,
+      type: newMemory.type,
+      metadata: newMemory.tags.trim()
+        ? { tags: newMemory.tags.split(',').map((t) => t.trim()).filter(Boolean) }
+        : undefined,
+    });
+
+    setNewMemory({ content: '', type: 'fact', tags: '' });
+    setIsAddDialogOpen(false);
+  };
+
   return (
     <Card>
       <CardHeader className="space-y-4">
@@ -62,9 +93,15 @@ export function UserMemoryList() {
             <Brain className="h-4 w-4" />
             User Memory ({total || 0})
           </CardTitle>
-          <Button variant="outline" size="icon" onClick={() => refetch()}>
-            <RefreshCw className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-2">
+            <Button variant="outline" size="icon" onClick={() => refetch()}>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+            <Button size="sm" onClick={() => setIsAddDialogOpen(true)}>
+              <Plus className="h-4 w-4 mr-1" />
+              Add
+            </Button>
+          </div>
         </div>
 
         <div className="flex gap-2">
@@ -180,6 +217,72 @@ export function UserMemoryList() {
           </div>
         )}
       </CardContent>
+
+      {/* Add Memory Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New Memory</DialogTitle>
+            <DialogDescription>
+              Add a new memory entry to the user memory system.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="memory-type">Type</Label>
+              <Select
+                value={newMemory.type}
+                onValueChange={(value) =>
+                  setNewMemory((prev) => ({ ...prev, type: value as UserMemoryType }))
+                }
+              >
+                <SelectTrigger id="memory-type">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="preference">Preference</SelectItem>
+                  <SelectItem value="fact">Fact</SelectItem>
+                  <SelectItem value="context">Context</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="memory-content">Content</Label>
+              <Textarea
+                id="memory-content"
+                placeholder="Enter memory content..."
+                value={newMemory.content}
+                onChange={(e) =>
+                  setNewMemory((prev) => ({ ...prev, content: e.target.value }))
+                }
+                rows={4}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="memory-tags">Tags (optional, comma-separated)</Label>
+              <Input
+                id="memory-tags"
+                placeholder="tag1, tag2, tag3"
+                value={newMemory.tags}
+                onChange={(e) =>
+                  setNewMemory((prev) => ({ ...prev, tags: e.target.value }))
+                }
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAddMemory}
+              disabled={!newMemory.content.trim() || isCreating}
+            >
+              {isCreating ? 'Adding...' : 'Add Memory'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

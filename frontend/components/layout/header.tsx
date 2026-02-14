@@ -3,31 +3,134 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
-import { Activity, Github, Settings, Menu, X, ExternalLink } from 'lucide-react';
+import {
+  Activity,
+  Github,
+  Settings,
+  Menu,
+  X,
+  ExternalLink,
+  BarChart3,
+  Settings2,
+  Bot,
+  Wrench,
+  Zap,
+  Stethoscope,
+  ChevronDown,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from './theme-toggle';
 import { LanguageSelector } from '@/components/i18n/language-selector';
 import { useI18n } from '@/lib/i18n';
 import { useGatewayDashboard } from '@/hooks/use-gateway';
 import { useState } from 'react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
-const navigation = [
-  { key: 'dashboard', href: '/' },
-  { key: 'gettingStarted', href: '/getting-started' },
-  { key: 'diagnostics', href: '/diagnostics' },
-  { key: 'install', href: '/install' },
-  { key: 'gateway', href: '/gateway' },
-  { key: 'agents', href: '/agents' },
-  { key: 'providers', href: '/providers' },
-  { key: 'models', href: '/models' },
-  { key: 'channels', href: '/channels' },
-  { key: 'skills', href: '/skills' },
-  { key: 'memory', href: '/memory' },
-  { key: 'persona', href: '/persona' },
-  { key: 'heartbeats', href: '/heartbeats' },
-  { key: 'browser', href: '/browser' },
-  { key: 'logs', href: '/logs' },
+// Quick access items (always visible)
+const quickAccess = [
+  { key: 'gettingStarted', href: '/getting-started', icon: Zap },
+  { key: 'diagnostics', href: '/diagnostics', icon: Stethoscope },
 ];
+
+// Navigation groups
+const navGroups = [
+  {
+    key: 'monitor',
+    icon: BarChart3,
+    items: [
+      { key: 'dashboard', href: '/' },
+      { key: 'gateway', href: '/gateway' },
+      { key: 'logs', href: '/logs' },
+    ],
+  },
+  {
+    key: 'config',
+    icon: Settings2,
+    items: [
+      { key: 'install', href: '/install' },
+      { key: 'channels', href: '/channels' },
+      { key: 'agents', href: '/agents' },
+    ],
+  },
+  {
+    key: 'ai',
+    icon: Bot,
+    items: [
+      { key: 'providers', href: '/providers' },
+      { key: 'models', href: '/models' },
+      { key: 'persona', href: '/persona' },
+    ],
+  },
+  {
+    key: 'tools',
+    icon: Wrench,
+    items: [
+      { key: 'skills', href: '/skills' },
+      { key: 'memory', href: '/memory' },
+      { key: 'browser', href: '/browser' },
+      { key: 'heartbeats', href: '/heartbeats' },
+    ],
+  },
+];
+
+// Helper component for navigation group dropdown
+function NavGroupDropdown({
+  group,
+  pathname,
+  t,
+}: {
+  group: (typeof navGroups)[0];
+  pathname: string;
+  t: (key: string) => string;
+}) {
+  const isActive = group.items.some((item) => item.href === pathname);
+  const Icon = group.icon;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="sm"
+          className={cn(
+            'h-8 px-2 text-sm font-medium transition-colors',
+            isActive ? 'text-foreground' : 'text-foreground/60 hover:text-foreground/80'
+          )}
+        >
+          <Icon className="mr-1.5 h-4 w-4" />
+          {t(`navGroups.${group.key}`)}
+          <ChevronDown className="ml-1 h-3 w-3" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" className="w-48">
+        <DropdownMenuLabel className="text-xs text-muted-foreground">
+          {t(`navGroups.${group.key}`)}
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        {group.items.map((item) => (
+          <DropdownMenuItem key={item.href} asChild>
+            <Link
+              href={item.href}
+              className={cn(
+                'w-full cursor-pointer',
+                pathname === item.href && 'bg-accent'
+              )}
+            >
+              {t(`nav.${item.key}`)}
+            </Link>
+          </DropdownMenuItem>
+        ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
 
 export function Header() {
   const pathname = usePathname();
@@ -47,18 +150,30 @@ export function Header() {
               <span className="hidden font-bold sm:inline-block">OpenClaw Tool</span>
             </Link>
             {/* Desktop navigation */}
-            <nav className="hidden md:flex items-center space-x-1 lg:space-x-6 text-sm font-medium">
-              {navigation.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(
-                    'transition-colors hover:text-foreground/80 px-2 py-1',
-                    pathname === item.href ? 'text-foreground' : 'text-foreground/60'
-                  )}
-                >
-                  {t(`nav.${item.key}`)}
-                </Link>
+            <nav className="hidden md:flex items-center space-x-1 text-sm font-medium">
+              {/* Quick access items */}
+              {quickAccess.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={cn(
+                      'transition-colors hover:text-foreground/80 px-2 py-1 flex items-center gap-1',
+                      pathname === item.href ? 'text-foreground' : 'text-foreground/60'
+                    )}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    {t(`nav.${item.key}`)}
+                  </Link>
+                );
+              })}
+
+              <div className="mx-2 h-4 w-px bg-border" />
+
+              {/* Navigation group dropdowns */}
+              {navGroups.map((group) => (
+                <NavGroupDropdown key={group.key} group={group} pathname={pathname} t={t} />
               ))}
             </nav>
           </div>
@@ -112,20 +227,57 @@ export function Header() {
         </div>
         {/* Mobile navigation menu */}
         {mobileMenuOpen && (
-          <div className="py-4 space-y-1 border-t md:hidden">
-            {navigation.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className={cn(
-                  'block px-4 py-2 text-sm font-medium transition-colors hover:bg-accent',
-                  pathname === item.href ? 'text-foreground bg-accent' : 'text-foreground/60'
-                )}
-              >
-                {t(`nav.${item.key}`)}
-              </Link>
-            ))}
+          <div className="py-4 border-t md:hidden">
+            {/* Quick access */}
+            <div className="px-4 mb-2">
+              <p className="text-xs font-medium text-muted-foreground mb-2">
+                {t('navGroups.quickAccess')}
+              </p>
+              {quickAccess.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={cn(
+                      'flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors hover:bg-accent rounded-md',
+                      pathname === item.href ? 'text-foreground bg-accent' : 'text-foreground/60'
+                    )}
+                  >
+                    <Icon className="h-4 w-4" />
+                    {t(`nav.${item.key}`)}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Navigation groups */}
+            {navGroups.map((group) => {
+              const Icon = group.icon;
+              return (
+                <div key={group.key} className="px-4 mb-2">
+                  <p className="text-xs font-medium text-muted-foreground mb-2 flex items-center gap-1.5">
+                    <Icon className="h-3.5 w-3.5" />
+                    {t(`navGroups.${group.key}`)}
+                  </p>
+                  {group.items.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className={cn(
+                        'block px-4 py-2 text-sm font-medium transition-colors hover:bg-accent rounded-md',
+                        pathname === item.href ? 'text-foreground bg-accent' : 'text-foreground/60'
+                      )}
+                    >
+                      {t(`nav.${item.key}`)}
+                    </Link>
+                  ))}
+                </div>
+              );
+            })}
+
             <div className="px-4 pt-2 space-y-1">
               {dashboardUrl && (
                 <a

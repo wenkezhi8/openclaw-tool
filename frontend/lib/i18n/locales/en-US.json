@@ -353,6 +353,13 @@
     "persona": "Persona",
     "heartbeats": "Heartbeats"
   },
+  "navGroups": {
+    "quickAccess": "Quick Access",
+    "monitor": "Monitor",
+    "config": "Config",
+    "ai": "AI",
+    "tools": "Tools"
+  },
   "header": {
     "language": "Language",
     "theme": "Theme",

@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal, Pencil, Trash2, Power, CheckCircle2, XCircle, Loader2 } from 'lucide-react';
+import { MoreHorizontal, Pencil, Trash2, Power, CheckCircle2, XCircle, Loader2, Play, AlertTriangle } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,6 +18,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Switch } from '@/components/ui/switch';
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from '@/components/ui/tooltip';
 import type { Channel, ConnectionStatus } from '@/types/channel';
 import { cn } from '@/lib/utils';
 
@@ -82,7 +83,17 @@ export function ChannelsTable({
     }
   };
 
-  const getStatusBadge = (status?: ConnectionStatus) => {
+  const getStatusTooltip = (status?: ConnectionStatus) => {
+    const tooltips: Record<ConnectionStatus, string> = {
+      connected: 'API 密钥有效，可以正常调用',
+      disconnected: 'API 密钥无效或未配置，点击测试连接',
+      checking: '正在检查连接状态...',
+      error: '连接出错，检查网络或密钥',
+    };
+    return tooltips[status || 'disconnected'];
+  };
+
+  const getStatusBadge = (status?: ConnectionStatus, channel?: Channel) => {
     const statusColors: Record<ConnectionStatus, string> = {
       connected: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400',
       disconnected: 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400',
@@ -97,19 +108,56 @@ export function ChannelsTable({
       error: text?.error || 'Error',
     };
 
+    const currentStatus = status || 'disconnected';
+    const showTestButton = (currentStatus === 'disconnected' || currentStatus === 'error') && channel?.enabled && onTestConnection;
+
     return (
-      <Badge variant="outline" className={cn(statusColors[status || 'disconnected'])}>
-        <div className="flex items-center gap-1.5">
-          {getStatusIcon(status)}
-          <span className="text-xs">{statusText[status || 'disconnected']}</span>
-        </div>
-      </Badge>
+      <div className="flex items-center gap-2">
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Badge variant="outline" className={cn(statusColors[currentStatus], 'cursor-help')}>
+              <div className="flex items-center gap-1.5">
+                {getStatusIcon(status)}
+                <span className="text-xs">{statusText[currentStatus]}</span>
+              </div>
+            </Badge>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{getStatusTooltip(status)}</p>
+          </TooltipContent>
+        </Tooltip>
+        {showTestButton && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-6 w-6"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onTestConnection(channel!);
+                }}
+              >
+                {currentStatus === 'error' ? (
+                  <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+                ) : (
+                  <Play className="h-3.5 w-3.5 text-muted-foreground" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>测试连接</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+      </div>
     );
   };
 
   return (
-    <div className="rounded-md border">
-      <Table>
+    <TooltipProvider>
+      <div className="rounded-md border">
+        <Table>
         <TableHeader>
           <TableRow>
             <TableHead>{text?.name || 'Name'}</TableHead>
@@ -138,7 +186,7 @@ export function ChannelsTable({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  {getStatusBadge(channel.status)}
+                  {getStatusBadge(channel.status, channel)}
                 </TableCell>
                 <TableCell>{channel.priority}</TableCell>
                 <TableCell>
@@ -184,6 +232,7 @@ export function ChannelsTable({
           )}
         </TableBody>
       </Table>
-    </div>
+      </div>
+    </TooltipProvider>
   );
 }

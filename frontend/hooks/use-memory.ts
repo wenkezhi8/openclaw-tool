@@ -7,6 +7,7 @@ import type {
   SoulConfig,
   UserMemoryListResponse,
   UserMemory,
+  UserMemoryType,
   SearchMemoryParams,
   SearchMemoryResult,
   ClearMemoryParams,
@@ -80,9 +81,31 @@ export function useSearchMemory(params: SearchMemoryParams) {
   });
 }
 
+// Create memory params
+export interface CreateMemoryParams {
+  content: string;
+  type: UserMemoryType;
+  metadata?: {
+    source?: string;
+    importance?: number;
+    tags?: string[];
+  };
+}
+
 // Memory actions
 export function useMemoryActions() {
   const queryClient = useQueryClient();
+
+  // Create memory
+  const createMemoryMutation = useMutation({
+    mutationFn: async (params: CreateMemoryParams) => {
+      const response = await apiClient.post<UserMemory>(API_ENDPOINTS.MEMORY_USER, params);
+      return response.data!;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: USER_MEMORY_KEY });
+    },
+  });
 
   // Clear memory
   const clearMemoryMutation = useMutation({
@@ -106,7 +129,7 @@ export function useMemoryActions() {
       return response.data!;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: MEMORY_QUERY_KEY });
+      queryClient.invalidateQueries({ queryKey: USER_MEMORY_KEY });
     },
   });
 
@@ -122,9 +145,11 @@ export function useMemoryActions() {
   });
 
   return {
+    createMemory: createMemoryMutation.mutate,
     clearMemory: clearMemoryMutation.mutate,
     deleteMemory: deleteMemoryMutation.mutate,
     backupMemory: backupMemoryMutation.mutate,
+    isCreating: createMemoryMutation.isPending,
     isClearing: clearMemoryMutation.isPending,
     isDeleting: deleteMemoryMutation.isPending,
     isBackingUp: backupMemoryMutation.isPending,
