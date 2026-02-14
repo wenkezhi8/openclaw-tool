@@ -923,7 +923,13 @@
       "skip": "Skip for Now",
       "installCli": "Install CLI",
       "installSuccess": "CLI installed successfully",
-      "installError": "CLI installation failed"
+      "installError": "CLI installation failed",
+      "checking": "Checking system requirements...",
+      "downloading": "Downloading OpenClaw CLI...",
+      "installing": "Installing...",
+      "configuring": "Configuring environment...",
+      "verifying": "Verifying installation...",
+      "complete": "Installation complete!"
     },
     "model": {
       "title": "Configure Model Provider",

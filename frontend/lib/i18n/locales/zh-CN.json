@@ -923,7 +923,13 @@
       "skip": "暂时跳过",
       "installCli": "安装 CLI",
       "installSuccess": "CLI 安装成功",
-      "installError": "CLI 安装失败"
+      "installError": "CLI 安装失败",
+      "checking": "检查系统要求...",
+      "downloading": "下载 OpenClaw CLI...",
+      "installing": "安装中...",
+      "configuring": "配置环境...",
+      "verifying": "验证安装...",
+      "complete": "安装完成！"
     },
     "model": {
       "title": "配置模型提供商",

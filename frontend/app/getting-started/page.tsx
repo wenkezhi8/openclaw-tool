@@ -47,6 +47,11 @@ export default function GettingStartedPage() {
   const [platformToken, setPlatformToken] = useState('');
   const [testResult, setTestResult] = useState<'pending' | 'success' | 'error'>('pending');
 
+  // Installation progress states
+  const [installProgress, setInstallProgress] = useState(0);
+  const [installStatus, setInstallStatus] = useState<string | null>(null);
+  const [isInstalling, setIsInstalling] = useState(false);
+
   const steps: Step[] = [
     {
       id: 1,
@@ -95,15 +100,44 @@ export default function GettingStartedPage() {
   };
 
   const installCli = async () => {
+    setIsInstalling(true);
+    setInstallProgress(0);
+    setInstallStatus(t('gettingStarted.install.checking', '检查系统要求...'));
+
+    // Simulate installation progress
+    const progressSteps = [
+      { progress: 10, status: t('gettingStarted.install.checking', '检查系统要求...') },
+      { progress: 25, status: t('gettingStarted.install.downloading', '下载 OpenClaw CLI...') },
+      { progress: 50, status: t('gettingStarted.install.installing', '安装中...') },
+      { progress: 75, status: t('gettingStarted.install.configuring', '配置环境...') },
+      { progress: 90, status: t('gettingStarted.install.verifying', '验证安装...') },
+    ];
+
+    let stepIndex = 0;
+    const progressInterval = setInterval(() => {
+      if (stepIndex < progressSteps.length) {
+        setInstallProgress(progressSteps[stepIndex].progress);
+        setInstallStatus(progressSteps[stepIndex].status);
+        stepIndex++;
+      }
+    }, 800);
+
     setIsLoading(true);
     try {
       await apiClient.post(API_ENDPOINTS.INSTALL);
+      clearInterval(progressInterval);
+      setInstallProgress(100);
+      setInstallStatus(t('gettingStarted.install.complete', '安装完成！'));
       await checkCliInstallation();
       success(t('gettingStarted.installSuccess', 'CLI 安装成功'));
     } catch {
+      clearInterval(progressInterval);
+      setInstallProgress(0);
+      setInstallStatus(null);
       error(t('gettingStarted.installError', 'CLI 安装失败'));
     } finally {
       setIsLoading(false);
+      setIsInstalling(false);
     }
   };
 
@@ -223,6 +257,40 @@ export default function GettingStartedPage() {
                     </h3>
                     <p className="text-muted-foreground">
                       {t('gettingStarted.cliInstalledDesc', 'OpenClaw CLI 已正确安装，可以继续下一步')}
+                    </p>
+                  </div>
+                ) : isInstalling ? (
+                  <div className="text-center py-8 space-y-4">
+                    <div className="relative w-24 h-24 mx-auto">
+                      <svg className="w-24 h-24 transform -rotate-90">
+                        <circle
+                          cx="48"
+                          cy="48"
+                          r="40"
+                          stroke="currentColor"
+                          strokeWidth="8"
+                          fill="none"
+                          className="text-muted"
+                        />
+                        <circle
+                          cx="48"
+                          cy="48"
+                          r="40"
+                          stroke="currentColor"
+                          strokeWidth="8"
+                          fill="none"
+                          strokeDasharray={251.2}
+                          strokeDashoffset={251.2 - (251.2 * installProgress) / 100}
+                          className="text-primary transition-all duration-300"
+                        />
+                      </svg>
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <span className="text-2xl font-bold">{installProgress}%</span>
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground flex items-center justify-center gap-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      {installStatus}
                     </p>
                   </div>
                 ) : (
